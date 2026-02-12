@@ -1,0 +1,24 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "role": "admin",
+      "salt": "f5116202d3589cffeecd2f7671e0f5a1",
+      "iterations": 120000,
+      "keylen": 64,
+      "digest": "sha512",
+      "hash": "15fe132a34cb0ed02f486cf6d5c9a9a81da617f04505579b43fb060acdeafe7d8274a6590f162b66cd7755b0f30ce7ee961b7bf427a6f0a21525de2202c1d474"
+    },
+    {
+      "id": 2,
+      "username": "user",
+      "role": "user",
+      "salt": "32ccadcded1c97f094622d2b56b1b303",
+      "iterations": 120000,
+      "keylen": 64,
+      "digest": "sha512",
+      "hash": "d37ac5aebe2deafa90c20ee0f411be81db85fcf7854f7b0fefe594424f4c3baf8a0ccc011f7dadf7e9b6c3de33253ba45fa1b586f33c7b9d3faf0862197fd97b"
+    }
+  ]
+}

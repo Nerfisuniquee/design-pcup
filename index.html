@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Community Helpers Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-base: #0b1022;
+            --bg-dark: #0a0f1e;
+            --bg-panel: rgba(15, 23, 42, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --accent: #4cc3ff;
+            --accent-strong: #2aa7f0;
+            --accent-warm: #fbbf24;
+            --text-main: #e7f2ff;
+            --text-muted: rgba(231, 242, 255, 0.7);
+            --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+            --radius: 18px;
+            --sidebar-w: 220px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            background: var(--bg-base);
+            color: var(--text-main);
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(60% 60% at 10% 10%, rgba(76, 195, 255, 0.18), transparent 60%),
+                radial-gradient(55% 55% at 85% 20%, rgba(42, 167, 240, 0.15), transparent 60%),
+                radial-gradient(50% 50% at 70% 85%, rgba(251, 191, 36, 0.08), transparent 55%);
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+            background-size: 3px 3px;
+            opacity: 0.06;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        header {
+            padding: 60px 20px 40px;
+            text-align: center;
+            background: rgba(0,0,0,0.25);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            transition: padding-left 360ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        body.sidebar-open header {
+            padding-left: var(--sidebar-w);
+        }
+
+        header h1 {
+            font-family: "Fraunces", serif;
+            font-size: 2.6rem;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        nav {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            flex-direction: column;
+            gap: 12px;
+            padding: 80px 20px 24px;
+            background: rgba(7, 12, 24, 0.9);
+            min-height: 100vh;
+            width: var(--sidebar-w);
+            transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease;
+            transform: translateX(0);
+            opacity: 1;
+            overflow: hidden;
+            z-index: 20;
+            align-items: center;
+            border-right: 1px solid rgba(255,255,255,0.06);
+            backdrop-filter: blur(10px);
+        }
+
+        nav button {
+            text-align: center;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            padding: 10px 22px;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+        }
+
+        nav button.active {
+            background: rgba(76, 195, 255, 0.18);
+            color: var(--text-main);
+            transform: translateY(-1px);
+        }
+
+        .nav-spacer {
+            height: 12px;
+        }
+
+        .nav-push {
+            margin-top: auto;
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 40;
+            background: rgba(76, 195, 255, 0.9);
+            border: none;
+            color: #001225;
+            padding: 10px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            box-shadow: var(--shadow);
+            display: none;
+            width: 48px;
+            height: 44px;
+        }
+
+        .sidebar-toggle .bar {
+            display: block;
+            width: 22px;
+            height: 3px;
+            margin: 4px auto;
+            background: #001225;
+            border-radius: 999px;
+            transition: transform 180ms ease, opacity 180ms ease;
+        }
+
+        body.sidebar-collapsed .sidebar-toggle .bar:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        body.sidebar-collapsed .sidebar-toggle .bar:nth-child(2) {
+            opacity: 0;
+        }
+
+        body.sidebar-collapsed .sidebar-toggle .bar:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        body.sidebar-collapsed nav {
+            opacity: 0;
+            transform: translateX(-100%);
+            pointer-events: none;
+        }
+
+        .layout {
+            position: relative;
+            min-height: calc(100vh - 0px);
+        }
+
+        .content-wrap {
+            transition: padding-left 360ms cubic-bezier(0.22, 1, 0.36, 1);
+            padding-left: 0;
+        }
+
+        body.sidebar-open .content-wrap {
+            padding-left: var(--sidebar-w);
+        }
+
+        body.sidebar-open.sidebar-collapsed .content-wrap {
+            padding-left: 0;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .section { display: none; }
+        .section.active { display: block; }
+
+        h2 {
+            font-family: "Fraunces", serif;
+            font-size: 1.6rem;
+            margin: 0 0 12px 0;
+        }
+
+        h3 {
+            margin: 0 0 8px 0;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 28px;
+            border-radius: var(--radius);
+            margin-bottom: 28px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .forum {
+            display: grid;
+            gap: 16px;
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        .post-card {
+            display: grid;
+            grid-template-columns: 56px 1fr;
+            gap: 16px;
+            padding: 18px;
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255,255,255,0.08);
+            margin: 0 auto;
+        }
+
+        .post-vote {
+            background: rgba(0,0,0,0.35);
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 0;
+            color: var(--text-muted);
+        }
+
+        .post-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .post-title {
+            font-size: 1.1rem;
+            margin: 0 0 6px 0;
+        }
+
+        .post-body {
+            margin: 0;
+            color: var(--text-main);
+        }
+
+        .post-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .post-image {
+            width: 100%;
+            max-height: 360px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-top: 10px;
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .comment-list {
+            margin-top: 12px;
+            display: grid;
+            gap: 10px;
+        }
+
+        .comment-card {
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.28);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .comment-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: rgba(56, 189, 248, 0.2);
+            border: 1px solid rgba(56, 189, 248, 0.5);
+            font-size: 0.8rem;
+        }
+
+        .hero-card {
+            background: var(--bg-panel);
+            padding: 22px;
+            border-radius: var(--radius);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: var(--accent);
+            color: #000;
+            font-size: 0.8rem;
+        }
+
+        .pending {
+            background: var(--accent-warm);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            margin-top: 10px;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            margin-top: 10px;
+            font-family: 'Quicksand', sans-serif;
+            background: rgba(255,255,255,0.12);
+            color: var(--text-main);
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+        }
+
+        input[type="text"]::placeholder,
+        input[type="password"]::placeholder {
+            color: rgba(224, 242, 254, 0.7);
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: 2px solid rgba(56, 189, 248, 0.6);
+            outline-offset: 2px;
+        }
+
+        .login-screen {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            max-width: 420px;
+            width: 100%;
+        }
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: none;
+            margin-top: 10px;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px dashed rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.06);
+            color: var(--text-muted);
+        }
+
+        input[type="file"]::file-selector-button {
+            background: rgba(56, 189, 248, 0.9);
+            color: #001225;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin-right: 10px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        input[type="file"]::-webkit-file-upload-button {
+            background: rgba(56, 189, 248, 0.9);
+            color: #001225;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin-right: 10px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        button.primary, button.danger {
+            margin-top: 10px;
+            padding: 10px 22px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        button.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+            color: #001225;
+        }
+
+        button.danger {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .inline {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 720px) {
+            .row { grid-template-columns: 1fr; }
+            .layout { min-height: auto; }
+            nav { width: 75vw; }
+            body.sidebar-open .content-wrap { padding-left: 0; }
+            body.sidebar-open header { padding-left: 20px; }
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: rgba(0,0,0,0.4);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Community Helpers Hub</h1>
+    <p>Recognition, appreciation, and community-driven impact</p>
+</header>
+
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+</button>
+<div class="layout">
+    <nav id="navbar">
+        <div class="nav-spacer"></div>
+        <button class="tab active" onclick="showTab('home', this)">Home</button>
+        <button class="tab" onclick="showTab('heroes', this)">Heroes</button>
+        <button class="tab" onclick="showTab('messages', this)">Messages</button>
+        <button class="tab" id="adminTab" onclick="showTab('admin', this)">Admin</button>
+        <button class="tab nav-push" id="logoutBtn" onclick="logout()">Logout</button>
+    </nav>
+
+    <div class="content-wrap">
+    <div class="container">
+
+    <div id="loginSection" class="section active">
+        <div class="login-screen">
+        <div class="card login-card">
+            <h2>Login</h2>
+            <input id="loginUser" type="text" placeholder="Username" autocomplete="username" />
+            <input id="loginPass" type="password" placeholder="Password" autocomplete="current-password" />
+            <button class="primary" onclick="handleLogin()">Login</button>
+            <button class="primary" onclick="handleSignup()">Sign Up</button>
+            <p id="loginError" style="color:#fbbf24; display:none; margin-top:10px;">Invalid credentials.</p>
+            <hr style="border:0; height:1px; background:rgba(255,255,255,0.2); margin:20px 0;">
+            <button class="primary" onclick="enterSite(false)">Continue as Guest</button>
+        </div>
+        </div>
+    </div>
+    <div id="home" class="section">
+        <div class="card">
+            <h2>Welcome</h2>
+            <p>
+                This platform highlights individuals who contribute positively
+                to their communities through responsibility and care.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>Community Forums</h2>
+            <div id="forumComposer" class="hero-card" style="max-width:820px; margin:0 auto 18px;">
+                <div class="pill">New Post</div>
+                <input id="postTitle" type="text" placeholder="Post title" />
+                <textarea id="postBody" placeholder="Share updates, ideas, or requests..."></textarea>
+                <input id="postImageUrl" type="text" placeholder="Image URL (optional)" />
+                <input id="postImageFile" type="file" accept="image/*" />
+                <button class="primary" onclick="addPost()">Post</button>
+                <p id="postHint" style="color:rgba(224,242,254,0.7); margin-top:10px; display:none;">Login to create a post.</p>
+            </div>
+            <div class="forum" id="forumList"></div>
+        </div>
+    </div>
+    </div>
+
+    <div id="heroes" class="section">
+        <div class="card">
+            <h2>Community Heroes</h2>
+            <div class="grid" id="heroesGrid"></div>
+        </div>
+    </div>
+
+    <div id="messages" class="section">
+        <div class="card">
+            <h2>Leave a Message</h2>
+            <textarea id="messageInput" placeholder="Write a message of appreciation..."></textarea>
+            <button class="primary" onclick="submitMessage()">Submit</button>
+        </div>
+
+        <div class="card">
+            <h2>Messages</h2>
+            <div id="messagesList"></div>
+        </div>
+    </div>
+
+    <div id="admin" class="section">
+        <div class="card">
+            <h2>Admin Panel</h2>
+            <h3>Data Tools</h3>
+            <div class="admin-actions">
+                <button class="primary" onclick="exportJSON('heroes')">Export Heroes JSON</button>
+                <button class="primary" onclick="exportJSON('messages')">Export Messages JSON</button>
+                <button class="primary" onclick="exportJSON('all')">Export All JSON</button>
+            </div>
+            <div class="row" style="margin-top:12px;">
+                <div>
+                    <label for="importType">Import Type</label>
+                    <select id="importType">
+                        <option value="heroes">Heroes</option>
+                        <option value="messages">Messages</option>
+                        <option value="all">All</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="importFile">Import JSON File</label>
+                    <input id="importFile" type="file" accept="application/json" />
+                </div>
+            </div>
+            <button class="primary" onclick="importJSON()">Import Selected JSON</button>
+
+            <h3 style="margin-top:30px;">Add Hero</h3>
+            <input id="newHeroName" type="text" placeholder="Hero name" />
+            <textarea id="newHeroDesc" placeholder="Short description..."></textarea>
+            <input id="newHeroTags" type="text" placeholder="Tags (comma-separated) e.g. Volunteer, Mentor" />
+            <div class="inline">
+                <input id="newHeroApproved" type="checkbox" />
+                <label for="newHeroApproved">Approved</label>
+            </div>
+            <button class="primary" onclick="addHero()">Add Hero</button>
+
+            <h3>Manage Heroes</h3>
+            <div id="adminHeroes"></div>
+
+            <h3 style="margin-top:30px;">Manage Messages</h3>
+            <div id="adminMessages"></div>
+        </div>
+    </div>
+
+    </div>
+    </div>
+</div>
+
+<footer>
+    © 2026 Community Helpers Hub
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const SUPABASE_URL = "https://iyumgbzkgjpsdvxwfmyd.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_CXaKZLi2-bQ1bZBsB4bIiQ_O6GiK6Js";
+    const API_BASE = "https://YOUR_BACKEND_URL";
+    const sb = window.supabase
+        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+        : null;
+
+    let heroes = [];
+    let messages = [];
+    let posts = [];
+    let currentUser = null;
+    let currentProfile = null;
+    let isAdmin = false;
+    let editingPostId = null;
+    let editingComment = null;
+    let sidebarOpen = true;
+    document.getElementById("logoutBtn").style.display = "none";
+    document.getElementById("sidebarToggle").style.display = "none";
+
+    const DEMO_EMAIL_DOMAIN = "gmail.com";
+
+    function usernameToEmail(username) {
+        const safe = username.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
+        return safe ? `${safe}@${DEMO_EMAIL_DOMAIN}` : "";
+    }
+
+    function supabaseConfigured() {
+        return !!sb && !SUPABASE_URL.includes("YOUR_") && !SUPABASE_ANON_KEY.includes("YOUR_");
+    }
+
+    function apiConfigured() {
+        return !!API_BASE && !API_BASE.includes("YOUR_");
+    }
+
+    async function loadProfile() {
+        if (!currentUser) {
+            currentProfile = null;
+            isAdmin = false;
+            return;
+        }
+        const { data } = await sb
+            .from("profiles")
+            .select("username, role")
+            .eq("user_id", currentUser.id)
+            .single();
+        currentProfile = data || { username: currentUser.user_metadata?.username || "user", role: "user" };
+        isAdmin = currentProfile && currentProfile.role === "admin";
+    }
+
+    async function handleLogin() {
+        const username = document.getElementById("loginUser").value.trim();
+        const password = document.getElementById("loginPass").value.trim();
+        const error = document.getElementById("loginError");
+        error.style.display = "none";
+        if (!username || !password) return;
+        if (!supabaseConfigured() || !apiConfigured()) {
+            error.textContent = "Set your Supabase URL/anon key and backend URL first.";
+            error.style.display = "block";
+            return;
+        }
+        try {
+            const res = await fetch(`${API_BASE}/api/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Login failed");
+            if (data.session) {
+                await sb.auth.setSession({
+                    access_token: data.session.access_token,
+                    refresh_token: data.session.refresh_token
+                });
+            }
+            currentUser = data.user || null;
+            await loadProfile();
+            await enterSite(isAdmin);
+        } catch (e) {
+            error.textContent = e && e.message ? e.message : "Invalid credentials.";
+            error.style.display = "block";
+        }
+    }
+
+    async function handleSignup() {
+        const username = document.getElementById("loginUser").value.trim();
+        const password = document.getElementById("loginPass").value.trim();
+        const error = document.getElementById("loginError");
+        error.style.display = "none";
+        if (!username || !password) return;
+        if (!supabaseConfigured() || !apiConfigured()) {
+            error.textContent = "Set your Supabase URL/anon key and backend URL first.";
+            error.style.display = "block";
+            return;
+        }
+        try {
+            const res = await fetch(`${API_BASE}/api/signup`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Signup failed");
+            if (data.session) {
+                await sb.auth.setSession({
+                    access_token: data.session.access_token,
+                    refresh_token: data.session.refresh_token
+                });
+            }
+            currentUser = data.user || null;
+            await loadProfile();
+            await enterSite(isAdmin);
+        } catch (e) {
+            error.textContent = e && e.message ? e.message : "Signup failed. Try a different username.";
+            error.style.display = "block";
+        }
+    }
+
+    async function enterSite(admin) {
+        isAdmin = admin;
+        document.getElementById("loginSection").classList.remove("active");
+        document.getElementById("home").classList.add("active");
+        document.getElementById("navbar").style.display = "flex";
+        document.getElementById("adminTab").style.display = isAdmin ? "inline-block" : "none";
+        document.getElementById("logoutBtn").style.display = "inline-block";
+        document.getElementById("sidebarToggle").style.display = "inline-block";
+        document.body.classList.remove("sidebar-collapsed");
+        document.body.classList.add("sidebar-open");
+        sidebarOpen = true;
+        if (currentUser && !currentProfile) {
+            await loadProfile();
+        }
+        updateComposerState();
+        await loadData();
+        await loadPosts();
+        render();
+    }
+
+    function render() {
+        renderHeroes();
+        renderMessages();
+        renderAdmin();
+        renderPosts();
+    }
+
+    function renderHeroes() {
+        const grid = document.getElementById("heroesGrid");
+        grid.innerHTML = "";
+        heroes.filter(h => h.approved).forEach(h => {
+            const tags = Array.isArray(h.tags) ? h.tags : [];
+            grid.innerHTML += `
+                <div class="hero-card">
+                    <h3>${escapeHtml(h.name)}</h3>
+                    <p>${escapeHtml(h.desc)}</p>
+                    <div class="tag-row">
+                        ${tags.map(t => `<span class="tag tag-soft">${escapeHtml(t)}</span>`).join("")}
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    function renderMessages() {
+        const list = document.getElementById("messagesList");
+        list.innerHTML = "";
+        messages.forEach(m => {
+            list.innerHTML += `<p>“${escapeHtml(m.text)}”</p>`;
+        });
+    }
+
+    function renderAdmin() {
+        if (!isAdmin) return;
+
+        const ah = document.getElementById("adminHeroes");
+        ah.innerHTML = "";
+        heroes.forEach(h => {
+            const tagsValue = (Array.isArray(h.tags) ? h.tags : []).join(", ");
+            ah.innerHTML += `
+                <div class="hero-card">
+                    <label>Name</label>
+                    <input type="text" id="heroName_${h.id}" value="${h.name.replace(/"/g, '&quot;')}" />
+                    <label>Description</label>
+                    <textarea id="heroDesc_${h.id}">${h.desc}</textarea>
+                    <label>Tags (comma-separated)</label>
+                    <input type="text" id="heroTags_${h.id}" value="${tagsValue.replace(/"/g, '&quot;')}" />
+                    <div class="inline">
+                        <input type="checkbox" id="heroApproved_${h.id}" ${h.approved ? "checked" : ""} />
+                        <label for="heroApproved_${h.id}">Approved</label>
+                    </div>
+                    <div class="admin-actions">
+                        <button class="primary" onclick="saveHero(${h.id})">Save</button>
+                        ${h.approved
+                            ? ""
+                            : `<button class="primary" onclick="approveHero(${h.id})">Approve</button>`
+                        }
+                        <button class="danger" onclick="deleteHero(${h.id})">Delete</button>
+                    </div>
+                </div>
+            `;
+        });
+
+        const am = document.getElementById("adminMessages");
+        am.innerHTML = "";
+        messages.forEach((m) => {
+            am.innerHTML += `
+                <div class="hero-card">
+                    <p>${escapeHtml(m.text)}</p>
+                    <button class="danger" onclick="deleteMessage(${m.id})">Delete</button>
+                </div>
+            `;
+        });
+    }
+
+    async function approveHero(id) {
+        if (!isAdmin) return;
+        await sb.from("heroes").update({ approved: true }).eq("id", id);
+        await loadData();
+        render();
+    }
+
+    async function deleteHero(id) {
+        if (!isAdmin) return;
+        await sb.from("heroes").delete().eq("id", id);
+        await loadData();
+        render();
+    }
+
+    async function addHero() {
+        const name = document.getElementById("newHeroName").value.trim();
+        const desc = document.getElementById("newHeroDesc").value.trim();
+        const tagsInput = document.getElementById("newHeroTags").value.trim();
+        const approved = document.getElementById("newHeroApproved").checked;
+        if (!name || !desc) return;
+        const tags = tagsInput
+            ? tagsInput.split(",").map(t => t.trim()).filter(Boolean)
+            : [];
+        if (!isAdmin) return;
+        await sb.from("heroes").insert([{ name, desc, approved, tags }]);
+        document.getElementById("newHeroName").value = "";
+        document.getElementById("newHeroDesc").value = "";
+        document.getElementById("newHeroTags").value = "";
+        document.getElementById("newHeroApproved").checked = false;
+        await loadData();
+        render();
+    }
+
+    async function saveHero(id) {
+        if (!isAdmin) return;
+        const name = document.getElementById(`heroName_${id}`).value.trim();
+        const desc = document.getElementById(`heroDesc_${id}`).value.trim();
+        const tagsInput = document.getElementById(`heroTags_${id}`).value.trim();
+        const approved = document.getElementById(`heroApproved_${id}`).checked;
+        if (!name || !desc) return;
+        const tags = tagsInput
+            ? tagsInput.split(",").map(t => t.trim()).filter(Boolean)
+            : [];
+        await sb.from("heroes").update({ name, desc, approved, tags }).eq("id", id);
+        await loadData();
+        render();
+    }
+
+    async function submitMessage() {
+        const text = document.getElementById("messageInput").value.trim();
+        if (!text) return;
+        try {
+            await sb.from("messages").insert([{
+                text,
+                author_id: currentUser ? currentUser.id : null,
+                author: currentProfile ? currentProfile.username : "guest"
+            }]);
+            document.getElementById("messageInput").value = "";
+            await loadData();
+            render();
+        } catch (e) {}
+    }
+
+    function renderPosts() {
+        const list = document.getElementById("forumList");
+        if (!list) return;
+        list.innerHTML = "";
+        posts.forEach(p => {
+            const canEdit = isAdmin || (currentUser && p.authorId === currentUser.id);
+            const isEditing = editingPostId === p.id;
+            const comments = Array.isArray(p.comments) ? [...p.comments].sort((a, b) => new Date(a.created_at) - new Date(b.created_at)) : [];
+            list.innerHTML += `
+                <div class="post-card">
+                    <div class="post-vote">
+                        <span>▲</span>
+                        <strong>${p.score || 0}</strong>
+                        <span>▼</span>
+                    </div>
+                    <div>
+                        <div class="post-meta">Posted by ${escapeHtml(p.author || "user")} • ${formatTime(p.createdAt)}</div>
+                        ${isEditing ? `
+                            <input type="text" id="editTitle_${p.id}" value="${escapeHtml(p.title)}" />
+                            <textarea id="editBody_${p.id}">${escapeHtml(p.body)}</textarea>
+                            ${p.image_url ? `<div class="post-meta">Current image attached</div>` : ""}
+                            <input type="text" id="editImageUrl_${p.id}" value="${escapeHtml(p.image_url || "")}" placeholder="Image URL (optional)" />
+                            <input type="file" id="editImageFile_${p.id}" accept="image/*" />
+                            <div class="inline">
+                                <input type="checkbox" id="editImageRemove_${p.id}" />
+                                <label for="editImageRemove_${p.id}">Remove image</label>
+                            </div>
+                        ` : `
+                            <h3 class="post-title">${escapeHtml(p.title)}</h3>
+                            <p class="post-body">${escapeHtml(p.body)}</p>
+                            ${p.image_url ? `<img class="post-image" src="${escapeHtml(p.image_url)}" alt="Forum post image" />` : ""}
+                        `}
+                        <div class="post-actions">
+                            ${canEdit ? (isEditing
+                                ? `<button class="primary" onclick="savePost(${p.id})">Save</button>
+                                   <button class="danger" onclick="cancelEdit()">Cancel</button>`
+                                : `<button class="primary" onclick="editPost(${p.id})">Edit</button>
+                                   <button class="danger" onclick="deletePost(${p.id})">Delete</button>`) : ""
+                            }
+                        </div>
+                        <div class="comment-list">
+                            ${comments.map(c => {
+                                const canEditComment = isAdmin || (currentUser && c.authorId === currentUser.id);
+                                const isEditingComment = editingComment && editingComment.postId === p.id && editingComment.commentId === c.id;
+                                if (isEditingComment) {
+                                    return `
+                                        <div class="comment-card">
+                                            <div class="comment-meta">Editing comment</div>
+                                            <textarea id="editComment_${p.id}_${c.id}">${escapeHtml(c.body)}</textarea>
+                                            <div class="post-actions">
+                                                <button class="primary" onclick="saveComment(${p.id}, ${c.id})">Save</button>
+                                                <button class="danger" onclick="cancelEditComment()">Cancel</button>
+                                            </div>
+                                        </div>
+                                    `;
+                                }
+                                return `
+                                    <div class="comment-card">
+                                        <div class="comment-meta">${escapeHtml(c.author || "user")} • ${formatTime(c.createdAt)}</div>
+                                        <div>${escapeHtml(c.body)}</div>
+                                        ${canEditComment ? `
+                                            <div class="post-actions">
+                                                <button class="primary" onclick="editComment(${p.id}, ${c.id})">Edit</button>
+                                                <button class="danger" onclick="deleteComment(${p.id}, ${c.id})">Delete</button>
+                                            </div>
+                                        ` : ""}
+                                    </div>
+                                `;
+                            }).join("")}
+                        </div>
+                        <div class="post-actions" style="margin-top:12px;">
+                            <textarea id="commentBody_${p.id}" placeholder="Write a comment..." ${currentUser ? "" : "disabled"}></textarea>
+                            <button class="primary" onclick="addComment(${p.id})" ${currentUser ? "" : "disabled"}>Comment</button>
+                            ${currentUser ? "" : `<div class="post-meta">Login to comment.</div>`}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    async function loadPosts() {
+        try {
+            const { data } = await sb
+                .from("posts")
+                .select("id,title,body,image_url,author,author_id,created_at,updated_at, comments ( id, body, author, author_id, created_at, updated_at )")
+                .order("created_at", { ascending: false });
+            posts = Array.isArray(data) ? data : [];
+        } catch (e) {
+            posts = [];
+        }
+    }
+
+    async function addComment(postId) {
+        if (!currentUser) return;
+        const body = document.getElementById(`commentBody_${postId}`).value.trim();
+        if (!body) return;
+        try {
+            const { data } = await sb.from("comments").insert([{
+                post_id: postId,
+                body,
+                author_id: currentUser.id,
+                author: currentProfile ? currentProfile.username : "user"
+            }]).select().single();
+            posts = posts.map(p => p.id === postId ? { ...p, comments: [...(p.comments || []), data] } : p);
+            document.getElementById(`commentBody_${postId}`).value = "";
+            renderPosts();
+        } catch (e) {}
+    }
+
+    function editComment(postId, commentId) {
+        editingComment = { postId, commentId };
+        renderPosts();
+    }
+
+    function cancelEditComment() {
+        editingComment = null;
+        renderPosts();
+    }
+
+    async function saveComment(postId, commentId) {
+        const body = document.getElementById(`editComment_${postId}_${commentId}`).value.trim();
+        if (!body) return;
+        try {
+            const { data } = await sb
+                .from("comments")
+                .update({ body })
+                .eq("id", commentId)
+                .select()
+                .single();
+            posts = posts.map(p => {
+                if (p.id !== postId) return p;
+                const comments = (p.comments || []).map(c => c.id === commentId ? data : c);
+                return { ...p, comments };
+            });
+            editingComment = null;
+            renderPosts();
+        } catch (e) {}
+    }
+
+    async function deleteComment(postId, commentId) {
+        if (!confirm("Delete this comment?")) return;
+        try {
+            await sb.from("comments").delete().eq("id", commentId);
+            posts = posts.map(p => {
+                if (p.id !== postId) return p;
+                const comments = (p.comments || []).filter(c => c.id !== commentId);
+                return { ...p, comments };
+            });
+            renderPosts();
+        } catch (e) {}
+    }
+
+    async function addPost() {
+        if (!currentUser) {
+            updateComposerState();
+            return;
+        }
+        const title = document.getElementById("postTitle").value.trim();
+        const body = document.getElementById("postBody").value.trim();
+        if (!title || !body) return;
+        const imageUrl = document.getElementById("postImageUrl").value.trim();
+        const imageFile = document.getElementById("postImageFile").files[0];
+        try {
+            let image = null;
+            if (imageFile) {
+                image = await uploadPostImage(imageFile);
+            } else if (imageUrl) {
+                image = imageUrl;
+            }
+            const { data } = await sb.from("posts").insert([{
+                title,
+                body,
+                image_url: image,
+                author_id: currentUser.id,
+                author: currentProfile ? currentProfile.username : "user"
+            }]).select().single();
+            if (data) posts.unshift(data);
+            document.getElementById("postTitle").value = "";
+            document.getElementById("postBody").value = "";
+            document.getElementById("postImageUrl").value = "";
+            document.getElementById("postImageFile").value = "";
+            renderPosts();
+        } catch (e) {}
+    }
+
+    function editPost(id) {
+        editingPostId = id;
+        renderPosts();
+    }
+
+    function cancelEdit() {
+        editingPostId = null;
+        renderPosts();
+    }
+
+    async function savePost(id) {
+        const title = document.getElementById(`editTitle_${id}`).value.trim();
+        const body = document.getElementById(`editBody_${id}`).value.trim();
+        if (!title || !body) return;
+        const imageUrl = document.getElementById(`editImageUrl_${id}`).value.trim();
+        const imageFile = document.getElementById(`editImageFile_${id}`).files[0];
+        const removeImage = document.getElementById(`editImageRemove_${id}`).checked;
+        const existing = posts.find(p => p.id === id);
+        let image = existing ? existing.image_url : null;
+        if (removeImage) {
+            image = null;
+        } else if (imageFile) {
+            image = await uploadPostImage(imageFile);
+        } else if (imageUrl) {
+            image = imageUrl;
+        }
+        try {
+            const { data } = await sb
+                .from("posts")
+                .update({ title, body, image_url: image })
+                .eq("id", id)
+                .select()
+                .single();
+            posts = posts.map(p => (p.id === id ? data : p));
+            editingPostId = null;
+            renderPosts();
+        } catch (e) {}
+    }
+
+    async function deletePost(id) {
+        if (!confirm("Delete this post?")) return;
+        try {
+            await sb.from("posts").delete().eq("id", id);
+            posts = posts.filter(p => p.id !== id);
+            renderPosts();
+        } catch (e) {}
+    }
+
+    async function deleteMessage(id) {
+        if (!isAdmin) return;
+        await sb.from("messages").delete().eq("id", id);
+        await loadData();
+        render();
+    }
+
+    function exportJSON(type) {
+        let data = null;
+        let filename = "community-data.json";
+        if (type === "heroes") {
+            data = heroes;
+            filename = "community-heroes.json";
+        } else if (type === "messages") {
+            data = messages;
+            filename = "community-messages.json";
+        } else {
+            data = { heroes, messages };
+            filename = "community-all.json";
+        }
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function importJSON() {
+        if (!isAdmin) return;
+        const type = document.getElementById("importType").value;
+        const fileInput = document.getElementById("importFile");
+        const file = fileInput.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            try {
+                const data = JSON.parse(e.target.result);
+                if (type === "heroes") {
+                    if (Array.isArray(data)) {
+                        await sb.from("heroes").upsert(data, { onConflict: "id" });
+                    }
+                } else if (type === "messages") {
+                    if (Array.isArray(data)) {
+                        await sb.from("messages").upsert(data, { onConflict: "id" });
+                    }
+                } else {
+                    if (data && Array.isArray(data.heroes)) {
+                        await sb.from("heroes").upsert(data.heroes, { onConflict: "id" });
+                    }
+                    if (data && Array.isArray(data.messages)) {
+                        await sb.from("messages").upsert(data.messages, { onConflict: "id" });
+                    }
+                }
+                await loadData();
+                render();
+                fileInput.value = "";
+            } catch (err) {}
+        };
+        reader.readAsText(file);
+    }
+
+    function showTab(id, el) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        if (el) el.classList.add('active');
+    }
+
+    async function loadData() {
+        try {
+            let heroesQuery = sb.from("heroes").select("*").order("id", { ascending: true });
+            if (!isAdmin) heroesQuery = heroesQuery.eq("approved", true);
+            const { data: heroData } = await heroesQuery;
+            const { data: messageData } = await sb.from("messages").select("*").order("created_at", { ascending: false });
+            heroes = Array.isArray(heroData) ? heroData : [];
+            messages = Array.isArray(messageData) ? messageData : [];
+        } catch (e) {
+            heroes = [];
+            messages = [];
+        }
+    }
+
+    async function saveData() {}
+
+    async function init() {
+        if (!supabaseConfigured()) return;
+        const { data } = await sb.auth.getSession();
+        if (data && data.session && data.session.user) {
+            currentUser = data.session.user;
+            await loadProfile();
+            await enterSite(isAdmin);
+            return;
+        }
+    }
+
+    async function logout() {
+        try {
+            await sb.auth.signOut();
+        } catch (e) {}
+        isAdmin = false;
+        currentUser = null;
+        currentProfile = null;
+        posts = [];
+        editingPostId = null;
+        editingComment = null;
+        heroes = [];
+        messages = [];
+        document.getElementById("navbar").style.display = "none";
+        document.getElementById("adminTab").style.display = "none";
+        document.getElementById("logoutBtn").style.display = "none";
+        document.getElementById("sidebarToggle").style.display = "none";
+        document.body.classList.remove("sidebar-open");
+        updateComposerState();
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById("loginSection").classList.add("active");
+        document.getElementById("loginError").style.display = "none";
+        render();
+    }
+
+    function toggleSidebar() {
+        sidebarOpen = !sidebarOpen;
+        document.body.classList.toggle("sidebar-collapsed", !sidebarOpen);
+    }
+
+    function updateComposerState() {
+        const hint = document.getElementById("postHint");
+        const title = document.getElementById("postTitle");
+        const body = document.getElementById("postBody");
+        const imageUrl = document.getElementById("postImageUrl");
+        const imageFile = document.getElementById("postImageFile");
+        const button = document.querySelector("#forumComposer button.primary");
+        if (!hint || !title || !body || !button) return;
+        const disabled = !currentUser;
+        hint.style.display = disabled ? "block" : "none";
+        title.disabled = disabled;
+        body.disabled = disabled;
+        if (imageUrl) imageUrl.disabled = disabled;
+        if (imageFile) imageFile.disabled = disabled;
+        button.disabled = disabled;
+        button.style.opacity = disabled ? "0.6" : "1";
+        button.style.cursor = disabled ? "not-allowed" : "pointer";
+    }
+
+
+    async function uploadPostImage(file) {
+        const ext = (file.name.split(".").pop() || "png").toLowerCase();
+        const uid = currentUser ? currentUser.id : "anon";
+        const key = (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(36).slice(2)}`);
+        const path = `${uid}/${key}.${ext}`;
+        const { error } = await sb.storage.from("post-images").upload(path, file, {
+            cacheControl: "3600",
+            upsert: false
+        });
+        if (error) throw error;
+        const { data } = sb.storage.from("post-images").getPublicUrl(path);
+        return data.publicUrl;
+    }
+
+    function escapeHtml(str) {
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/\"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+    }
+
+    function formatTime(iso) {
+        if (!iso) return "just now";
+        const date = new Date(iso);
+        return date.toLocaleString();
+    }
+
+    window.login = handleLogin;
+    window.signup = handleSignup;
+
+    init();
+</script>
+
+</body>
+</html>

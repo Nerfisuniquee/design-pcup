@@ -1,0 +1,77 @@
+{
+  "heroes": [
+    {
+      "id": 1,
+      "name": "Community Hero #1",
+      "desc": "Positive local impact.",
+      "approved": true,
+      "tags": [
+        "Volunteer",
+        "Neighborhood"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Community Hero #2",
+      "desc": "Consistent contributor.",
+      "approved": true,
+      "tags": [
+        "Mentor"
+      ]
+    }
+  ],
+  "messages": [],
+  "posts": [
+    {
+      "id": 1,
+      "title": "Neighborhood Cleanup This Saturday",
+      "body": "We are meeting at the community center at 9am. Gloves and bags provided. Everyone welcome.",
+      "authorId": 1,
+      "author": "admin",
+      "createdAt": "2026-02-08T17:30:00.000Z",
+      "updatedAt": "2026-02-09T04:15:07.620Z",
+      "image": null,
+      "comments": [
+        {
+          "id": 1,
+          "body": "I can bring extra supplies and water.",
+          "authorId": 2,
+          "author": "user",
+          "createdAt": "2026-02-08T18:05:00.000Z",
+          "updatedAt": "2026-02-09T05:44:03.475Z"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Looking for Mentors in Math & Science",
+      "body": "If you can spare 1 hour/week to help students, please reply. We especially need algebra and biology support.",
+      "authorId": 2,
+      "author": "user",
+      "createdAt": "2026-02-08T19:15:00.000Z",
+      "updatedAt": "2026-02-09T04:58:23.465Z",
+      "image": null,
+      "comments": []
+    }
+  ],
+  "board": [
+    {
+      "id": 1,
+      "title": "Food Pantry Restock Needed",
+      "body": "We need canned goods and hygiene kits this week. Drop-offs are open 10am–4pm.",
+      "authorId": 1,
+      "author": "admin",
+      "createdAt": "2026-02-08T16:00:00.000Z",
+      "updatedAt": null
+    },
+    {
+      "id": 2,
+      "title": "Community Garden Volunteers",
+      "body": "Looking for 3–5 volunteers to help with planting on Sunday.",
+      "authorId": 2,
+      "author": "user",
+      "createdAt": "2026-02-08T20:20:00.000Z",
+      "updatedAt": null
+    }
+  ]
+}
