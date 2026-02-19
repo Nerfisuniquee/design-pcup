@@ -764,6 +764,7 @@
     let posts = [];
     let tickets = [];
     let selectedTicketId = null;
+    let ticketsChannel = null;
     let currentUser = null;
     let currentProfile = null;
     let isAdmin = false;
@@ -887,6 +888,7 @@
         }
         updateComposerState();
         updateTicketComposerState();
+        subscribeTickets();
         await loadData();
         await loadPosts();
         await loadTickets();
@@ -1573,6 +1575,7 @@
             messages = [];
             tickets = [];
             selectedTicketId = null;
+            await unsubscribeTickets();
             document.getElementById("navbar").style.display = "none";
         document.getElementById("adminTab").style.display = "none";
         document.getElementById("logoutBtn").style.display = "none";
@@ -1623,6 +1626,28 @@
         button.disabled = disabled;
         button.style.opacity = disabled ? "0.6" : "1";
         button.style.cursor = disabled ? "not-allowed" : "pointer";
+    }
+
+    function subscribeTickets() {
+        if (!sb || !currentUser || ticketsChannel) return;
+        ticketsChannel = sb.channel("tickets-changes")
+            .on(
+                "postgres_changes",
+                { event: "*", schema: "public", table: "tickets" },
+                async () => {
+                    await loadTickets();
+                    renderTickets();
+                }
+            )
+            .subscribe();
+    }
+
+    async function unsubscribeTickets() {
+        if (!sb || !ticketsChannel) return;
+        try {
+            await sb.removeChannel(ticketsChannel);
+        } catch (e) {}
+        ticketsChannel = null;
     }
 
     async function uploadHeroImage(file) {
