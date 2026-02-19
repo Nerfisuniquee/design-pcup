@@ -9,16 +9,16 @@
 
     <style>
         :root {
-            --bg-base: #f4eff2;
-            --bg-dark: #ece5ec;
-            --bg-panel: rgba(255, 255, 255, 0.8);
-            --card-bg: rgba(255, 255, 255, 0.92);
-            --accent: #e6b5cc;
-            --accent-strong: #d0b3e5;
-            --accent-warm: #e9b0b8;
-            --text-main: #3b2a35;
-            --text-muted: rgba(59, 42, 53, 0.55);
-            --shadow: 0 16px 32px rgba(120, 90, 110, 0.14);
+            --bg-base: #f6f1ea;
+            --bg-dark: #efe7de;
+            --bg-panel: rgba(255, 250, 245, 0.85);
+            --card-bg: rgba(255, 253, 250, 0.95);
+            --accent: #d8b2a9;
+            --accent-strong: #c2b0d9;
+            --accent-warm: #ddb7a5;
+            --text-main: #3a2f2a;
+            --text-muted: rgba(58, 47, 42, 0.6);
+            --shadow: 0 16px 32px rgba(110, 92, 80, 0.12);
             --radius: 18px;
             --sidebar-w: 220px;
         }
@@ -26,7 +26,7 @@
         * { box-sizing: border-box; }
 
         ::placeholder {
-            color: rgba(44, 27, 42, 0.45);
+            color: rgba(58, 47, 42, 0.45);
         }
 
         body {
@@ -42,9 +42,9 @@
             position: fixed;
             inset: 0;
             background:
-                radial-gradient(60% 60% at 10% 10%, rgba(230, 181, 204, 0.22), transparent 60%),
-                radial-gradient(55% 55% at 85% 20%, rgba(208, 179, 229, 0.2), transparent 60%),
-                radial-gradient(50% 50% at 70% 85%, rgba(233, 176, 184, 0.18), transparent 55%);
+                radial-gradient(60% 60% at 12% 8%, rgba(221, 183, 165, 0.22), transparent 60%),
+                radial-gradient(55% 55% at 85% 18%, rgba(194, 176, 217, 0.18), transparent 60%),
+                radial-gradient(50% 50% at 70% 85%, rgba(216, 178, 169, 0.18), transparent 55%);
             pointer-events: none;
             z-index: -2;
         }
@@ -63,8 +63,8 @@
         header {
             padding: 60px 20px 40px;
             text-align: center;
-            background: rgba(255, 255, 255, 0.65);
-            border-bottom: 1px solid rgba(44, 27, 42, 0.1);
+            background: rgba(255, 252, 248, 0.7);
+            border-bottom: 1px solid rgba(58, 47, 42, 0.12);
             transition: padding-left 360ms cubic-bezier(0.22, 1, 0.36, 1);
         }
 
@@ -87,7 +87,7 @@
             flex-direction: column;
             gap: 12px;
             padding: 80px 20px 24px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 252, 248, 0.92);
             min-height: 100vh;
             width: var(--sidebar-w);
             transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease;
@@ -96,7 +96,7 @@
             overflow: hidden;
             z-index: 20;
             align-items: center;
-            border-right: 1px solid rgba(44, 27, 42, 0.1);
+            border-right: 1px solid rgba(58, 47, 42, 0.12);
             backdrop-filter: blur(10px);
         }
 
@@ -113,13 +113,13 @@
         }
 
         nav button.active {
-            background: rgba(230, 181, 204, 0.22);
+            background: rgba(216, 178, 169, 0.25);
             color: var(--text-main);
             transform: translateY(-1px);
         }
 
         nav button:hover {
-            background: rgba(230, 181, 204, 0.18);
+            background: rgba(216, 178, 169, 0.18);
         }
 
         .nav-spacer {
@@ -247,7 +247,7 @@
         }
 
         .post-vote {
-            background: rgba(250, 241, 248, 0.9);
+            background: rgba(255, 245, 238, 0.9);
             border-radius: 14px;
             display: flex;
             flex-direction: column;
@@ -363,8 +363,8 @@
             display: inline-block;
             padding: 6px 12px;
             border-radius: 999px;
-            background: rgba(230, 181, 204, 0.2);
-            border: 1px solid rgba(230, 181, 204, 0.45);
+            background: rgba(216, 178, 169, 0.2);
+            border: 1px solid rgba(216, 178, 169, 0.45);
             font-size: 0.8rem;
         }
 
@@ -379,8 +379,8 @@
             display: inline-block;
             padding: 6px 14px;
             border-radius: 20px;
-            background: rgba(230, 181, 204, 0.2);
-            color: #7a4a61;
+            background: rgba(216, 178, 169, 0.2);
+            color: #7a554a;
             font-size: 0.8rem;
         }
 
@@ -460,7 +460,7 @@
         }
 
         input[type="file"]::file-selector-button {
-            background: rgba(230, 181, 204, 0.92);
+            background: rgba(216, 178, 169, 0.92);
             color: #fff;
             border: none;
             padding: 8px 12px;
@@ -471,7 +471,7 @@
         }
 
         input[type="file"]::-webkit-file-upload-button {
-            background: rgba(230, 181, 204, 0.92);
+            background: rgba(216, 178, 169, 0.92);
             color: #fff;
             border: none;
             padding: 8px 12px;
@@ -493,7 +493,7 @@
         button.primary {
             background: linear-gradient(135deg, var(--accent), var(--accent-strong));
             color: #fff;
-            box-shadow: 0 10px 22px rgba(208, 179, 229, 0.2);
+            box-shadow: 0 10px 22px rgba(194, 176, 217, 0.2);
         }
 
         button.danger {
