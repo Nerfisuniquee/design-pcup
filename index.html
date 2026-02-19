@@ -9,16 +9,16 @@
 
     <style>
         :root {
-            --bg-base: #f7f1f6;
-            --bg-dark: #efe6f2;
-            --bg-panel: rgba(255, 255, 255, 0.78);
-            --card-bg: rgba(255, 255, 255, 0.9);
-            --accent: #f472b6;
-            --accent-strong: #c084fc;
-            --accent-warm: #fb7185;
-            --text-main: #2c1b2a;
-            --text-muted: rgba(44, 27, 42, 0.65);
-            --shadow: 0 18px 38px rgba(140, 84, 122, 0.18);
+            --bg-base: #f4eff2;
+            --bg-dark: #ece5ec;
+            --bg-panel: rgba(255, 255, 255, 0.8);
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --accent: #e6b5cc;
+            --accent-strong: #d0b3e5;
+            --accent-warm: #e9b0b8;
+            --text-main: #3b2a35;
+            --text-muted: rgba(59, 42, 53, 0.55);
+            --shadow: 0 16px 32px rgba(120, 90, 110, 0.14);
             --radius: 18px;
             --sidebar-w: 220px;
         }
@@ -42,9 +42,9 @@
             position: fixed;
             inset: 0;
             background:
-                radial-gradient(60% 60% at 10% 10%, rgba(244, 114, 182, 0.25), transparent 60%),
-                radial-gradient(55% 55% at 85% 20%, rgba(192, 132, 252, 0.22), transparent 60%),
-                radial-gradient(50% 50% at 70% 85%, rgba(251, 113, 133, 0.2), transparent 55%);
+                radial-gradient(60% 60% at 10% 10%, rgba(230, 181, 204, 0.22), transparent 60%),
+                radial-gradient(55% 55% at 85% 20%, rgba(208, 179, 229, 0.2), transparent 60%),
+                radial-gradient(50% 50% at 70% 85%, rgba(233, 176, 184, 0.18), transparent 55%);
             pointer-events: none;
             z-index: -2;
         }
@@ -63,7 +63,7 @@
         header {
             padding: 60px 20px 40px;
             text-align: center;
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.65);
             border-bottom: 1px solid rgba(44, 27, 42, 0.1);
             transition: padding-left 360ms cubic-bezier(0.22, 1, 0.36, 1);
         }
@@ -113,13 +113,13 @@
         }
 
         nav button.active {
-            background: rgba(236, 72, 153, 0.16);
+            background: rgba(230, 181, 204, 0.22);
             color: var(--text-main);
             transform: translateY(-1px);
         }
 
         nav button:hover {
-            background: rgba(244, 114, 182, 0.12);
+            background: rgba(230, 181, 204, 0.18);
         }
 
         .nav-spacer {
@@ -348,6 +348,11 @@
             color: #374151;
         }
 
+        .composer-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px dashed rgba(122, 74, 97, 0.25);
+        }
+
         .comment-meta {
             font-size: 0.8rem;
             color: var(--text-muted);
@@ -358,8 +363,8 @@
             display: inline-block;
             padding: 6px 12px;
             border-radius: 999px;
-            background: rgba(244, 114, 182, 0.18);
-            border: 1px solid rgba(244, 114, 182, 0.4);
+            background: rgba(230, 181, 204, 0.2);
+            border: 1px solid rgba(230, 181, 204, 0.45);
             font-size: 0.8rem;
         }
 
@@ -374,8 +379,8 @@
             display: inline-block;
             padding: 6px 14px;
             border-radius: 20px;
-            background: rgba(244, 114, 182, 0.18);
-            color: #7b2c4a;
+            background: rgba(230, 181, 204, 0.2);
+            color: #7a4a61;
             font-size: 0.8rem;
         }
 
@@ -455,7 +460,7 @@
         }
 
         input[type="file"]::file-selector-button {
-            background: rgba(244, 114, 182, 0.9);
+            background: rgba(230, 181, 204, 0.92);
             color: #fff;
             border: none;
             padding: 8px 12px;
@@ -466,7 +471,7 @@
         }
 
         input[type="file"]::-webkit-file-upload-button {
-            background: rgba(244, 114, 182, 0.9);
+            background: rgba(230, 181, 204, 0.92);
             color: #fff;
             border: none;
             padding: 8px 12px;
@@ -488,7 +493,7 @@
         button.primary {
             background: linear-gradient(135deg, var(--accent), var(--accent-strong));
             color: #fff;
-            box-shadow: 0 10px 24px rgba(244, 114, 182, 0.25);
+            box-shadow: 0 10px 22px rgba(208, 179, 229, 0.2);
         }
 
         button.danger {
@@ -583,16 +588,17 @@
 
         <div class="card">
             <h2>Community Forums</h2>
-            <div id="forumComposer" class="hero-card" style="max-width:820px; margin:0 auto 18px;">
-                <div class="pill">New Post</div>
-                <input id="postTitle" type="text" placeholder="Post title" />
-                <textarea id="postBody" placeholder="Share updates, ideas, or requests..."></textarea>
-                <input id="postImageUrl" type="text" placeholder="Image URL (optional)" />
-                <input id="postImageFile" type="file" accept="image/*" />
-                <button class="primary" onclick="addPost()">Post</button>
-                <p id="postHint" style="color:rgba(224,242,254,0.7); margin-top:10px; display:none;">Login to create a post.</p>
-            </div>
             <div class="forum" id="forumList"></div>
+        </div>
+
+        <div class="card composer-card" id="forumComposer" style="max-width:820px; margin:0 auto 28px;">
+            <div class="pill">Start a New Post</div>
+            <input id="postTitle" type="text" placeholder="Post title" />
+            <textarea id="postBody" placeholder="Share updates, ideas, or requests..."></textarea>
+            <input id="postImageUrl" type="text" placeholder="Image URL (optional)" />
+            <input id="postImageFile" type="file" accept="image/*" />
+            <button class="primary" onclick="addPost()">Post</button>
+            <p id="postHint" style="color:var(--text-muted); margin-top:10px; display:none;">Login to create a post.</p>
         </div>
     </div>
     </div>
