@@ -9,21 +9,25 @@
 
     <style>
         :root {
-            --bg-base: #0b1022;
-            --bg-dark: #0a0f1e;
-            --bg-panel: rgba(15, 23, 42, 0.7);
-            --card-bg: rgba(255, 255, 255, 0.08);
-            --accent: #4cc3ff;
-            --accent-strong: #2aa7f0;
-            --accent-warm: #fbbf24;
-            --text-main: #e7f2ff;
-            --text-muted: rgba(231, 242, 255, 0.7);
-            --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+            --bg-base: #f7f1f6;
+            --bg-dark: #efe6f2;
+            --bg-panel: rgba(255, 255, 255, 0.78);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --accent: #f472b6;
+            --accent-strong: #c084fc;
+            --accent-warm: #fb7185;
+            --text-main: #2c1b2a;
+            --text-muted: rgba(44, 27, 42, 0.65);
+            --shadow: 0 18px 38px rgba(140, 84, 122, 0.18);
             --radius: 18px;
             --sidebar-w: 220px;
         }
 
         * { box-sizing: border-box; }
+
+        ::placeholder {
+            color: rgba(44, 27, 42, 0.45);
+        }
 
         body {
             margin: 0;
@@ -38,9 +42,9 @@
             position: fixed;
             inset: 0;
             background:
-                radial-gradient(60% 60% at 10% 10%, rgba(76, 195, 255, 0.18), transparent 60%),
-                radial-gradient(55% 55% at 85% 20%, rgba(42, 167, 240, 0.15), transparent 60%),
-                radial-gradient(50% 50% at 70% 85%, rgba(251, 191, 36, 0.08), transparent 55%);
+                radial-gradient(60% 60% at 10% 10%, rgba(244, 114, 182, 0.25), transparent 60%),
+                radial-gradient(55% 55% at 85% 20%, rgba(192, 132, 252, 0.22), transparent 60%),
+                radial-gradient(50% 50% at 70% 85%, rgba(251, 113, 133, 0.2), transparent 55%);
             pointer-events: none;
             z-index: -2;
         }
@@ -49,9 +53,9 @@
             content: "";
             position: fixed;
             inset: 0;
-            background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+            background-image: radial-gradient(rgba(0,0,0,0.06) 1px, transparent 1px);
             background-size: 3px 3px;
-            opacity: 0.06;
+            opacity: 0.05;
             pointer-events: none;
             z-index: -1;
         }
@@ -59,8 +63,8 @@
         header {
             padding: 60px 20px 40px;
             text-align: center;
-            background: rgba(0,0,0,0.25);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255, 255, 255, 0.6);
+            border-bottom: 1px solid rgba(44, 27, 42, 0.1);
             transition: padding-left 360ms cubic-bezier(0.22, 1, 0.36, 1);
         }
 
@@ -83,7 +87,7 @@
             flex-direction: column;
             gap: 12px;
             padding: 80px 20px 24px;
-            background: rgba(7, 12, 24, 0.9);
+            background: rgba(255, 255, 255, 0.9);
             min-height: 100vh;
             width: var(--sidebar-w);
             transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease;
@@ -92,7 +96,7 @@
             overflow: hidden;
             z-index: 20;
             align-items: center;
-            border-right: 1px solid rgba(255,255,255,0.06);
+            border-right: 1px solid rgba(44, 27, 42, 0.1);
             backdrop-filter: blur(10px);
         }
 
@@ -109,9 +113,13 @@
         }
 
         nav button.active {
-            background: rgba(76, 195, 255, 0.18);
+            background: rgba(236, 72, 153, 0.16);
             color: var(--text-main);
             transform: translateY(-1px);
+        }
+
+        nav button:hover {
+            background: rgba(244, 114, 182, 0.12);
         }
 
         .nav-spacer {
@@ -127,9 +135,9 @@
             top: 16px;
             left: 16px;
             z-index: 40;
-            background: rgba(76, 195, 255, 0.9);
+            background: rgba(244, 114, 182, 0.9);
             border: none;
-            color: #001225;
+            color: #fff;
             padding: 10px 14px;
             border-radius: 12px;
             cursor: pointer;
@@ -145,7 +153,7 @@
             width: 22px;
             height: 3px;
             margin: 4px auto;
-            background: #001225;
+            background: #fff;
             border-radius: 999px;
             transition: transform 180ms ease, opacity 180ms ease;
         }
@@ -211,7 +219,7 @@
             border-radius: var(--radius);
             margin-bottom: 28px;
             box-shadow: var(--shadow);
-            border: 1px solid rgba(255,255,255,0.06);
+            border: 1px solid rgba(44, 27, 42, 0.08);
         }
 
         .grid {
@@ -233,13 +241,13 @@
             gap: 16px;
             padding: 18px;
             border-radius: var(--radius);
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(44, 27, 42, 0.08);
             margin: 0 auto;
         }
 
         .post-vote {
-            background: rgba(0,0,0,0.35);
+            background: rgba(250, 241, 248, 0.9);
             border-radius: 14px;
             display: flex;
             flex-direction: column;
@@ -279,7 +287,7 @@
             object-fit: cover;
             border-radius: 12px;
             margin-top: 10px;
-            border: 1px solid rgba(255,255,255,0.12);
+            border: 1px solid rgba(44, 27, 42, 0.12);
         }
 
         .hero-image {
@@ -288,7 +296,7 @@
             object-fit: cover;
             border-radius: 14px;
             margin-bottom: 12px;
-            border: 1px solid rgba(255,255,255,0.12);
+            border: 1px solid rgba(44, 27, 42, 0.12);
         }
 
         .comment-list {
@@ -300,8 +308,44 @@
         .comment-card {
             padding: 10px 12px;
             border-radius: 12px;
-            background: rgba(0,0,0,0.28);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(44, 27, 42, 0.08);
+        }
+
+        .ticket-card {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(44, 27, 42, 0.1);
+            border-radius: var(--radius);
+            padding: 18px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .ticket-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .ticket-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 999px;
+            background: rgba(244, 114, 182, 0.18);
+            color: #7b2c4a;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .ticket-status.answered {
+            background: rgba(192, 132, 252, 0.18);
+            color: #5b2b91;
+        }
+
+        .ticket-status.closed {
+            background: rgba(148, 163, 184, 0.25);
+            color: #374151;
         }
 
         .comment-meta {
@@ -314,8 +358,8 @@
             display: inline-block;
             padding: 6px 12px;
             border-radius: 999px;
-            background: rgba(56, 189, 248, 0.2);
-            border: 1px solid rgba(56, 189, 248, 0.5);
+            background: rgba(244, 114, 182, 0.18);
+            border: 1px solid rgba(244, 114, 182, 0.4);
             font-size: 0.8rem;
         }
 
@@ -323,15 +367,15 @@
             background: var(--bg-panel);
             padding: 22px;
             border-radius: var(--radius);
-            border: 1px solid rgba(255,255,255,0.06);
+            border: 1px solid rgba(44, 27, 42, 0.08);
         }
 
         .tag {
             display: inline-block;
             padding: 6px 14px;
             border-radius: 20px;
-            background: var(--accent);
-            color: #000;
+            background: rgba(244, 114, 182, 0.18);
+            color: #7b2c4a;
             font-size: 0.8rem;
         }
 
@@ -343,9 +387,11 @@
             width: 100%;
             padding: 14px;
             border-radius: 12px;
-            border: none;
+            border: 1px solid rgba(44, 27, 42, 0.16);
             margin-top: 10px;
             font-family: 'Quicksand', sans-serif;
+            background: rgba(255, 255, 255, 0.92);
+            color: var(--text-main);
         }
 
         input[type="text"],
@@ -385,13 +431,17 @@
             max-width: 420px;
             width: 100%;
         }
+        input[type="text"],
+        input[type="password"],
         select {
             width: 100%;
             padding: 12px 14px;
             border-radius: 12px;
-            border: none;
+            border: 1px solid rgba(44, 27, 42, 0.16);
             margin-top: 10px;
             font-family: 'Quicksand', sans-serif;
+            background: rgba(255, 255, 255, 0.92);
+            color: var(--text-main);
         }
 
         input[type="file"] {
@@ -399,14 +449,14 @@
             margin-top: 10px;
             padding: 10px 12px;
             border-radius: 12px;
-            border: 1px dashed rgba(255,255,255,0.25);
-            background: rgba(255,255,255,0.06);
-            color: var(--text-muted);
+            border: 1px dashed rgba(44, 27, 42, 0.25);
+            background: rgba(255,255,255,0.72);
+            color: var(--text-main);
         }
 
         input[type="file"]::file-selector-button {
-            background: rgba(56, 189, 248, 0.9);
-            color: #001225;
+            background: rgba(244, 114, 182, 0.9);
+            color: #fff;
             border: none;
             padding: 8px 12px;
             border-radius: 10px;
@@ -416,8 +466,8 @@
         }
 
         input[type="file"]::-webkit-file-upload-button {
-            background: rgba(56, 189, 248, 0.9);
-            color: #001225;
+            background: rgba(244, 114, 182, 0.9);
+            color: #fff;
             border: none;
             padding: 8px 12px;
             border-radius: 10px;
@@ -437,11 +487,12 @@
 
         button.primary {
             background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-            color: #001225;
+            color: #fff;
+            box-shadow: 0 10px 24px rgba(244, 114, 182, 0.25);
         }
 
         button.danger {
-            background: #ef4444;
+            background: #e11d48;
             color: #fff;
         }
 
@@ -499,6 +550,7 @@
         <button class="tab active" onclick="showTab('home', this)">Home</button>
         <button class="tab" onclick="showTab('heroes', this)">Heroes</button>
         <button class="tab" onclick="showTab('messages', this)">Messages</button>
+        <button class="tab" onclick="showTab('support', this)">Support</button>
         <button class="tab" id="adminTab" onclick="showTab('admin', this)">Admin</button>
         <button class="tab nav-push" id="logoutBtn" onclick="logout()">Logout</button>
     </nav>
@@ -514,8 +566,8 @@
             <input id="loginPass" type="password" placeholder="Password" autocomplete="current-password" />
             <button class="primary" onclick="handleLogin()">Login</button>
             <button class="primary" onclick="handleSignup()">Sign Up</button>
-            <p id="loginError" style="color:#fbbf24; display:none; margin-top:10px;">Invalid credentials.</p>
-            <hr style="border:0; height:1px; background:rgba(255,255,255,0.2); margin:20px 0;">
+            <p id="loginError" style="color:#e11d48; display:none; margin-top:10px;">Invalid credentials.</p>
+            <hr style="border:0; height:1px; background:rgba(44, 27, 42, 0.15); margin:20px 0;">
             <button class="primary" onclick="enterSite(false)">Continue as Guest</button>
         </div>
         </div>
@@ -562,6 +614,22 @@
         <div class="card">
             <h2>Messages</h2>
             <div id="messagesList"></div>
+        </div>
+    </div>
+
+    <div id="support" class="section">
+        <div class="card">
+            <h2>Contact Support</h2>
+            <p class="post-meta">Need help or want to report something? Create a support ticket and we’ll respond here.</p>
+            <input id="ticketSubject" type="text" placeholder="Ticket subject" />
+            <textarea id="ticketBody" placeholder="Describe the issue or request..."></textarea>
+            <button class="primary" id="ticketSubmitBtn" onclick="addTicket()">Submit Ticket</button>
+            <p id="ticketHint" style="color:var(--text-muted); margin-top:10px; display:none;">Login to create a ticket.</p>
+        </div>
+
+        <div class="card">
+            <h2 id="ticketListTitle">Your Tickets</h2>
+            <div id="ticketList" class="forum"></div>
         </div>
     </div>
 
@@ -630,6 +698,7 @@
     let heroes = [];
     let messages = [];
     let posts = [];
+    let tickets = [];
     let currentUser = null;
     let currentProfile = null;
     let isAdmin = false;
@@ -752,8 +821,10 @@
             await loadProfile();
         }
         updateComposerState();
+        updateTicketComposerState();
         await loadData();
         await loadPosts();
+        await loadTickets();
         render();
     }
 
@@ -762,6 +833,7 @@
         renderMessages();
         renderAdmin();
         renderPosts();
+        renderTickets();
     }
 
     function renderHeroes() {
@@ -787,6 +859,61 @@
         list.innerHTML = "";
         messages.forEach(m => {
             list.innerHTML += `<p>“${escapeHtml(m.text)}”</p>`;
+        });
+    }
+
+    function renderTickets() {
+        const list = document.getElementById("ticketList");
+        const title = document.getElementById("ticketListTitle");
+        if (!list || !title) return;
+        title.textContent = isAdmin ? "All Tickets" : "Your Tickets";
+        list.innerHTML = "";
+        if (!currentUser) {
+            list.innerHTML = `<div class="post-meta">Login to view your tickets.</div>`;
+            return;
+        }
+        if (!tickets.length) {
+            list.innerHTML = `<div class="post-meta">No tickets yet.</div>`;
+            return;
+        }
+        tickets.forEach(t => {
+            const status = (t.status || "open").toLowerCase();
+            const statusClass = status === "closed"
+                ? "ticket-status closed"
+                : status === "answered"
+                    ? "ticket-status answered"
+                    : "ticket-status";
+            list.innerHTML += `
+                <div class="ticket-card">
+                    <div class="ticket-meta">${escapeHtml(t.subject || "Support Ticket")} • ${formatTime(t.created_at)}</div>
+                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                        <span class="${statusClass}">${escapeHtml(status)}</span>
+                        <span class="ticket-meta">by ${escapeHtml(t.author || "user")}</span>
+                    </div>
+                    <div>${escapeHtml(t.body)}</div>
+                    ${t.admin_reply ? `
+                        <div class="hero-card" style="background:rgba(192,132,252,0.12);">
+                            <div class="ticket-meta">Admin reply</div>
+                            <div>${escapeHtml(t.admin_reply)}</div>
+                        </div>
+                    ` : ""}
+                    ${isAdmin ? `
+                        <div class="hero-card" style="background:rgba(244,114,182,0.08);">
+                            <label>Reply</label>
+                            <textarea id="ticketReply_${t.id}" placeholder="Write a response...">${escapeHtml(t.admin_reply || "")}</textarea>
+                            <label>Status</label>
+                            <select id="ticketStatus_${t.id}">
+                                <option value="open" ${status === "open" ? "selected" : ""}>Open</option>
+                                <option value="answered" ${status === "answered" ? "selected" : ""}>Answered</option>
+                                <option value="closed" ${status === "closed" ? "selected" : ""}>Closed</option>
+                            </select>
+                            <div class="post-actions">
+                                <button class="primary" onclick="replyTicket(${t.id})">Save Reply</button>
+                            </div>
+                        </div>
+                    ` : ""}
+                </div>
+            `;
         });
     }
 
@@ -927,6 +1054,49 @@
         } catch (e) {}
     }
 
+    async function addTicket() {
+        if (!currentUser) {
+            updateTicketComposerState();
+            return;
+        }
+        const subject = document.getElementById("ticketSubject").value.trim();
+        const body = document.getElementById("ticketBody").value.trim();
+        if (!subject || !body) return;
+        try {
+            const { data } = await sb.from("tickets").insert([{
+                subject,
+                body,
+                status: "open",
+                author_id: currentUser.id,
+                author: currentProfile ? currentProfile.username : "user"
+            }]).select().single();
+            if (data) tickets.unshift(data);
+            document.getElementById("ticketSubject").value = "";
+            document.getElementById("ticketBody").value = "";
+            renderTickets();
+        } catch (e) {}
+    }
+
+    async function replyTicket(id) {
+        if (!isAdmin) return;
+        const reply = document.getElementById(`ticketReply_${id}`).value.trim();
+        const status = document.getElementById(`ticketStatus_${id}`).value;
+        try {
+            const { data } = await sb
+                .from("tickets")
+                .update({
+                    admin_reply: reply || null,
+                    status,
+                    replied_at: reply ? new Date().toISOString() : null
+                })
+                .eq("id", id)
+                .select()
+                .single();
+            tickets = tickets.map(t => (t.id === id ? data : t));
+            renderTickets();
+        } catch (e) {}
+    }
+
     function renderPosts() {
         const list = document.getElementById("forumList");
         if (!list) return;
@@ -1017,6 +1187,23 @@
             posts = Array.isArray(data) ? data : [];
         } catch (e) {
             posts = [];
+        }
+    }
+
+    async function loadTickets() {
+        if (!currentUser) {
+            tickets = [];
+            return;
+        }
+        try {
+            let query = sb.from("tickets").select("*").order("created_at", { ascending: false });
+            if (!isAdmin) {
+                query = query.eq("author_id", currentUser.id);
+            }
+            const { data } = await query;
+            tickets = Array.isArray(data) ? data : [];
+        } catch (e) {
+            tickets = [];
         }
     }
 
@@ -1270,12 +1457,14 @@
         editingComment = null;
         heroes = [];
         messages = [];
+        tickets = [];
         document.getElementById("navbar").style.display = "none";
         document.getElementById("adminTab").style.display = "none";
         document.getElementById("logoutBtn").style.display = "none";
         document.getElementById("sidebarToggle").style.display = "none";
         document.body.classList.remove("sidebar-open");
         updateComposerState();
+        updateTicketComposerState();
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById("loginSection").classList.add("active");
         document.getElementById("loginError").style.display = "none";
@@ -1301,6 +1490,21 @@
         body.disabled = disabled;
         if (imageUrl) imageUrl.disabled = disabled;
         if (imageFile) imageFile.disabled = disabled;
+        button.disabled = disabled;
+        button.style.opacity = disabled ? "0.6" : "1";
+        button.style.cursor = disabled ? "not-allowed" : "pointer";
+    }
+
+    function updateTicketComposerState() {
+        const hint = document.getElementById("ticketHint");
+        const subject = document.getElementById("ticketSubject");
+        const body = document.getElementById("ticketBody");
+        const button = document.getElementById("ticketSubmitBtn");
+        if (!hint || !subject || !body || !button) return;
+        const disabled = !currentUser;
+        hint.style.display = disabled ? "block" : "none";
+        subject.disabled = disabled;
+        body.disabled = disabled;
         button.disabled = disabled;
         button.style.opacity = disabled ? "0.6" : "1";
         button.style.cursor = disabled ? "not-allowed" : "pointer";
