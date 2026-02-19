@@ -1021,6 +1021,7 @@
                             </select>
                             <div class="post-actions">
                                 <button class="primary" onclick="updateTicketStatus(${current.id})">Update Status</button>
+                                <button class="danger" onclick="deleteTicket(${current.id})">Delete Ticket</button>
                             </div>
                         ` : ""}
                     </div>
@@ -1232,6 +1233,17 @@
                 .select()
                 .single();
             tickets = tickets.map(t => (t.id === ticketId ? data : t));
+            renderTickets();
+        } catch (e) {}
+    }
+
+    async function deleteTicket(ticketId) {
+        if (!isAdmin) return;
+        if (!confirm("Delete this ticket and all its messages?")) return;
+        try {
+            await sb.from("tickets").delete().eq("id", ticketId);
+            tickets = tickets.filter(t => t.id !== ticketId);
+            selectedTicketId = tickets.length ? tickets[0].id : null;
             renderTickets();
         } catch (e) {}
     }
