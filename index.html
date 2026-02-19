@@ -9,16 +9,16 @@
 
     <style>
         :root {
-            --bg-base: #f6f1ea;
-            --bg-dark: #efe7de;
-            --bg-panel: rgba(255, 250, 245, 0.85);
-            --card-bg: rgba(255, 253, 250, 0.95);
-            --accent: #d8b2a9;
-            --accent-strong: #c2b0d9;
-            --accent-warm: #ddb7a5;
-            --text-main: #3a2f2a;
-            --text-muted: rgba(58, 47, 42, 0.6);
-            --shadow: 0 16px 32px rgba(110, 92, 80, 0.12);
+            --bg-base: #f4f7fb;
+            --bg-dark: #e9eef6;
+            --bg-panel: rgba(255, 255, 255, 0.86);
+            --card-bg: rgba(255, 255, 255, 0.96);
+            --accent: #6bb7c8;
+            --accent-strong: #5a8fdc;
+            --accent-warm: #8cc6d6;
+            --text-main: #2b3a4a;
+            --text-muted: rgba(43, 58, 74, 0.6);
+            --shadow: 0 16px 32px rgba(72, 92, 120, 0.14);
             --radius: 18px;
             --sidebar-w: 220px;
         }
@@ -26,7 +26,7 @@
         * { box-sizing: border-box; }
 
         ::placeholder {
-            color: rgba(58, 47, 42, 0.45);
+            color: rgba(43, 58, 74, 0.45);
         }
 
         body {
@@ -42,9 +42,9 @@
             position: fixed;
             inset: 0;
             background:
-                radial-gradient(60% 60% at 12% 8%, rgba(221, 183, 165, 0.22), transparent 60%),
-                radial-gradient(55% 55% at 85% 18%, rgba(194, 176, 217, 0.18), transparent 60%),
-                radial-gradient(50% 50% at 70% 85%, rgba(216, 178, 169, 0.18), transparent 55%);
+                radial-gradient(60% 60% at 12% 8%, rgba(107, 183, 200, 0.18), transparent 60%),
+                radial-gradient(55% 55% at 85% 18%, rgba(90, 143, 220, 0.18), transparent 60%),
+                radial-gradient(50% 50% at 70% 85%, rgba(140, 198, 214, 0.18), transparent 55%);
             pointer-events: none;
             z-index: -2;
         }
@@ -63,8 +63,8 @@
         header {
             padding: 60px 20px 40px;
             text-align: center;
-            background: rgba(255, 252, 248, 0.7);
-            border-bottom: 1px solid rgba(58, 47, 42, 0.12);
+            background: rgba(255, 255, 255, 0.75);
+            border-bottom: 1px solid rgba(43, 58, 74, 0.12);
             transition: padding-left 360ms cubic-bezier(0.22, 1, 0.36, 1);
         }
 
@@ -87,7 +87,7 @@
             flex-direction: column;
             gap: 12px;
             padding: 80px 20px 24px;
-            background: rgba(255, 252, 248, 0.92);
+            background: rgba(255, 255, 255, 0.92);
             min-height: 100vh;
             width: var(--sidebar-w);
             transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease;
@@ -96,7 +96,7 @@
             overflow: hidden;
             z-index: 20;
             align-items: center;
-            border-right: 1px solid rgba(58, 47, 42, 0.12);
+            border-right: 1px solid rgba(43, 58, 74, 0.12);
             backdrop-filter: blur(10px);
         }
 
@@ -113,13 +113,13 @@
         }
 
         nav button.active {
-            background: rgba(216, 178, 169, 0.25);
+            background: rgba(107, 183, 200, 0.22);
             color: var(--text-main);
             transform: translateY(-1px);
         }
 
         nav button:hover {
-            background: rgba(216, 178, 169, 0.18);
+            background: rgba(107, 183, 200, 0.16);
         }
 
         .nav-spacer {
@@ -135,7 +135,7 @@
             top: 16px;
             left: 16px;
             z-index: 40;
-            background: rgba(244, 114, 182, 0.9);
+            background: rgba(107, 183, 200, 0.9);
             border: none;
             color: #fff;
             padding: 10px 14px;
@@ -247,7 +247,7 @@
         }
 
         .post-vote {
-            background: rgba(255, 245, 238, 0.9);
+            background: rgba(242, 246, 252, 0.9);
             border-radius: 14px;
             display: flex;
             flex-direction: column;
@@ -332,15 +332,15 @@
             gap: 6px;
             padding: 4px 12px;
             border-radius: 999px;
-            background: rgba(244, 114, 182, 0.18);
-            color: #7b2c4a;
+            background: rgba(107, 183, 200, 0.18);
+            color: #2f5566;
             font-size: 0.75rem;
             font-weight: 700;
         }
 
         .ticket-status.answered {
-            background: rgba(192, 132, 252, 0.18);
-            color: #5b2b91;
+            background: rgba(90, 143, 220, 0.18);
+            color: #2f4f7a;
         }
 
         .ticket-status.closed {
@@ -350,7 +350,7 @@
 
         .composer-card {
             background: rgba(255, 255, 255, 0.95);
-            border: 1px dashed rgba(122, 74, 97, 0.25);
+            border: 1px dashed rgba(66, 92, 120, 0.25);
         }
 
         .comment-meta {
@@ -363,8 +363,8 @@
             display: inline-block;
             padding: 6px 12px;
             border-radius: 999px;
-            background: rgba(216, 178, 169, 0.2);
-            border: 1px solid rgba(216, 178, 169, 0.45);
+            background: rgba(107, 183, 200, 0.2);
+            border: 1px solid rgba(107, 183, 200, 0.45);
             font-size: 0.8rem;
         }
 
@@ -372,15 +372,15 @@
             background: var(--bg-panel);
             padding: 22px;
             border-radius: var(--radius);
-            border: 1px solid rgba(44, 27, 42, 0.08);
+            border: 1px solid rgba(43, 58, 74, 0.1);
         }
 
         .tag {
             display: inline-block;
             padding: 6px 14px;
             border-radius: 20px;
-            background: rgba(216, 178, 169, 0.2);
-            color: #7a554a;
+            background: rgba(107, 183, 200, 0.2);
+            color: #3b5a6b;
             font-size: 0.8rem;
         }
 
@@ -392,10 +392,10 @@
             width: 100%;
             padding: 14px;
             border-radius: 12px;
-            border: 1px solid rgba(44, 27, 42, 0.16);
+            border: 1px solid rgba(66, 92, 120, 0.2);
             margin-top: 10px;
             font-family: 'Quicksand', sans-serif;
-            background: rgba(255, 255, 255, 0.92);
+            background: #ffffff;
             color: var(--text-main);
         }
 
@@ -404,24 +404,24 @@
             width: 100%;
             padding: 12px 14px;
             border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(66, 92, 120, 0.2);
             margin-top: 10px;
             font-family: 'Quicksand', sans-serif;
-            background: rgba(255,255,255,0.12);
+            background: #ffffff;
             color: var(--text-main);
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+            box-shadow: none;
         }
 
         input[type="text"]::placeholder,
         input[type="password"]::placeholder {
-            color: rgba(224, 242, 254, 0.7);
+            color: var(--text-muted);
         }
 
         input[type="text"]:focus,
         input[type="password"]:focus,
         textarea:focus,
         select:focus {
-            outline: 2px solid rgba(56, 189, 248, 0.6);
+            outline: 2px solid rgba(90, 143, 220, 0.45);
             outline-offset: 2px;
         }
 
@@ -442,10 +442,10 @@
             width: 100%;
             padding: 12px 14px;
             border-radius: 12px;
-            border: 1px solid rgba(44, 27, 42, 0.16);
+            border: 1px solid rgba(66, 92, 120, 0.2);
             margin-top: 10px;
             font-family: 'Quicksand', sans-serif;
-            background: rgba(255, 255, 255, 0.92);
+            background: #ffffff;
             color: var(--text-main);
         }
 
@@ -454,13 +454,13 @@
             margin-top: 10px;
             padding: 10px 12px;
             border-radius: 12px;
-            border: 1px dashed rgba(44, 27, 42, 0.25);
-            background: rgba(255,255,255,0.72);
+            border: 1px dashed rgba(66, 92, 120, 0.25);
+            background: #ffffff;
             color: var(--text-main);
         }
 
         input[type="file"]::file-selector-button {
-            background: rgba(216, 178, 169, 0.92);
+            background: rgba(107, 183, 200, 0.92);
             color: #fff;
             border: none;
             padding: 8px 12px;
@@ -471,7 +471,7 @@
         }
 
         input[type="file"]::-webkit-file-upload-button {
-            background: rgba(216, 178, 169, 0.92);
+            background: rgba(107, 183, 200, 0.92);
             color: #fff;
             border: none;
             padding: 8px 12px;
@@ -493,7 +493,7 @@
         button.primary {
             background: linear-gradient(135deg, var(--accent), var(--accent-strong));
             color: #fff;
-            box-shadow: 0 10px 22px rgba(194, 176, 217, 0.2);
+            box-shadow: 0 10px 22px rgba(90, 143, 220, 0.22);
         }
 
         button.danger {
