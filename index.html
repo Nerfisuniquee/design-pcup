@@ -282,6 +282,15 @@
             border: 1px solid rgba(255,255,255,0.12);
         }
 
+        .hero-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+
         .comment-list {
             margin-top: 12px;
             display: grid;
@@ -584,6 +593,8 @@
             <h3 style="margin-top:30px;">Add Hero</h3>
             <input id="newHeroName" type="text" placeholder="Hero name" />
             <textarea id="newHeroDesc" placeholder="Short description..."></textarea>
+            <input id="newHeroImageUrl" type="text" placeholder="Hero image URL (optional)" />
+            <input id="newHeroImageFile" type="file" accept="image/*" />
             <input id="newHeroTags" type="text" placeholder="Tags (comma-separated) e.g. Volunteer, Mentor" />
             <div class="inline">
                 <input id="newHeroApproved" type="checkbox" />
@@ -760,6 +771,7 @@
             const tags = Array.isArray(h.tags) ? h.tags : [];
             grid.innerHTML += `
                 <div class="hero-card">
+                    ${h.image_url ? `<img class="hero-image" src="${escapeHtml(h.image_url)}" alt="Hero image" />` : ""}
                     <h3>${escapeHtml(h.name)}</h3>
                     <p>${escapeHtml(h.desc)}</p>
                     <div class="tag-row">
@@ -785,12 +797,21 @@
         ah.innerHTML = "";
         heroes.forEach(h => {
             const tagsValue = (Array.isArray(h.tags) ? h.tags : []).join(", ");
+            const imageValue = (h.image_url || "").replace(/"/g, '&quot;');
             ah.innerHTML += `
                 <div class="hero-card">
                     <label>Name</label>
                     <input type="text" id="heroName_${h.id}" value="${h.name.replace(/"/g, '&quot;')}" />
                     <label>Description</label>
                     <textarea id="heroDesc_${h.id}">${h.desc}</textarea>
+                    ${h.image_url ? `<div class="post-meta">Current image attached</div>` : ""}
+                    <label>Image URL</label>
+                    <input type="text" id="heroImageUrl_${h.id}" value="${imageValue}" placeholder="Hero image URL (optional)" />
+                    <input type="file" id="heroImageFile_${h.id}" accept="image/*" />
+                    <div class="inline">
+                        <input type="checkbox" id="heroImageRemove_${h.id}" />
+                        <label for="heroImageRemove_${h.id}">Remove image</label>
+                    </div>
                     <label>Tags (comma-separated)</label>
                     <input type="text" id="heroTags_${h.id}" value="${tagsValue.replace(/"/g, '&quot;')}" />
                     <div class="inline">
@@ -838,6 +859,8 @@
     async function addHero() {
         const name = document.getElementById("newHeroName").value.trim();
         const desc = document.getElementById("newHeroDesc").value.trim();
+        const imageUrl = document.getElementById("newHeroImageUrl").value.trim();
+        const imageFile = document.getElementById("newHeroImageFile").files[0];
         const tagsInput = document.getElementById("newHeroTags").value.trim();
         const approved = document.getElementById("newHeroApproved").checked;
         if (!name || !desc) return;
@@ -845,9 +868,17 @@
             ? tagsInput.split(",").map(t => t.trim()).filter(Boolean)
             : [];
         if (!isAdmin) return;
-        await sb.from("heroes").insert([{ name, desc, approved, tags }]);
+        let image = null;
+        if (imageFile) {
+            image = await uploadHeroImage(imageFile);
+        } else if (imageUrl) {
+            image = imageUrl;
+        }
+        await sb.from("heroes").insert([{ name, desc, approved, tags, image_url: image }]);
         document.getElementById("newHeroName").value = "";
         document.getElementById("newHeroDesc").value = "";
+        document.getElementById("newHeroImageUrl").value = "";
+        document.getElementById("newHeroImageFile").value = "";
         document.getElementById("newHeroTags").value = "";
         document.getElementById("newHeroApproved").checked = false;
         await loadData();
@@ -858,13 +889,25 @@
         if (!isAdmin) return;
         const name = document.getElementById(`heroName_${id}`).value.trim();
         const desc = document.getElementById(`heroDesc_${id}`).value.trim();
+        const imageUrl = document.getElementById(`heroImageUrl_${id}`).value.trim();
+        const imageFile = document.getElementById(`heroImageFile_${id}`).files[0];
+        const removeImage = document.getElementById(`heroImageRemove_${id}`).checked;
         const tagsInput = document.getElementById(`heroTags_${id}`).value.trim();
         const approved = document.getElementById(`heroApproved_${id}`).checked;
         if (!name || !desc) return;
         const tags = tagsInput
             ? tagsInput.split(",").map(t => t.trim()).filter(Boolean)
             : [];
-        await sb.from("heroes").update({ name, desc, approved, tags }).eq("id", id);
+        const existing = heroes.find(h => h.id === id);
+        let image = existing ? existing.image_url : null;
+        if (removeImage) {
+            image = null;
+        } else if (imageFile) {
+            image = await uploadHeroImage(imageFile);
+        } else if (imageUrl) {
+            image = imageUrl;
+        }
+        await sb.from("heroes").update({ name, desc, approved, tags, image_url: image }).eq("id", id);
         await loadData();
         render();
     }
@@ -1263,6 +1306,19 @@
         button.style.cursor = disabled ? "not-allowed" : "pointer";
     }
 
+    async function uploadHeroImage(file) {
+        const ext = (file.name.split(".").pop() || "png").toLowerCase();
+        const uid = currentUser ? currentUser.id : "anon";
+        const key = (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(36).slice(2)}`);
+        const path = `heroes/${uid}/${key}.${ext}`;
+        const { error } = await sb.storage.from("post-images").upload(path, file, {
+            cacheControl: "3600",
+            upsert: false
+        });
+        if (error) throw error;
+        const { data } = sb.storage.from("post-images").getPublicUrl(path);
+        return data.publicUrl;
+    }
 
     async function uploadPostImage(file) {
         const ext = (file.name.split(".").pop() || "png").toLowerCase();
