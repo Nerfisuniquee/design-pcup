@@ -693,7 +693,16 @@
         </div>
 
         <div class="card">
-            <h2 id="ticketListTitle">Your Tickets</h2>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                <h2 id="ticketListTitle">Your Tickets</h2>
+                <div class="inline" style="margin:0;">
+                    <label for="ticketFilter">View</label>
+                    <select id="ticketFilter" onchange="renderTickets()">
+                        <option value="active">Active</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                </div>
+            </div>
             <div id="ticketList" class="ticket-layout"></div>
         </div>
     </div>
@@ -942,10 +951,22 @@
             list.innerHTML = `<div class="post-meta">No tickets yet.</div>`;
             return;
         }
-        if (!selectedTicketId || !tickets.find(t => t.id === selectedTicketId)) {
-            selectedTicketId = tickets[0].id;
+        const filter = document.getElementById("ticketFilter")?.value || "active";
+        const showArchived = filter === "archived";
+        const activeTickets = tickets.filter(t => !t.archived);
+        const archivedTickets = tickets.filter(t => t.archived);
+        const ticketsToShow = showArchived ? archivedTickets : activeTickets;
+
+        if (!ticketsToShow.length) {
+            list.innerHTML = `<div class="post-meta">${showArchived ? "No archived tickets." : "No active tickets."}</div>`;
+            return;
         }
-        const listHtml = tickets.map(t => {
+
+        if (!selectedTicketId || !ticketsToShow.find(t => t.id === selectedTicketId)) {
+            selectedTicketId = ticketsToShow[0].id;
+        }
+
+        const listHtml = ticketsToShow.map(t => {
             const status = (t.status || "open").toLowerCase();
             const statusClass = status === "closed"
                 ? "ticket-status closed"
@@ -965,7 +986,7 @@
             `;
         }).join("");
 
-        const current = tickets.find(t => t.id === selectedTicketId);
+        const current = ticketsToShow.find(t => t.id === selectedTicketId);
         const status = current ? (current.status || "open").toLowerCase() : "open";
         const statusClass = status === "closed"
             ? "ticket-status closed"
@@ -1011,6 +1032,9 @@
                         <textarea id="ticketMessage_${current.id}" placeholder="Write a response..."></textarea>
                         <div class="post-actions">
                             <button class="primary" onclick="sendTicketMessage(${current.id})">Send</button>
+                            ${isAdmin && current.archived ? `
+                                <button class="primary" onclick="archiveTicket(${current.id}, false)">Restore</button>
+                            ` : ""}
                         </div>
                         ${isAdmin ? `
                             <label>Status</label>
@@ -1021,7 +1045,7 @@
                             </select>
                             <div class="post-actions">
                                 <button class="primary" onclick="updateTicketStatus(${current.id})">Update Status</button>
-                                <button class="danger" onclick="deleteTicket(${current.id})">Delete Ticket</button>
+                                <button class="danger" onclick="archiveTicket(${current.id}, true)">Archive</button>
                             </div>
                         ` : ""}
                     </div>
@@ -1233,6 +1257,23 @@
                 .select()
                 .single();
             tickets = tickets.map(t => (t.id === ticketId ? data : t));
+            renderTickets();
+        } catch (e) {}
+    }
+
+    async function archiveTicket(ticketId, archived) {
+        if (!isAdmin) return;
+        try {
+            const { data } = await sb
+                .from("tickets")
+                .update({ archived })
+                .eq("id", ticketId)
+                .select()
+                .single();
+            tickets = tickets.map(t => (t.id === ticketId ? data : t));
+            if (archived && selectedTicketId === ticketId) {
+                selectedTicketId = null;
+            }
             renderTickets();
         } catch (e) {}
     }
