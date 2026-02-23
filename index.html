@@ -5,23 +5,23 @@
     <title>Kindness Recognition Hub</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg-base: #f6f5f3;
-            --bg-dark: #eeedea;
+            --bg-base: #dae0e6;
+            --bg-dark: #d2d8de;
             --bg-panel: #ffffff;
             --card-bg: #ffffff;
-            --border: #e6e1d9;
-            --accent: #2f80ed;
-            --accent-soft: rgba(47, 128, 237, 0.12);
-            --accent-muted: #6b9be8;
-            --accent-warm: #f6c597;
-            --text-main: #1f2328;
-            --text-muted: rgba(31, 35, 40, 0.6);
-            --shadow: 0 10px 20px rgba(31, 35, 40, 0.06);
-            --radius: 16px;
+            --border: #cfd6dd;
+            --accent: #ff4500;
+            --accent-soft: rgba(255, 69, 0, 0.12);
+            --accent-muted: #ff7a4d;
+            --accent-warm: #ffd8c8;
+            --text-main: #1a1a1b;
+            --text-muted: rgba(26, 26, 27, 0.6);
+            --shadow: 0 6px 14px rgba(26, 26, 27, 0.08);
+            --radius: 10px;
             --sidebar-w: 220px;
         }
 
@@ -33,7 +33,7 @@
 
         body {
             margin: 0;
-            font-family: 'Manrope', sans-serif;
+            font-family: 'IBM Plex Sans', sans-serif;
             font-weight: 500;
             background: var(--bg-base);
             color: var(--text-main);
@@ -44,9 +44,9 @@
             position: fixed;
             inset: 0;
             background:
-                radial-gradient(50% 50% at 10% 10%, rgba(47, 128, 237, 0.08), transparent 60%),
-                radial-gradient(50% 50% at 80% 15%, rgba(246, 197, 151, 0.12), transparent 60%),
-                radial-gradient(50% 50% at 70% 85%, rgba(47, 128, 237, 0.06), transparent 55%);
+                radial-gradient(45% 45% at 8% 10%, rgba(255, 69, 0, 0.08), transparent 60%),
+                radial-gradient(45% 45% at 85% 20%, rgba(52, 168, 83, 0.05), transparent 60%),
+                radial-gradient(45% 45% at 70% 85%, rgba(255, 69, 0, 0.05), transparent 55%);
             pointer-events: none;
             z-index: -2;
         }
@@ -63,9 +63,9 @@
         }
 
         header {
-            padding: 60px 20px 40px;
+            padding: 24px 20px 18px;
             text-align: left;
-            background: rgba(255, 255, 255, 0.9);
+            background: #ffffff;
             border-bottom: 1px solid var(--border);
             transition: padding-left 360ms cubic-bezier(0.22, 1, 0.36, 1);
         }
@@ -79,23 +79,57 @@
             margin: 0 auto;
             padding: 0 10px;
             display: grid;
+            gap: 14px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
             gap: 10px;
+            font-weight: 700;
+        }
+
+        .brand-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+            background: var(--accent);
+        }
+
+        .search {
+            flex: 1;
+            max-width: 520px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: #f6f7f8;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
         }
 
         .eyebrow {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 1.2px;
+            letter-spacing: 1px;
             color: var(--text-muted);
         }
 
         header h1 {
-            font-size: 2.4rem;
-            margin-bottom: 6px;
-            letter-spacing: 0.2px;
+            font-size: 1.9rem;
+            margin-bottom: 2px;
+            letter-spacing: 0.1px;
         }
 
         nav {
@@ -106,7 +140,7 @@
             flex-direction: column;
             gap: 12px;
             padding: 80px 20px 24px;
-            background: rgba(255, 255, 255, 0.96);
+            background: #f6f7f8;
             min-height: 100vh;
             width: var(--sidebar-w);
             transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease;
@@ -125,7 +159,7 @@
             border: none;
             color: var(--text-main);
             padding: 10px 16px;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             width: 100%;
             transition: background 160ms ease, color 160ms ease, transform 160ms ease;
@@ -138,7 +172,7 @@
         }
 
         nav button:hover {
-            background: rgba(47, 128, 237, 0.08);
+            background: rgba(255, 69, 0, 0.08);
         }
 
         .nav-spacer {
@@ -158,7 +192,7 @@
             border: none;
             color: #fff;
             padding: 10px 14px;
-            border-radius: 12px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 700;
             box-shadow: var(--shadow);
@@ -223,7 +257,7 @@
         .section.active { display: block; }
 
         h2 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             margin: 0 0 12px 0;
             letter-spacing: 0.1px;
         }
@@ -266,7 +300,7 @@
         }
 
         .post-vote {
-            background: #f4f7ff;
+            background: #f6f7f8;
             border-radius: 14px;
             display: flex;
             flex-direction: column;
@@ -355,13 +389,13 @@
 
         .ticket-item:hover {
             transform: translateY(-1px);
-            border-color: rgba(47, 128, 237, 0.35);
-            box-shadow: 0 10px 24px rgba(47, 128, 237, 0.12);
+            border-color: rgba(255, 69, 0, 0.35);
+            box-shadow: 0 10px 24px rgba(255, 69, 0, 0.12);
         }
 
         .ticket-item.active {
-            border-color: rgba(47, 128, 237, 0.5);
-            box-shadow: 0 12px 26px rgba(47, 128, 237, 0.16);
+            border-color: rgba(255, 69, 0, 0.5);
+            box-shadow: 0 12px 26px rgba(255, 69, 0, 0.16);
         }
 
         .ticket-detail {
@@ -389,14 +423,14 @@
             padding: 4px 12px;
             border-radius: 999px;
             background: var(--accent-soft);
-            color: #2b4b7a;
+            color: #7a3b1f;
             font-size: 0.75rem;
             font-weight: 700;
         }
 
         .ticket-status.answered {
-            background: rgba(47, 128, 237, 0.16);
-            color: #2b4b7a;
+            background: rgba(255, 69, 0, 0.14);
+            color: #7a3b1f;
         }
 
         .ticket-status.closed {
@@ -412,18 +446,18 @@
         .ticket-bubble {
             padding: 12px 14px;
             border-radius: 14px;
-            background: #f7f9fc;
-            border: 1px solid rgba(47, 128, 237, 0.12);
+            background: #f7f8f9;
+            border: 1px solid rgba(255, 69, 0, 0.12);
         }
 
         .ticket-bubble.admin {
-            background: #f2f6ff;
-            border-color: rgba(47, 128, 237, 0.18);
+            background: #fff6f2;
+            border-color: rgba(255, 69, 0, 0.18);
         }
 
         .composer-card {
             background: #ffffff;
-            border: 1px dashed rgba(47, 128, 237, 0.25);
+            border: 1px dashed rgba(255, 69, 0, 0.25);
         }
 
         .comment-meta {
@@ -437,7 +471,7 @@
             padding: 6px 12px;
             border-radius: 999px;
             background: var(--accent-soft);
-            border: 1px solid rgba(47, 128, 237, 0.2);
+            border: 1px solid rgba(255, 69, 0, 0.2);
             font-size: 0.8rem;
         }
 
@@ -452,8 +486,8 @@
             display: inline-block;
             padding: 6px 14px;
             border-radius: 20px;
-            background: rgba(47, 128, 237, 0.1);
-            color: #2b4b7a;
+            background: rgba(255, 69, 0, 0.1);
+            color: #7a3b1f;
             font-size: 0.8rem;
         }
 
@@ -467,7 +501,7 @@
             border-radius: 12px;
             border: 1px solid var(--border);
             margin-top: 10px;
-            font-family: 'Manrope', sans-serif;
+            font-family: 'IBM Plex Sans', sans-serif;
             background: #fbfbfa;
             color: var(--text-main);
         }
@@ -479,7 +513,7 @@
             border-radius: 12px;
             border: 1px solid var(--border);
             margin-top: 10px;
-            font-family: 'Manrope', sans-serif;
+            font-family: 'IBM Plex Sans', sans-serif;
             background: #fbfbfa;
             color: var(--text-main);
             box-shadow: none;
@@ -494,7 +528,7 @@
         input[type="password"]:focus,
         textarea:focus,
         select:focus {
-            outline: 2px solid rgba(47, 128, 237, 0.35);
+            outline: 2px solid rgba(255, 69, 0, 0.35);
             outline-offset: 2px;
         }
 
@@ -517,7 +551,7 @@
             border-radius: 12px;
             border: 1px solid var(--border);
             margin-top: 10px;
-            font-family: 'Manrope', sans-serif;
+            font-family: 'IBM Plex Sans', sans-serif;
             background: #fbfbfa;
             color: var(--text-main);
         }
@@ -566,7 +600,7 @@
         button.primary {
             background: var(--accent);
             color: #fff;
-            box-shadow: 0 8px 18px rgba(47, 128, 237, 0.2);
+            box-shadow: 0 8px 18px rgba(255, 69, 0, 0.25);
         }
 
         button.danger {
@@ -604,7 +638,7 @@
         footer {
             text-align: center;
             padding: 25px;
-            background: rgba(255, 255, 255, 0.7);
+            background: #ffffff;
             border-top: 1px solid var(--border);
             color: var(--text-muted);
         }
@@ -615,6 +649,13 @@
 
 <header>
     <div class="header-inner">
+        <div class="topbar">
+            <div class="brand">
+                <span class="brand-dot"></span>
+                <span>Kindness Hub</span>
+            </div>
+            <div class="search">Search recognition, neighbors, posts…</div>
+        </div>
         <div class="eyebrow">Structured Recognition System</div>
         <h1>Kindness Recognition Hub</h1>
         <p>A structured recognition system to capture, celebrate, and sustain everyday acts of kindness.</p>
