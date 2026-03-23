@@ -442,6 +442,159 @@
             body.sidebar-open header { padding-left: 20px; }
             .search-bar { display: none; }
         }
+
+        /* ── Life & personality ── */
+        @keyframes pulse { 0%,100%{transform:scale(1)}50%{transform:scale(1.08)} }
+        @keyframes float { 0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)} }
+        @keyframes shimmer { 0%{background-position:200% center}100%{background-position:-200% center} }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)} }
+        @keyframes ticker { 0%{transform:translateX(100%)}100%{transform:translateX(-100%)} }
+        @keyframes countUp { from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)} }
+        @keyframes spin { to{transform:rotate(360deg)} }
+
+        .brand-icon { animation: pulse 3s ease-in-out infinite; }
+
+        .hero-card { animation: fadeInUp 0.35s ease both; }
+        .post-card { animation: fadeInUp 0.3s ease both; }
+        .message-card { animation: fadeInUp 0.3s ease both; }
+
+        /* Stagger children */
+        .heroes-grid .hero-card:nth-child(1) { animation-delay: 0.05s; }
+        .heroes-grid .hero-card:nth-child(2) { animation-delay: 0.1s; }
+        .heroes-grid .hero-card:nth-child(3) { animation-delay: 0.15s; }
+        .heroes-grid .hero-card:nth-child(4) { animation-delay: 0.2s; }
+        .heroes-grid .hero-card:nth-child(5) { animation-delay: 0.25s; }
+        .heroes-grid .hero-card:nth-child(6) { animation-delay: 0.3s; }
+
+        .lb-row:nth-child(1) .lb-medal { animation: float 2.5s ease-in-out infinite; }
+
+        /* Gradient brand text */
+        .brand-name {
+            background: linear-gradient(90deg, var(--accent), #ff8a50, var(--accent));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s linear infinite;
+        }
+
+        /* Activity ticker */
+        .activity-ticker {
+            background: var(--accent-soft);
+            border: 1px solid rgba(255,69,0,0.15);
+            border-radius: 999px;
+            padding: 6px 16px;
+            font-size: 0.78rem;
+            color: var(--accent);
+            font-weight: 600;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .ticker-inner {
+            display: inline-block;
+            animation: ticker 18s linear infinite;
+            white-space: nowrap;
+        }
+
+        /* Stat numbers animation */
+        .stat-value { transition: all 0.4s ease; }
+        .stat-value.bump { transform: scale(1.3); color: var(--accent); }
+
+        /* Reaction bar on message cards */
+        .reaction-bar { display: flex; gap: 6px; margin-top: 8px; }
+        .reaction-btn {
+            padding: 3px 9px; border-radius: 999px; border: 1px solid var(--border);
+            background: var(--bg-base); cursor: pointer; font-size: 0.78rem;
+            transition: transform 0.15s, background 0.12s; user-select: none;
+        }
+        .reaction-btn:hover { transform: scale(1.15); background: var(--accent-soft); border-color: var(--accent); }
+        .reaction-btn.reacted { background: var(--accent-soft); border-color: var(--accent); }
+
+        /* Welcome banner upgrade */
+        .welcome-banner {
+            background: linear-gradient(135deg, #ff4500 0%, #ff6b35 50%, #ff8a50 100%);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            color: white;
+            margin-bottom: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 180px; height: 180px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.07);
+            pointer-events: none;
+        }
+        .welcome-banner::after {
+            content: '';
+            position: absolute;
+            bottom: -60px; right: 60px;
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            pointer-events: none;
+        }
+        .welcome-banner h2 { color: white; font-size: 1.3rem; margin-bottom: 6px; }
+        .welcome-banner p { color: rgba(255,255,255,0.88); font-size: 0.88rem; line-height: 1.6; }
+        .welcome-meta { display: flex; align-items: center; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+        .welcome-pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 12px; border-radius: 999px;
+            background: rgba(255,255,255,0.18); color: white;
+            font-size: 0.78rem; font-weight: 600;
+        }
+
+        /* Greeting text in header */
+        .greeting { font-size: 0.82rem; color: var(--text-muted); font-weight: 500; }
+
+        /* Hover glow on primary buttons */
+        button.primary:hover {
+            box-shadow: 0 6px 20px rgba(255,69,0,0.4) !important;
+        }
+
+        /* Animated loading dots */
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.4s steps(4, end) infinite;
+        }
+        @keyframes dots {
+            0%,20%{content:'.'}
+            40%{content:'..'}
+            60%,100%{content:'...'}
+        }
+
+        /* Status indicator */
+        .status-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: #22c55e;
+            display: inline-block;
+            animation: pulse 2s ease-in-out infinite;
+            margin-right: 4px;
+        }
+
+        /* Hero card pending badge */
+        .pending-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 2px 8px; border-radius: 999px;
+            background: rgba(234,179,8,0.15); color: #a16207;
+            font-size: 0.68rem; font-weight: 700;
+        }
+        body.dark .pending-badge { background: rgba(234,179,8,0.1); color: #fbbf24; }
+
+        /* Confetti burst on nominate success (CSS only) */
+        .confetti-wrap { position: relative; display: inline-block; }
+
+        /* Hover lift on hero cards */
+        .hero-card:hover .hero-avatar { animation: float 1s ease-in-out 1; }
     </style>
 </head>
 <body>
@@ -450,7 +603,7 @@
     <div class="header-inner">
         <div class="brand">
             <div class="brand-icon">💛</div>
-            <span>Kindness Hub</span>
+            <span class="brand-name">Kindness Hub</span>
         </div>
         <div class="search-bar">
             <span class="search-icon">🔍</span>
@@ -524,14 +677,17 @@
     <div id="home" class="section">
         <div class="page-grid">
             <div>
-                <div class="card card-accent">
-                    <div class="section-header">
-                        <h2>Welcome to the Recognition Hub</h2>
-                        <span class="badge">✦ Live</span>
+                <div class="welcome-banner">
+                    <h2 id="welcomeHeading">Hey there 👋</h2>
+                    <p>Every act of kindness deserves to be seen. This is where your community's best moments live.</p>
+                    <div class="welcome-meta">
+                        <span class="welcome-pill"><span class="status-dot"></span>Live</span>
+                        <span class="welcome-pill" id="welcomeTimePill">🕐 Loading…</span>
+                        <span class="welcome-pill">🌍 Open to all</span>
                     </div>
-                    <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6;">
-                        Capture acts of kindness in a consistent, structured way so recognition feels fair, visible, and meaningful across the community.
-                    </p>
+                </div>
+                <div class="activity-ticker" id="activityTicker">
+                    <span class="ticker-inner" id="tickerText">✨ Loading community activity…</span>
                 </div>
 
                 <div class="card">
@@ -545,13 +701,22 @@
 
             <aside class="rail">
                 <div class="card card-outline">
-                    <div class="section-header"><h2>Recognition Flow</h2></div>
-                    <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.7;">
-                        1. Nominate someone for an act of kindness.<br>
-                        2. Admins review &amp; approve nominations.<br>
-                        3. The community celebrates together.
-                    </p>
-                    <button class="primary" style="width:100%; margin-top:14px;" onclick="showTab('nominate', document.querySelector('[onclick*=nominate]'))">✨ Nominate Someone</button>
+                    <div class="section-header"><h2>How it works</h2></div>
+                    <div style="display:grid; gap:10px; margin-bottom:14px;">
+                        <div style="display:flex; gap:10px; align-items:flex-start;">
+                            <span style="font-size:1.1rem; flex-shrink:0;">🌱</span>
+                            <div><strong style="font-size:0.85rem;">Nominate</strong><br><span style="font-size:0.8rem; color:var(--text-muted);">Spot an act of kindness? Put it forward.</span></div>
+                        </div>
+                        <div style="display:flex; gap:10px; align-items:flex-start;">
+                            <span style="font-size:1.1rem; flex-shrink:0;">🔍</span>
+                            <div><strong style="font-size:0.85rem;">Review</strong><br><span style="font-size:0.8rem; color:var(--text-muted);">Admins verify and approve submissions.</span></div>
+                        </div>
+                        <div style="display:flex; gap:10px; align-items:flex-start;">
+                            <span style="font-size:1.1rem; flex-shrink:0;">🎉</span>
+                            <div><strong style="font-size:0.85rem;">Celebrate</strong><br><span style="font-size:0.8rem; color:var(--text-muted);">The community sees and uplifts the moment.</span></div>
+                        </div>
+                    </div>
+                    <button class="primary" style="width:100%; margin-top:0;" onclick="showTab('nominate', document.querySelector('[onclick*=nominate]'))">✨ Nominate Someone</button>
                 </div>
 
                 <div class="card card-outline">
@@ -722,7 +887,11 @@
     </div>
 </div>
 
-<footer>© 2026 Kindness Recognition Hub · Built for community</footer>
+<footer>
+    <div style="font-size:1.1rem; margin-bottom:6px;">💛</div>
+    <div>© 2026 <strong>Kindness Recognition Hub</strong></div>
+    <div style="margin-top:4px; font-size:0.78rem; color:var(--text-subtle);">Recognising the everyday heroes around us</div>
+</footer>
 <div id="toast-container"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -896,6 +1065,9 @@
         await loadPosts();
         await loadTickets();
         render();
+        updateWelcomeHeading();
+        updateActivityTicker();
+        setInterval(updateWelcomeHeading, 60000);
     }
 
     async function logout() {
@@ -934,11 +1106,16 @@
         const approved = heroes.filter(h => h.approved).length;
         const totalPosts = posts.length;
         const totalMsgs = messages.length;
+        const totalVotes = Object.entries(localVotes).filter(([k]) => !k.startsWith("delta_")).reduce((s, [, v]) => s + Math.max(0, v), 0);
         el.innerHTML = `
-            <div class="stat-row"><span class="stat-label">Recognitions</span><span class="stat-value">${approved}</span></div>
-            <div class="stat-row"><span class="stat-label">Community posts</span><span class="stat-value">${totalPosts}</span></div>
-            <div class="stat-row"><span class="stat-label">Thank-you notes</span><span class="stat-value">${totalMsgs}</span></div>
+            <div class="stat-row"><span class="stat-label">⭐ Recognitions</span><span class="stat-value">${approved}</span></div>
+            <div class="stat-row"><span class="stat-label">📝 Community posts</span><span class="stat-value">${totalPosts}</span></div>
+            <div class="stat-row"><span class="stat-label">💬 Thank-you notes</span><span class="stat-value">${totalMsgs}</span></div>
+            <div class="stat-row"><span class="stat-label">👍 Upvotes given</span><span class="stat-value">${totalVotes}</span></div>
         `;
+        animateStatValues();
+        updateActivityTicker();
+        updateWelcomeHeading();
     }
 
     // ── Leaderboard ────────────────────────────────────────────────────────
@@ -1017,6 +1194,12 @@
             <div class="message-card">
                 <div style="padding-top:10px;">${escapeHtml(m.text)}</div>
                 <div class="message-author">— ${escapeHtml(m.author || "anonymous")} · ${timeAgo(m.created_at)}</div>
+                <div class="reaction-bar">
+                    ${REACTIONS.map(emoji => {
+                        const count = getReactionCount(m.id, emoji);
+                        return `<button class="reaction-btn ${msgReactions[m.id+'_'+emoji] ? 'reacted' : ''}" onclick="toggleReaction(${m.id}, '${emoji}')">${emoji}${count > 0 ? ` ${count}` : ''}</button>`;
+                    }).join("")}
+                </div>
             </div>
         `).join("");
     }
@@ -1708,6 +1891,58 @@
             await loadProfile();
             await enterSite(isAdmin);
         }
+    }
+
+    // ── Personality & life ─────────────────────────────────────────────
+    function updateWelcomeHeading() {
+        const h = document.getElementById("welcomeHeading");
+        const pill = document.getElementById("welcomeTimePill");
+        if (!h) return;
+        const hour = new Date().getHours();
+        const greetings = hour < 5 ? "Burning the midnight oil 🌙" : hour < 12 ? "Good morning ☀️" : hour < 17 ? "Good afternoon 👋" : hour < 21 ? "Good evening 🌆" : "Night owl energy 🦉";
+        const name = currentProfile ? `, ${currentProfile.username}` : "";
+        h.textContent = `${greetings}${name}`;
+        if (pill) pill.textContent = `🕐 ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    }
+
+    function updateActivityTicker() {
+        const el = document.getElementById("tickerText");
+        if (!el) return;
+        const items = [];
+        if (heroes.filter(h => h.approved).length) items.push(`⭐ ${heroes.filter(h=>h.approved).length} people recognized so far`);
+        if (posts.length) items.push(`📝 ${posts.length} posts in the community feed`);
+        if (messages.length) items.push(`💬 ${messages.length} thank-you notes on the wall`);
+        const pending = heroes.filter(h => !h.approved).length;
+        if (isAdmin && pending) items.push(`⏳ ${pending} nomination${pending>1?'s':''} waiting for your review`);
+        if (posts.length) {
+            const newest = posts[0];
+            items.push(`🔥 Latest post: "${(newest.title || '').slice(0, 40)}${newest.title?.length > 40 ? '…' : ''}" by ${newest.author}`);
+        }
+        if (!items.length) items.push("🌱 Be the first to post something kind today!");
+        el.textContent = items.join("   ·   ");
+    }
+
+    function animateStatValues() {
+        document.querySelectorAll(".stat-value").forEach(el => {
+            el.classList.add("bump");
+            setTimeout(() => el.classList.remove("bump"), 400);
+        });
+    }
+
+    // Reactions on messages — stored in localStorage
+    const msgReactions = JSON.parse(localStorage.getItem("kindness_reactions") || "{}");
+    const REACTIONS = ["❤️", "🙌", "✨", "😊"];
+
+    function toggleReaction(msgId, emoji) {
+        const key = `${msgId}_${emoji}`;
+        const current = msgReactions[key] || 0;
+        msgReactions[key] = current ? 0 : 1;
+        localStorage.setItem("kindness_reactions", JSON.stringify(msgReactions));
+        renderMessages();
+    }
+
+    function getReactionCount(msgId, emoji) {
+        return msgReactions[`${msgId}_${emoji}`] || 0;
     }
 
     window.login = handleLogin;
