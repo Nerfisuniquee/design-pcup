@@ -729,7 +729,7 @@
 <script>
     const SUPABASE_URL = "https://iyumgbzkgjpsdvxwfmyd.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_CXaKZLi2-bQ1bZBsB4bIiQ_O6GiK6Js";
-    const API_BASE = "https://design-pcup-production.up.railway.app";
+    const API_BASE = ""; // empty = same origin (Vercel), no external dependency
     const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
     const DEMO_EMAIL_DOMAIN = "gmail.com";
 
@@ -800,7 +800,7 @@
         return safe ? `${safe}@${DEMO_EMAIL_DOMAIN}` : "";
     }
     function supabaseConfigured() { return !!sb && !SUPABASE_URL.includes("YOUR_"); }
-    function apiConfigured() { return !!API_BASE && !API_BASE.includes("YOUR_"); }
+    function apiConfigured() { return API_BASE !== null; } // empty string = same-origin Vercel = valid
     function escapeHtml(str) {
         return String(str)
             .replace(/&/g, "&amp;").replace(/</g, "&lt;")
