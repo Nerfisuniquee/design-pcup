@@ -428,6 +428,63 @@
         .admin-actions { display: flex; gap: 8px; flex-wrap: wrap; }
         footer { text-align: center; padding: 22px; background: var(--bg-panel); border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.83rem; transition: background 0.25s; }
 
+        /* ── Communities ── */
+        .community-filter-bar {
+            display: flex; gap: 8px; flex-wrap: wrap;
+            margin-bottom: 18px; align-items: center;
+        }
+        .comm-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 999px;
+            border: 1px solid var(--border); background: var(--card-bg);
+            font-size: 0.82rem; font-weight: 600; color: var(--text-muted);
+            cursor: pointer; transition: background 0.12s, border-color 0.12s, color 0.12s;
+            white-space: nowrap;
+        }
+        .comm-chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+        .comm-chip.active { background: var(--accent); color: white; border-color: var(--accent); }
+        .comm-chip .chip-emoji { font-size: 0.9rem; }
+
+        .communities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+        }
+        .community-card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: var(--radius-lg); padding: 20px;
+            transition: box-shadow 0.15s, transform 0.15s, background 0.25s;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .community-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+        .community-card.joined { border-color: var(--accent); }
+        .comm-card-top { display: flex; align-items: center; gap: 12px; }
+        .comm-emoji-bubble {
+            width: 46px; height: 46px; border-radius: 13px;
+            background: var(--accent-soft); display: flex;
+            align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;
+        }
+        .comm-name { font-weight: 700; font-size: 1rem; }
+        .comm-desc { font-size: 0.84rem; color: var(--text-muted); line-height: 1.5; flex: 1; }
+        .comm-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .comm-members { font-size: 0.78rem; color: var(--text-subtle); }
+        .comm-join-btn {
+            padding: 6px 16px; border-radius: 999px; border: 1.5px solid var(--accent);
+            background: transparent; color: var(--accent); cursor: pointer;
+            font-weight: 700; font-family: inherit; font-size: 0.8rem;
+            transition: background 0.12s, color 0.12s;
+        }
+        .comm-join-btn:hover, .comm-join-btn.joined { background: var(--accent); color: white; }
+        .comm-join-btn.joined:hover { background: #dc2626; border-color: #dc2626; }
+
+        .comm-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 2px 8px; border-radius: 999px;
+            background: var(--accent-soft); color: var(--accent);
+            font-size: 0.72rem; font-weight: 700; cursor: pointer;
+        }
+        .comm-badge:hover { background: var(--accent); color: white; }
+
         /* ── Responsive ── */
         @media (max-width: 900px) {
             .page-grid { grid-template-columns: 1fr; }
@@ -627,6 +684,7 @@
     <nav id="navbar">
         <div class="nav-label">Navigate</div>
         <button class="tab active" onclick="showTab('home', this)"><span class="nav-icon">🏠</span>Home</button>
+        <button class="tab" onclick="showTab('communities', this)"><span class="nav-icon">🏘️</span>Communities</button>
         <button class="tab" onclick="showTab('heroes', this)"><span class="nav-icon">⭐</span>Recognition</button>
         <button class="tab" onclick="showTab('nominate', this)"><span class="nav-icon">🌟</span>Nominate</button>
         <button class="tab" onclick="showTab('messages', this)"><span class="nav-icon">💬</span>Thank-You Wall</button>
@@ -690,10 +748,11 @@
                     <span class="ticker-inner" id="tickerText">✨ Loading community activity…</span>
                 </div>
 
+                <div class="community-filter-bar" id="communityFilterBar"></div>
                 <div class="card">
                     <div class="section-header">
-                        <h2>Community Feed</h2>
-                        <small style="color:var(--text-muted); font-size:0.8rem;">Latest posts</small>
+                        <h2 id="feedHeading">Community Feed</h2>
+                        <small style="color:var(--text-muted); font-size:0.8rem;" id="feedSubtitle">All communities</small>
                     </div>
                     <div id="forumList"></div>
                 </div>
@@ -734,6 +793,8 @@
 
                 <div class="card composer-card" id="forumComposer">
                     <div class="pill">✏️ New Post</div>
+                    <label>Community (optional)</label>
+                    <select id="postCommunity"><option value="">— General / No community —</option></select>
                     <input id="postTitle" type="text" placeholder="Post title" />
                     <textarea id="postBody" placeholder="Share a recognition, update, or request…" oninput="updateCounter(this, 'postBodyCount', 500)"></textarea>
                     <div class="char-counter" id="postBodyCount">500 left</div>
@@ -744,6 +805,18 @@
                 </div>
             </aside>
         </div>
+    </div>
+
+    <!-- COMMUNITIES -->
+    <div id="communities" class="section">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+            <div>
+                <h2 class="page-title" style="margin-bottom:4px;">🏘️ Communities</h2>
+                <p style="color:var(--text-muted); font-size:0.88rem;">Join communities to follow their updates in the feed.</p>
+            </div>
+            <span id="commCount" class="badge"></span>
+        </div>
+        <div id="communitiesGrid" class="communities-grid"></div>
     </div>
 
     <!-- RECOGNITION / HEROES -->
@@ -778,6 +851,8 @@
             <div class="char-counter" id="nomDescCount">400 left</div>
             <label>Tags (comma-separated)</label>
             <input id="nomTags" type="text" placeholder="e.g. Volunteer, Mentor, Cleanup" />
+            <label>Community (optional)</label>
+            <select id="nomCommunity"><option value="">— No specific community —</option></select>
             <label>Image URL (optional)</label>
             <input id="nomImageUrl" type="text" placeholder="Photo URL" />
             <input id="nomImageFile" type="file" accept="image/*" />
@@ -903,6 +978,7 @@
     const DEMO_EMAIL_DOMAIN = "gmail.com";
 
     let heroes = [], messages = [], posts = [], tickets = [];
+    let communities = [], myMemberships = [], activeCommunity = null;
     let selectedTicketId = null, currentUser = null, currentProfile = null;
     let isAdmin = false, editingPostId = null, editingComment = null, sidebarOpen = true;
     let searchQuery = "", heroTagFilter = "";
@@ -1064,6 +1140,7 @@
         await loadData();
         await loadPosts();
         await loadTickets();
+        await loadCommunities();
         render();
         updateWelcomeHeading();
         updateActivityTicker();
@@ -1076,6 +1153,7 @@
         try { await sb.auth.signOut(); } catch (e) {}
         isAdmin = false; currentUser = null; currentProfile = null;
         posts = []; heroes = []; messages = []; tickets = [];
+        communities = []; myMemberships = []; activeCommunity = null;
         editingPostId = null; editingComment = null; selectedTicketId = null;
         document.getElementById("navbar").style.display = "none";
         document.getElementById("adminTab").style.display = "none";
@@ -1099,6 +1177,8 @@
         renderTickets();
         renderStats();
         renderLeaderboard();
+        renderCommunities();
+        renderCommunityFilter();
     }
 
     // ── Live stats ─────────────────────────────────────────────────────────
@@ -1171,7 +1251,10 @@
                     }
                     <div class="hero-name">${escapeHtml(h.name)}</div>
                     <div class="hero-desc">${escapeHtml(h.desc)}</div>
-                    <div class="tag-row">${tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>
+                    <div class="tag-row">
+                        ${tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("")}
+                        ${h.community_id ? (() => { const c = communities.find(x => x.id === h.community_id); return c ? `<span class="comm-badge">${escapeHtml(c.emoji||'🏘️')} ${escapeHtml(c.name)}</span>` : ''; })() : ''}
+                    </div>
                 </div>
             `;
         }).join("");
@@ -1235,6 +1318,7 @@
                     <div>
                         <div class="post-meta">
                             <strong>${escapeHtml(p.author || "user")}</strong> · ${timeAgo(p.created_at)}
+                            ${p.community_id ? (() => { const c = communities.find(x => x.id === p.community_id); return c ? ` · <span class="comm-badge" onclick="setCommunity(${c.id})">${escapeHtml(c.emoji||'🏘️')} ${escapeHtml(c.name)}</span>` : ''; })() : ''}
                         </div>
                         ${isEditing ? `
                             <input type="text" id="editTitle_${p.id}" value="${escapeHtml(p.title)}" />
@@ -1537,12 +1621,14 @@
         try {
             if (imageFile) image = await uploadHeroImage(imageFile);
             else if (imageUrl) image = imageUrl;
-            await sb.from("heroes").insert([{ name, desc, approved: false, tags, image_url: image }]);
+            const nomCommId = document.getElementById("nomCommunity")?.value || null;
+            await sb.from("heroes").insert([{ name, desc, approved: false, tags, image_url: image, community_id: nomCommId ? parseInt(nomCommId) : null }]);
             document.getElementById("nomName").value = "";
             document.getElementById("nomDesc").value = "";
             document.getElementById("nomTags").value = "";
             document.getElementById("nomImageUrl").value = "";
             document.getElementById("nomImageFile").value = "";
+            const ncEl = document.getElementById("nomCommunity"); if (ncEl) ncEl.value = "";
             showToast("Nomination submitted! An admin will review it.", "success");
             await loadData(); render();
         } catch (e) {
@@ -1585,10 +1671,12 @@
         try {
             if (imageFile) image = await uploadPostImage(imageFile);
             else if (imageUrl) image = imageUrl;
+            const communityId = document.getElementById("postCommunity")?.value || null;
             const { data } = await sb.from("posts").insert([{
                 title, body, image_url: image,
                 author_id: currentUser.id,
-                author: currentProfile ? currentProfile.username : "user"
+                author: currentProfile ? currentProfile.username : "user",
+                community_id: communityId ? parseInt(communityId) : null
             }]).select().single();
             if (data) posts.unshift({ ...data, comments: [] });
             document.getElementById("postTitle").value = "";
@@ -1596,6 +1684,7 @@
             document.getElementById("postImageUrl").value = "";
             document.getElementById("postImageFile").value = "";
             document.getElementById("postBodyCount").textContent = "500 left";
+            const pcEl = document.getElementById("postCommunity"); if (pcEl) pcEl.value = "";
             showToast("Posted!", "success");
             renderPosts();
         } catch (e) { showToast("Failed to post", "error"); }
@@ -1763,10 +1852,12 @@
     }
     async function loadPosts() {
         try {
-            const { data } = await sb
+            let q = sb
                 .from("posts")
-                .select("id, title, body, image_url, author, author_id, created_at, updated_at, comments ( id, body, author, author_id, created_at, updated_at )")
+                .select("id, title, body, image_url, author, author_id, community_id, created_at, updated_at, comments ( id, body, author, author_id, created_at, updated_at )")
                 .order("created_at", { ascending: false });
+            if (activeCommunity !== null) q = q.eq("community_id", activeCommunity);
+            const { data } = await q;
             posts = Array.isArray(data) ? data : [];
         } catch (e) { posts = []; }
     }
@@ -1947,6 +2038,121 @@
         return msgReactions[`${msgId}_${emoji}`] || 0;
     }
 
+    // ── Communities ────────────────────────────────────────────────────────
+    async function loadCommunities() {
+        if (!sb) return;
+        try {
+            const { data: comms } = await sb.from("communities").select("*").order("id");
+            communities = Array.isArray(comms) ? comms : [];
+            if (currentUser) {
+                const { data: mems } = await sb.from("community_members").select("community_id").eq("user_id", currentUser.id);
+                myMemberships = Array.isArray(mems) ? mems.map(m => m.community_id) : [];
+            } else {
+                myMemberships = [];
+            }
+            populateCommunityDropdowns();
+            renderCommunities();
+            renderCommunityFilter();
+        } catch (e) { communities = []; myMemberships = []; }
+    }
+
+    function populateCommunityDropdowns() {
+        const opts = communities.map(c => `<option value="${c.id}">${escapeHtml(c.emoji || '🏘️')} ${escapeHtml(c.name)}</option>`).join("");
+        ["postCommunity", "nomCommunity"].forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const val = el.value;
+            el.innerHTML = `<option value="">— General / No community —</option>${opts}`;
+            el.value = val;
+        });
+        const countEl = document.getElementById("commCount");
+        if (countEl) countEl.textContent = `${communities.length} groups`;
+    }
+
+    function renderCommunities() {
+        const grid = document.getElementById("communitiesGrid");
+        if (!grid) return;
+        if (!communities.length) {
+            grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🏘️</div><div class="empty-title">No communities yet</div><div class="empty-desc">Check back soon!</div></div>`;
+            return;
+        }
+        grid.innerHTML = communities.map(c => {
+            const joined = myMemberships.includes(c.id);
+            return `
+                <div class="community-card ${joined ? 'joined' : ''}">
+                    <div class="comm-card-top">
+                        <div class="comm-emoji-bubble">${escapeHtml(c.emoji || '🏘️')}</div>
+                        <div>
+                            <div class="comm-name">${escapeHtml(c.name)}</div>
+                        </div>
+                    </div>
+                    <div class="comm-desc">${escapeHtml(c.description || '')}</div>
+                    <div class="comm-footer">
+                        <span class="comm-members">${joined ? '✅ Joined' : ''}</span>
+                        ${currentUser ? `
+                            <button class="comm-join-btn ${joined ? 'joined' : ''}"
+                                onclick="${joined ? `leaveCommunity(${c.id})` : `joinCommunity(${c.id})`}">
+                                ${joined ? 'Leave' : 'Join'}
+                            </button>
+                        ` : `<span class="comm-members" style="font-size:0.78rem; color:var(--text-subtle);">Login to join</span>`}
+                    </div>
+                </div>
+            `;
+        }).join("");
+    }
+
+    function renderCommunityFilter() {
+        const bar = document.getElementById("communityFilterBar");
+        if (!bar) return;
+        if (!communities.length) { bar.innerHTML = ""; return; }
+        const chips = communities.map(c => {
+            const active = activeCommunity === c.id;
+            return `<button class="comm-chip ${active ? 'active' : ''}" onclick="setCommunity(${c.id})">
+                <span class="chip-emoji">${escapeHtml(c.emoji || '🏘️')}</span>${escapeHtml(c.name)}
+            </button>`;
+        }).join("");
+        bar.innerHTML = `
+            <button class="comm-chip ${activeCommunity === null ? 'active' : ''}" onclick="setCommunity(null)">🌐 All</button>
+            ${chips}
+        `;
+    }
+
+    function setCommunity(id) {
+        activeCommunity = id;
+        const heading = document.getElementById("feedHeading");
+        const subtitle = document.getElementById("feedSubtitle");
+        if (id === null) {
+            if (heading) heading.textContent = "Community Feed";
+            if (subtitle) subtitle.textContent = "All communities";
+        } else {
+            const c = communities.find(x => x.id === id);
+            if (heading) heading.textContent = `${c?.emoji || '🏘️'} ${c?.name || 'Feed'}`;
+            if (subtitle) subtitle.textContent = c?.description ? c.description.slice(0, 60) + (c.description.length > 60 ? '…' : '') : '';
+        }
+        renderCommunityFilter();
+        loadPosts().then(renderPosts);
+    }
+
+    async function joinCommunity(id) {
+        if (!currentUser) { showToast("Login to join communities", "info"); return; }
+        try {
+            await sb.from("community_members").insert([{ community_id: id, user_id: currentUser.id }]);
+            myMemberships = [...myMemberships, id];
+            renderCommunities();
+            showToast("Joined community!", "success");
+        } catch (e) { showToast("Could not join community", "error"); }
+    }
+
+    async function leaveCommunity(id) {
+        if (!currentUser) return;
+        try {
+            await sb.from("community_members").delete().eq("community_id", id).eq("user_id", currentUser.id);
+            myMemberships = myMemberships.filter(x => x !== id);
+            renderCommunities();
+            showToast("Left community", "info");
+        } catch (e) { showToast("Could not leave community", "error"); }
+    }
+
     // ── Real-time ──────────────────────────────────────────────────────────
     let realtimeChannel = null;
     let pollInterval = null;
@@ -2028,6 +2234,17 @@
                 await loadTickets(); renderTickets();
                 if (eventType === 'UPDATE' && t?.status && t.author_id !== currentUser?.id)
                     showToast(`🎫 Ticket status updated: ${t.status}`, 'info');
+            })
+            // Communities
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'communities' }, async () => {
+                await loadCommunities();
+            })
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'community_members' }, async () => {
+                if (currentUser) {
+                    const { data: mems } = await sb.from("community_members").select("community_id").eq("user_id", currentUser.id);
+                    myMemberships = Array.isArray(mems) ? mems.map(m => m.community_id) : [];
+                    renderCommunities();
+                }
             })
             .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'ticket_messages' }, ({ new: tm }) => {
                 if (!currentUser) return;
