@@ -749,6 +749,20 @@
                 </div>
 
                 <div class="community-filter-bar" id="communityFilterBar"></div>
+
+                <div class="card composer-card" id="forumComposer">
+                    <div class="pill">✏️ New Post</div>
+                    <label>Community (optional)</label>
+                    <select id="postCommunity"><option value="">— General / No community —</option></select>
+                    <input id="postTitle" type="text" placeholder="Post title" />
+                    <textarea id="postBody" placeholder="Share a recognition, update, or request…" oninput="updateCounter(this, 'postBodyCount', 500)"></textarea>
+                    <div class="char-counter" id="postBodyCount">500 left</div>
+                    <input id="postImageUrl" type="text" placeholder="Image URL (optional)" />
+                    <input id="postImageFile" type="file" accept="image/*" />
+                    <button class="primary" onclick="addPost()" style="width:100%;">Post</button>
+                    <p id="postHint" style="color:var(--text-muted); margin-top:8px; font-size:0.82rem; display:none;">Login to create a post.</p>
+                </div>
+
                 <div class="card">
                     <div class="section-header">
                         <h2 id="feedHeading">Community Feed</h2>
@@ -789,19 +803,6 @@
                 <div class="card card-outline">
                     <div class="section-header"><h2>🏆 Leaderboard</h2></div>
                     <div id="leaderboard" class="leaderboard"></div>
-                </div>
-
-                <div class="card composer-card" id="forumComposer">
-                    <div class="pill">✏️ New Post</div>
-                    <label>Community (optional)</label>
-                    <select id="postCommunity"><option value="">— General / No community —</option></select>
-                    <input id="postTitle" type="text" placeholder="Post title" />
-                    <textarea id="postBody" placeholder="Share a recognition, update, or request…" oninput="updateCounter(this, 'postBodyCount', 500)"></textarea>
-                    <div class="char-counter" id="postBodyCount">500 left</div>
-                    <input id="postImageUrl" type="text" placeholder="Image URL (optional)" />
-                    <input id="postImageFile" type="file" accept="image/*" />
-                    <button class="primary" onclick="addPost()" style="width:100%;">Post</button>
-                    <p id="postHint" style="color:var(--text-muted); margin-top:8px; font-size:0.82rem; display:none;">Login to create a post.</p>
                 </div>
             </aside>
         </div>
