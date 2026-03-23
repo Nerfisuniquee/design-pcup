@@ -4,792 +4,684 @@
     <meta charset="UTF-8">
     <title>Kindness Recognition Hub</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-base: #dae0e6;
-            --bg-dark: #d2d8de;
+            --bg-base: #f0f2f5;
             --bg-panel: #ffffff;
             --card-bg: #ffffff;
-            --border: #cfd6dd;
+            --border: #e2e8f0;
             --accent: #ff4500;
-            --accent-soft: rgba(255, 69, 0, 0.12);
-            --accent-muted: #ff7a4d;
-            --accent-warm: #ffd8c8;
+            --accent-hover: #e03d00;
+            --accent-soft: rgba(255,69,0,0.1);
+            --accent-warm: #fff4f0;
             --text-main: #1a1a1b;
-            --text-muted: rgba(26, 26, 27, 0.6);
-            --shadow: 0 6px 14px rgba(26, 26, 27, 0.08);
-            --radius: 10px;
-            --sidebar-w: 220px;
+            --text-muted: #64748b;
+            --text-subtle: #94a3b8;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.07);
+            --shadow: 0 4px 16px rgba(0,0,0,0.09);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.13);
+            --radius: 12px;
+            --radius-lg: 16px;
+            --sidebar-w: 230px;
         }
-
-        * { box-sizing: border-box; }
-
-        ::placeholder {
-            color: rgba(31, 35, 40, 0.45);
+        body.dark {
+            --bg-base: #0f1117;
+            --bg-panel: #191c27;
+            --card-bg: #1e2130;
+            --border: #2a2d3e;
+            --accent: #ff5722;
+            --accent-hover: #e64a19;
+            --accent-soft: rgba(255,87,34,0.13);
+            --accent-warm: rgba(255,87,34,0.07);
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --text-subtle: #4a5568;
+            --shadow-sm: 0 1px 4px rgba(0,0,0,0.35);
+            --shadow: 0 4px 16px rgba(0,0,0,0.4);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
         }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
         body {
-            margin: 0;
             font-family: 'IBM Plex Sans', sans-serif;
-            font-weight: 500;
+            font-weight: 400;
             background: var(--bg-base);
             color: var(--text-main);
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background:
-                radial-gradient(45% 45% at 8% 10%, rgba(255, 69, 0, 0.08), transparent 60%),
-                radial-gradient(45% 45% at 85% 20%, rgba(52, 168, 83, 0.05), transparent 60%),
-                radial-gradient(45% 45% at 70% 85%, rgba(255, 69, 0, 0.05), transparent 55%);
-            pointer-events: none;
-            z-index: -2;
-        }
-
-        body::after {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background-image: radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px);
-            background-size: 4px 4px;
-            opacity: 0.04;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        header {
-            padding: 24px 20px 18px;
-            text-align: left;
-            background: #ffffff;
-            border-bottom: 1px solid var(--border);
-            transition: padding-left 360ms cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        body.sidebar-open header {
-            padding-left: var(--sidebar-w);
-        }
-
-        .header-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 10px;
-            display: grid;
-            gap: 14px;
-        }
-
-        .topbar {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            justify-content: space-between;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 700;
-        }
-
-        .brand-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 4px;
-            background: var(--accent);
-        }
-
-        .search {
-            flex: 1;
-            max-width: 520px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            border-radius: 999px;
-            background: #f6f7f8;
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-        }
-
-        .eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-        }
-
-        header h1 {
-            font-size: 1.9rem;
-            margin-bottom: 2px;
-            letter-spacing: 0.1px;
-        }
-
-        nav {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            flex-direction: column;
-            gap: 12px;
-            padding: 80px 20px 24px;
-            background: #f6f7f8;
+            transition: background 0.25s, color 0.25s;
             min-height: 100vh;
-            width: var(--sidebar-w);
-            transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease;
-            transform: translateX(0);
-            opacity: 1;
-            overflow: hidden;
-            z-index: 20;
-            align-items: center;
-            border-right: 1px solid var(--border);
-            backdrop-filter: blur(10px);
         }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
 
-        nav button {
-            text-align: left;
-            background: transparent;
-            border: none;
-            color: var(--text-main);
-            padding: 10px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+        /* ── Header ── */
+        header {
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 30;
+            transition: padding-left 0.3s cubic-bezier(0.22,1,0.36,1), background 0.25s;
         }
-
-        nav button.active {
-            background: var(--accent-soft);
-            color: var(--text-main);
-            transform: translateY(-1px);
+        body.sidebar-open header { padding-left: var(--sidebar-w); }
+        .header-inner {
+            max-width: 1200px; margin: 0 auto;
+            padding: 13px 20px;
+            display: flex; align-items: center; gap: 14px;
         }
-
-        nav button:hover {
-            background: rgba(255, 69, 0, 0.08);
+        .brand {
+            display: flex; align-items: center; gap: 10px;
+            font-weight: 700; font-size: 1rem; white-space: nowrap;
+            color: var(--text-main); flex-shrink: 0;
         }
-
-        .nav-spacer {
-            height: 12px;
+        .brand-icon {
+            width: 34px; height: 34px; background: var(--accent);
+            border-radius: 10px; display: flex; align-items: center;
+            justify-content: center; color: white; font-size: 1.1rem;
         }
-
-        .nav-push {
-            margin-top: auto;
+        .search-bar { flex: 1; max-width: 440px; position: relative; }
+        .search-bar input {
+            width: 100%; padding: 8px 14px 8px 36px;
+            border-radius: 999px; border: 1px solid var(--border);
+            background: var(--bg-base); color: var(--text-main);
+            font-family: inherit; font-size: 0.88rem; outline: none;
+            transition: border-color 0.15s, box-shadow 0.15s, background 0.25s;
         }
+        .search-bar input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+        .search-bar input::placeholder { color: var(--text-subtle); }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-subtle); font-size: 0.85rem; pointer-events: none; }
+        .header-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+        .user-badge {
+            display: none; align-items: center; gap: 8px;
+            padding: 5px 12px; border-radius: 999px;
+            background: var(--accent-soft); color: var(--accent);
+            font-weight: 600; font-size: 0.82rem;
+        }
+        .user-badge.visible { display: flex; }
+        .user-avatar {
+            width: 24px; height: 24px; border-radius: 50%;
+            background: var(--accent); color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.65rem; font-weight: 700;
+        }
+        .icon-btn {
+            width: 36px; height: 36px; border-radius: 9px;
+            border: 1px solid var(--border); background: var(--bg-panel);
+            color: var(--text-muted); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.95rem;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+        .icon-btn:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
 
+        /* ── Sidebar toggle ── */
         .sidebar-toggle {
-            position: fixed;
-            top: 16px;
-            left: 16px;
-            z-index: 40;
-            background: var(--accent);
-            border: none;
-            color: #fff;
-            padding: 10px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-            box-shadow: var(--shadow);
-            display: none;
-            width: 48px;
-            height: 44px;
+            position: fixed; top: 13px; left: 13px; z-index: 50;
+            background: var(--accent); border: none; color: white;
+            width: 38px; height: 38px; border-radius: 9px; cursor: pointer;
+            display: none; flex-direction: column; align-items: center;
+            justify-content: center; gap: 5px; box-shadow: var(--shadow);
         }
+        .bar { display: block; width: 17px; height: 2px; background: white; border-radius: 999px; transition: transform 0.2s, opacity 0.2s; }
+        body.sidebar-collapsed .sidebar-toggle .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        body.sidebar-collapsed .sidebar-toggle .bar:nth-child(2) { opacity: 0; }
+        body.sidebar-collapsed .sidebar-toggle .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        .sidebar-toggle .bar {
-            display: block;
-            width: 22px;
-            height: 3px;
-            margin: 4px auto;
-            background: #fff;
-            border-radius: 999px;
-            transition: transform 180ms ease, opacity 180ms ease;
+        /* ── Nav ── */
+        nav {
+            display: none; position: fixed; top: 0; left: 0;
+            flex-direction: column; gap: 2px;
+            padding: 68px 10px 24px;
+            background: var(--bg-panel); border-right: 1px solid var(--border);
+            min-height: 100vh; width: var(--sidebar-w); z-index: 20;
+            transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), opacity 0.2s, background 0.25s;
+            overflow-y: auto;
         }
-
-        body.sidebar-collapsed .sidebar-toggle .bar:nth-child(1) {
-            transform: translateY(7px) rotate(45deg);
+        body.sidebar-collapsed nav { transform: translateX(-100%); opacity: 0; pointer-events: none; }
+        .nav-label {
+            font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1px; color: var(--text-subtle); padding: 12px 10px 4px;
         }
-
-        body.sidebar-collapsed .sidebar-toggle .bar:nth-child(2) {
-            opacity: 0;
+        nav button {
+            text-align: left; background: transparent; border: none;
+            color: var(--text-muted); padding: 9px 10px; border-radius: 8px;
+            cursor: pointer; width: 100%; font-family: inherit; font-weight: 500;
+            font-size: 0.88rem; display: flex; align-items: center; gap: 10px;
+            transition: background 0.12s, color 0.12s;
         }
+        .nav-icon { font-size: 1rem; width: 22px; text-align: center; flex-shrink: 0; }
+        nav button.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+        nav button:hover:not(.active) { background: var(--bg-base); color: var(--text-main); }
+        .nav-divider { height: 1px; background: var(--border); margin: 8px 0; }
+        .nav-push { margin-top: auto !important; }
 
-        body.sidebar-collapsed .sidebar-toggle .bar:nth-child(3) {
-            transform: translateY(-7px) rotate(-45deg);
-        }
-
-        body.sidebar-collapsed nav {
-            opacity: 0;
-            transform: translateX(-100%);
-            pointer-events: none;
-        }
-
-        .layout {
-            position: relative;
-            min-height: calc(100vh - 0px);
-        }
-
-        .content-wrap {
-            transition: padding-left 360ms cubic-bezier(0.22, 1, 0.36, 1);
-            padding-left: 0;
-        }
-
-        body.sidebar-open .content-wrap {
-            padding-left: var(--sidebar-w);
-        }
-
-        body.sidebar-open.sidebar-collapsed .content-wrap {
-            padding-left: 0;
-        }
-
-        .container {
-            max-width: 980px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
+        /* ── Layout ── */
+        .layout { min-height: calc(100vh - 62px); }
+        .content-wrap { transition: padding-left 0.3s cubic-bezier(0.22,1,0.36,1); }
+        body.sidebar-open .content-wrap { padding-left: var(--sidebar-w); }
+        body.sidebar-open.sidebar-collapsed .content-wrap { padding-left: 0; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 28px 20px; }
         .section { display: none; }
         .section.active { display: block; }
 
-        h2 {
-            font-size: 1.4rem;
-            margin: 0 0 12px 0;
-            letter-spacing: 0.1px;
-        }
+        /* ── Grid ── */
+        .page-grid { display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr); gap: 22px; }
+        .rail { display: grid; gap: 16px; align-content: start; }
 
-        h3 {
-            margin: 0 0 8px 0;
-        }
-
+        /* ── Cards ── */
         .card {
-            background: var(--card-bg);
-            padding: 28px;
-            border-radius: var(--radius);
-            margin-bottom: 28px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
+            background: var(--card-bg); padding: 22px;
+            border-radius: var(--radius-lg); border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm); margin-bottom: 18px;
+            transition: background 0.25s, border-color 0.25s;
         }
+        .card-accent { border-top: 3px solid var(--accent); }
+        .card-outline { border: 1px dashed var(--border); background: transparent; }
+        .composer-card { border-style: dashed; transition: border-color 0.15s; }
+        .composer-card:focus-within { border-color: var(--accent); }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
+        /* ── Inputs ── */
+        input[type="text"], input[type="password"], textarea, select {
+            width: 100%; padding: 10px 13px; border-radius: 10px;
+            border: 1px solid var(--border); margin-top: 8px;
+            font-family: inherit; font-size: 0.88rem;
+            background: var(--bg-base); color: var(--text-main);
+            transition: border-color 0.15s, box-shadow 0.15s, background 0.25s; outline: none;
         }
-
-        .forum {
-            display: grid;
-            gap: 16px;
-            max-width: 820px;
-            margin: 0 auto;
-        }
-
-        .post-card {
-            display: grid;
-            grid-template-columns: 56px 1fr;
-            gap: 16px;
-            padding: 18px;
-            border-radius: var(--radius);
-            background: #ffffff;
-            border: 1px solid var(--border);
-            margin: 0 auto;
-        }
-
-        .post-vote {
-            background: #f6f7f8;
-            border-radius: 14px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 10px 0;
-            color: var(--text-muted);
-        }
-
-        .post-meta {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
-        .post-title {
-            font-size: 1.1rem;
-            margin: 0 0 6px 0;
-        }
-
-        .post-body {
-            margin: 0;
-            color: var(--text-main);
-        }
-
-        .post-actions {
-            margin-top: 10px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .post-image {
-            width: 100%;
-            max-height: 360px;
-            object-fit: cover;
-            border-radius: 12px;
-            margin-top: 10px;
-            border: 1px solid var(--border);
-        }
-
-        .hero-image {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 14px;
-            margin-bottom: 12px;
-            border: 1px solid var(--border);
-        }
-
-        .comment-list {
-            margin-top: 12px;
-            display: grid;
-            gap: 10px;
-        }
-
-        .comment-card {
-            padding: 10px 12px;
-            border-radius: 12px;
-            background: #ffffff;
-            border: 1px solid var(--border);
-        }
-
-        .ticket-layout {
-            display: grid;
-            grid-template-columns: 1.05fr 1.55fr;
-            gap: 18px;
-        }
-
-        .ticket-list {
-            display: grid;
-            gap: 10px;
-        }
-
-        .ticket-item {
-            padding: 14px 16px;
-            border-radius: 16px;
-            background: #ffffff;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            display: grid;
-            gap: 6px;
-            transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
-        }
-
-        .ticket-item:hover {
-            transform: translateY(-1px);
-            border-color: rgba(255, 69, 0, 0.35);
-            box-shadow: 0 10px 24px rgba(255, 69, 0, 0.12);
-        }
-
-        .ticket-item.active {
-            border-color: rgba(255, 69, 0, 0.5);
-            box-shadow: 0 12px 26px rgba(255, 69, 0, 0.16);
-        }
-
-        .ticket-detail {
-            padding: 18px;
-            border-radius: 18px;
-            background: #ffffff;
-            border: 1px solid var(--border);
-            display: grid;
-            gap: 14px;
-        }
-
-        @media (max-width: 900px) {
-            .ticket-layout { grid-template-columns: 1fr; }
-        }
-
-        .ticket-meta {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .ticket-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 12px;
-            border-radius: 999px;
-            background: var(--accent-soft);
-            color: #7a3b1f;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        .ticket-status.answered {
-            background: rgba(255, 69, 0, 0.14);
-            color: #7a3b1f;
-        }
-
-        .ticket-status.closed {
-            background: rgba(148, 163, 184, 0.25);
-            color: #374151;
-        }
-
-        .ticket-thread {
-            display: grid;
-            gap: 10px;
-        }
-
-        .ticket-bubble {
-            padding: 12px 14px;
-            border-radius: 14px;
-            background: #f7f8f9;
-            border: 1px solid rgba(255, 69, 0, 0.12);
-        }
-
-        .ticket-bubble.admin {
-            background: #fff6f2;
-            border-color: rgba(255, 69, 0, 0.18);
-        }
-
-        .composer-card {
-            background: #ffffff;
-            border: 1px dashed rgba(255, 69, 0, 0.25);
-        }
-
-        .comment-meta {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-        }
-
-        .pill {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 999px;
-            background: var(--accent-soft);
-            border: 1px solid rgba(255, 69, 0, 0.2);
-            font-size: 0.8rem;
-        }
-
-        .hero-card {
-            background: var(--bg-panel);
-            padding: 22px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-        }
-
-        .tag {
-            display: inline-block;
-            padding: 6px 14px;
-            border-radius: 20px;
-            background: rgba(255, 69, 0, 0.1);
-            color: #7a3b1f;
-            font-size: 0.8rem;
-        }
-
-        .pending {
-            background: var(--accent-warm);
-        }
-
-        textarea {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            margin-top: 10px;
-            font-family: 'IBM Plex Sans', sans-serif;
-            background: #fbfbfa;
-            color: var(--text-main);
-        }
-
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            margin-top: 10px;
-            font-family: 'IBM Plex Sans', sans-serif;
-            background: #fbfbfa;
-            color: var(--text-main);
-            box-shadow: none;
-        }
-
-        input[type="text"]::placeholder,
-        input[type="password"]::placeholder {
-            color: rgba(31, 35, 40, 0.4);
-        }
-
-        input[type="text"]:focus,
-        input[type="password"]:focus,
-        textarea:focus,
-        select:focus {
-            outline: 2px solid rgba(255, 69, 0, 0.35);
-            outline-offset: 2px;
-        }
-
-        .login-screen {
-            min-height: 60vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .login-card {
-            max-width: 420px;
-            width: 100%;
-        }
-        input[type="text"],
-        input[type="password"],
-        select {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            margin-top: 10px;
-            font-family: 'IBM Plex Sans', sans-serif;
-            background: #fbfbfa;
-            color: var(--text-main);
-        }
-
+        input:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+        input::placeholder, textarea::placeholder { color: var(--text-subtle); }
+        textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
         input[type="file"] {
-            width: 100%;
-            margin-top: 10px;
-            padding: 10px 12px;
-            border-radius: 12px;
-            border: 1px dashed rgba(47, 128, 237, 0.25);
-            background: #fbfbfa;
-            color: var(--text-main);
+            width: 100%; margin-top: 8px; padding: 9px 13px;
+            border-radius: 10px; border: 1px dashed var(--border);
+            background: var(--bg-base); color: var(--text-main); font-family: inherit; cursor: pointer;
         }
-
         input[type="file"]::file-selector-button {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 10px;
-            margin-right: 10px;
-            cursor: pointer;
-            font-weight: 700;
+            background: var(--accent); color: white; border: none;
+            padding: 5px 12px; border-radius: 7px; cursor: pointer;
+            font-weight: 600; font-family: inherit; margin-right: 10px;
         }
+        label { font-size: 0.82rem; font-weight: 600; color: var(--text-muted); display: block; margin-top: 10px; }
+        .char-counter { font-size: 0.73rem; color: var(--text-subtle); text-align: right; margin-top: 3px; }
 
-        input[type="file"]::-webkit-file-upload-button {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 10px;
-            margin-right: 10px;
-            cursor: pointer;
-            font-weight: 700;
-        }
-
-        button.primary, button.danger {
-            margin-top: 10px;
-            padding: 10px 22px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            font-weight: 700;
-        }
-
+        /* ── Buttons ── */
         button.primary {
-            background: var(--accent);
-            color: #fff;
-            box-shadow: 0 8px 18px rgba(255, 69, 0, 0.25);
+            margin-top: 10px; padding: 10px 20px; border-radius: 10px; border: none;
+            cursor: pointer; font-weight: 700; font-family: inherit; font-size: 0.88rem;
+            background: var(--accent); color: white;
+            box-shadow: 0 4px 12px rgba(255,69,0,0.28);
+            transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
         }
-
+        button.primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(255,69,0,0.35); }
+        button.primary:active { transform: translateY(0); }
+        button.primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+        button.secondary {
+            margin-top: 10px; padding: 10px 20px; border-radius: 10px;
+            border: 1px solid var(--border); cursor: pointer; font-weight: 600;
+            font-family: inherit; font-size: 0.88rem; background: transparent;
+            color: var(--text-main); transition: background 0.15s;
+        }
+        button.secondary:hover { background: var(--bg-base); }
         button.danger {
-            background: #e11d48;
-            color: #fff;
+            margin-top: 10px; padding: 10px 20px; border-radius: 10px; border: none;
+            cursor: pointer; font-weight: 700; font-family: inherit; font-size: 0.88rem;
+            background: #fee2e2; color: #dc2626; transition: background 0.15s, transform 0.1s;
+        }
+        button.danger:hover { background: #fecaca; transform: translateY(-1px); }
+        body.dark button.danger { background: rgba(220,38,38,0.15); color: #f87171; }
+        body.dark button.danger:hover { background: rgba(220,38,38,0.25); }
+
+        /* ── Action buttons (inline, compact) ── */
+        .action-btn {
+            padding: 5px 11px; border-radius: 8px; border: none;
+            background: transparent; color: var(--text-muted);
+            cursor: pointer; font-family: inherit; font-size: 0.78rem; font-weight: 600;
+            transition: background 0.12s, color 0.12s;
+        }
+        .action-btn:hover { background: var(--accent-soft); color: var(--accent); }
+        .action-btn.del:hover { background: #fee2e2; color: #dc2626; }
+        body.dark .action-btn.del:hover { background: rgba(220,38,38,0.15); color: #f87171; }
+
+        /* ── Tags & badges ── */
+        .badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 9px; border-radius: 999px;
+            background: var(--accent-soft); color: var(--accent);
+            font-size: 0.7rem; font-weight: 700;
+        }
+        .tag {
+            display: inline-block; padding: 3px 10px; border-radius: 999px;
+            background: var(--accent-soft); color: var(--accent); font-size: 0.76rem; font-weight: 600;
+        }
+        .tag.filter-tag {
+            cursor: pointer; border: 1px solid transparent;
+            transition: background 0.12s, border-color 0.12s, color 0.12s;
+        }
+        .tag.filter-tag:hover { border-color: var(--accent); }
+        .tag.filter-tag.active { background: var(--accent); color: white; }
+        .pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 5px 13px; border-radius: 999px; border: 1px solid var(--border);
+            font-size: 0.8rem; font-weight: 600; color: var(--text-muted); background: var(--bg-base);
         }
 
-        .row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
+        /* ── Section headings ── */
+        .section-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+        h2 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.2px; }
+        h3 { font-size: 0.95rem; font-weight: 700; }
+        .page-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.3px; }
 
-        .admin-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+        /* ── Post cards ── */
+        .post-card {
+            display: grid; grid-template-columns: 46px 1fr; gap: 12px;
+            padding: 14px; border-radius: var(--radius); background: var(--card-bg);
+            border: 1px solid var(--border); margin-bottom: 12px;
+            transition: box-shadow 0.15s, border-color 0.15s, background 0.25s;
         }
-
-        .inline {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
+        .post-card:hover { box-shadow: var(--shadow); border-color: rgba(255,69,0,0.2); }
+        .post-vote { display: flex; flex-direction: column; align-items: center; gap: 3px; padding-top: 2px; }
+        .vote-btn {
+            width: 30px; height: 30px; border-radius: 8px; border: none;
+            background: transparent; cursor: pointer; color: var(--text-subtle);
+            font-size: 0.9rem; display: flex; align-items: center; justify-content: center;
+            transition: background 0.12s, color 0.12s, transform 0.1s;
         }
+        .vote-btn:hover { background: var(--accent-soft); color: var(--accent); transform: scale(1.1); }
+        .vote-btn.voted-up { color: var(--accent); background: var(--accent-soft); }
+        .vote-btn.voted-down { color: #6366f1; background: rgba(99,102,241,0.1); }
+        .vote-count { font-weight: 700; font-size: 0.82rem; color: var(--text-main); }
+        .post-meta { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 5px; }
+        .post-title { font-size: 0.98rem; font-weight: 700; margin-bottom: 5px; line-height: 1.4; }
+        .post-body { font-size: 0.88rem; color: var(--text-main); line-height: 1.6; }
+        .post-image { width: 100%; max-height: 300px; object-fit: cover; border-radius: 10px; margin-top: 10px; border: 1px solid var(--border); }
+        .post-actions { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; align-items: center; }
 
+        /* ── Comments ── */
+        .comment-list { display: grid; gap: 7px; margin-top: 10px; }
+        .comment-card { padding: 9px 12px; border-radius: 9px; background: var(--bg-base); border: 1px solid var(--border); transition: background 0.25s; }
+        .comment-meta { font-size: 0.76rem; color: var(--text-muted); margin-bottom: 3px; }
+        .comment-body { font-size: 0.86rem; line-height: 1.5; }
+        .comment-input-row { display: flex; gap: 8px; align-items: flex-start; margin-top: 10px; }
+        .comment-input-row textarea { flex: 1; min-height: 54px; margin-top: 0; }
+        .comment-input-row button.primary { margin-top: 0; padding: 8px 14px; }
+
+        /* ── Hero cards ── */
+        .heroes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+        .hero-card {
+            background: var(--card-bg); padding: 18px; border-radius: var(--radius-lg);
+            border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.15s, transform 0.15s, background 0.25s;
+        }
+        .hero-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+        .hero-avatar {
+            width: 48px; height: 48px; border-radius: 13px;
+            background: linear-gradient(135deg, var(--accent), #ff8a50);
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 800; font-size: 1.1rem; margin-bottom: 10px;
+        }
+        .hero-image { width: 100%; height: 140px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; border: 1px solid var(--border); }
+        .hero-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 5px; }
+        .hero-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 8px; }
+        .tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+
+        /* ── Tickets ── */
+        .ticket-layout { display: grid; grid-template-columns: 270px 1fr; gap: 14px; align-items: start; }
+        .ticket-list { display: grid; gap: 7px; }
+        .ticket-item {
+            padding: 13px 14px; border-radius: var(--radius); background: var(--card-bg);
+            border: 1px solid var(--border); cursor: pointer;
+            transition: box-shadow 0.15s, border-color 0.15s, background 0.25s;
+        }
+        .ticket-item:hover { border-color: rgba(255,69,0,0.3); }
+        .ticket-item.active { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+        .ticket-subject { font-weight: 700; font-size: 0.88rem; margin-bottom: 3px; }
+        .ticket-meta { font-size: 0.76rem; color: var(--text-muted); }
+        .ticket-detail { padding: 18px; border-radius: var(--radius-lg); background: var(--card-bg); border: 1px solid var(--border); display: grid; gap: 12px; transition: background 0.25s; }
+        .ticket-status {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 9px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+        }
+        .ticket-status.open { background: #dcfce7; color: #15803d; }
+        .ticket-status.answered { background: #dbeafe; color: #1d4ed8; }
+        .ticket-status.closed { background: var(--bg-base); color: var(--text-muted); }
+        body.dark .ticket-status.open { background: rgba(22,163,74,0.15); color: #4ade80; }
+        body.dark .ticket-status.answered { background: rgba(37,99,235,0.15); color: #60a5fa; }
+        .ticket-thread { display: grid; gap: 8px; }
+        .ticket-bubble { padding: 11px 14px; border-radius: 10px; background: var(--bg-base); font-size: 0.88rem; line-height: 1.5; transition: background 0.25s; }
+        .ticket-bubble.support { background: var(--accent-warm); border-left: 3px solid var(--accent); }
+        body.dark .ticket-bubble.support { background: rgba(255,87,34,0.08); }
+
+        /* ── Thank-you wall ── */
+        .messages-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+        .message-card {
+            padding: 16px; border-radius: var(--radius); background: var(--accent-warm);
+            border: 1px solid rgba(255,69,0,0.12); font-size: 0.88rem; line-height: 1.6;
+            font-style: italic; color: var(--text-main); position: relative;
+            transition: background 0.25s, transform 0.15s;
+        }
+        .message-card:hover { transform: translateY(-2px); }
+        .message-card::before {
+            content: '\201C'; position: absolute; top: 6px; left: 12px;
+            font-size: 2.2rem; color: var(--accent); opacity: 0.25; font-style: normal; line-height: 1;
+        }
+        .message-author { font-size: 0.73rem; color: var(--text-muted); margin-top: 8px; font-style: normal; font-weight: 600; }
+
+        /* ── Login ── */
+        .login-screen { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+        .login-wrap { display: grid; grid-template-columns: 1fr 1fr; max-width: 720px; width: 100%; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+        .login-banner { background: linear-gradient(140deg, #ff4500 0%, #ff8a50 100%); padding: 40px; display: flex; flex-direction: column; justify-content: center; }
+        .login-banner h2 { font-size: 1.5rem; color: white; margin-bottom: 10px; }
+        .login-banner p { font-size: 0.86rem; color: rgba(255,255,255,0.88); line-height: 1.7; }
+        .feature-list { margin-top: 22px; display: grid; gap: 9px; }
+        .feature-item { display: flex; align-items: center; gap: 9px; font-size: 0.83rem; color: rgba(255,255,255,0.9); }
+        .feature-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.65); flex-shrink: 0; }
+        .login-card { background: var(--card-bg); padding: 40px; transition: background 0.25s; }
+        .login-card h2 { margin-bottom: 4px; }
+        .login-subtitle { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 18px; }
+        .login-divider { display: flex; align-items: center; gap: 10px; margin: 15px 0; color: var(--text-subtle); font-size: 0.78rem; }
+        .login-divider::before, .login-divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+        .login-btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 0; }
+        .login-btn-row button.primary { margin-top: 0; }
+
+        /* ── Leaderboard ── */
+        .leaderboard { display: grid; gap: 7px; }
+        .lb-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 9px; background: var(--bg-base); border: 1px solid var(--border); transition: background 0.25s; }
+        .lb-rank { font-weight: 800; color: var(--accent); width: 18px; font-size: 0.82rem; }
+        .lb-name { font-weight: 600; font-size: 0.88rem; flex: 1; }
+        .lb-count { font-size: 0.78rem; color: var(--text-muted); }
+        .lb-medal { font-size: 0.9rem; }
+
+        /* ── Stats ── */
+        .stat-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; border-radius: 9px; background: var(--bg-base); border: 1px solid var(--border); margin-bottom: 7px; transition: background 0.25s; }
+        .stat-label { font-size: 0.83rem; color: var(--text-muted); }
+        .stat-value { font-weight: 700; color: var(--accent); }
+
+        /* ── Tag filter row ── */
+        .tag-filters { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
+
+        /* ── Empty state ── */
+        .empty-state { text-align: center; padding: 36px 20px; color: var(--text-muted); }
+        .empty-icon { font-size: 2.2rem; margin-bottom: 10px; }
+        .empty-title { font-weight: 700; margin-bottom: 5px; font-size: 0.95rem; }
+        .empty-desc { font-size: 0.85rem; }
+
+        /* ── Toast ── */
+        #toast-container { position: fixed; bottom: 22px; right: 22px; z-index: 200; display: grid; gap: 8px; }
+        .toast {
+            padding: 11px 16px; border-radius: 11px; background: var(--card-bg);
+            border: 1px solid var(--border); box-shadow: var(--shadow-lg);
+            font-size: 0.85rem; font-weight: 600; color: var(--text-main);
+            display: flex; align-items: center; gap: 9px;
+            min-width: 200px; max-width: 320px;
+            animation: slideUp 0.22s ease;
+        }
+        .toast.success { border-left: 4px solid #16a34a; }
+        .toast.error { border-left: 4px solid #dc2626; }
+        .toast.info { border-left: 4px solid #2563eb; }
+        .toast-out { animation: toastOut 0.25s ease forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes toastOut { to { opacity: 0; transform: translateY(-6px); } }
+
+        /* ── Misc ── */
+        .inline { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        hr { border: none; height: 1px; background: var(--border); margin: 18px 0; }
+        .admin-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        footer { text-align: center; padding: 22px; background: var(--bg-panel); border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.83rem; transition: background 0.25s; }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .page-grid { grid-template-columns: 1fr; }
+            .ticket-layout { grid-template-columns: 1fr; }
+            .login-wrap { grid-template-columns: 1fr; }
+            .login-banner { display: none; }
+        }
         @media (max-width: 720px) {
             .row { grid-template-columns: 1fr; }
-            .layout { min-height: auto; }
-            nav { width: 75vw; }
+            nav { width: 78vw; }
             body.sidebar-open .content-wrap { padding-left: 0; }
             body.sidebar-open header { padding-left: 20px; }
-        }
-
-        footer {
-            text-align: center;
-            padding: 25px;
-            background: #ffffff;
-            border-top: 1px solid var(--border);
-            color: var(--text-muted);
+            .search-bar { display: none; }
         }
     </style>
 </head>
-
 <body>
 
 <header>
     <div class="header-inner">
-        <div class="topbar">
-            <div class="brand">
-                <span class="brand-dot"></span>
-                <span>Kindness Hub</span>
-            </div>
-            <div class="search">Search recognition, neighbors, posts…</div>
+        <div class="brand">
+            <div class="brand-icon">💛</div>
+            <span>Kindness Hub</span>
         </div>
-        <div class="eyebrow">Structured Recognition System</div>
-        <h1>Kindness Recognition Hub</h1>
-        <p>A structured recognition system to capture, celebrate, and sustain everyday acts of kindness.</p>
+        <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input id="searchInput" type="text" placeholder="Search posts, recognitions…" oninput="handleSearch(this.value)" />
+        </div>
+        <div class="header-right">
+            <div class="user-badge" id="userBadge">
+                <div class="user-avatar" id="userAvatar"></div>
+                <span id="userBadgeName"></span>
+            </div>
+            <button class="icon-btn" onclick="toggleDark()" title="Toggle dark mode" id="darkBtn">🌙</button>
+        </div>
     </div>
 </header>
 
-<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-    <span class="bar"></span>
-    <span class="bar"></span>
-    <span class="bar"></span>
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
+    <span class="bar"></span><span class="bar"></span><span class="bar"></span>
 </button>
+
 <div class="layout">
     <nav id="navbar">
-        <div class="nav-spacer"></div>
-        <button class="tab active" onclick="showTab('home', this)">Home</button>
-        <button class="tab" onclick="showTab('heroes', this)">Recognition</button>
-        <button class="tab" onclick="showTab('messages', this)">Thank-You Wall</button>
-        <button class="tab" onclick="showTab('support', this)">Support</button>
-        <button class="tab" id="adminTab" onclick="showTab('admin', this)">Admin</button>
-        <button class="tab nav-push" id="logoutBtn" onclick="logout()">Logout</button>
+        <div class="nav-label">Navigate</div>
+        <button class="tab active" onclick="showTab('home', this)"><span class="nav-icon">🏠</span>Home</button>
+        <button class="tab" onclick="showTab('heroes', this)"><span class="nav-icon">⭐</span>Recognition</button>
+        <button class="tab" onclick="showTab('nominate', this)"><span class="nav-icon">🌟</span>Nominate</button>
+        <button class="tab" onclick="showTab('messages', this)"><span class="nav-icon">💬</span>Thank-You Wall</button>
+        <button class="tab" onclick="showTab('support', this)"><span class="nav-icon">🎫</span>Support</button>
+        <button class="tab" id="adminTab" onclick="showTab('admin', this)" style="display:none"><span class="nav-icon">⚙️</span>Admin</button>
+        <div class="nav-divider"></div>
+        <button class="tab nav-push" id="logoutBtn" onclick="logout()" style="display:none"><span class="nav-icon">🚪</span>Logout</button>
     </nav>
 
     <div class="content-wrap">
     <div class="container">
 
+    <!-- LOGIN -->
     <div id="loginSection" class="section active">
         <div class="login-screen">
-        <div class="card login-card">
-            <h2>Member Login</h2>
-            <input id="loginUser" type="text" placeholder="Username" autocomplete="username" />
-            <input id="loginPass" type="password" placeholder="Password" autocomplete="current-password" />
-            <button class="primary" onclick="handleLogin()">Login</button>
-            <button class="primary" onclick="handleSignup()">Sign Up</button>
-            <p id="loginError" style="color:#e11d48; display:none; margin-top:10px;">Invalid credentials.</p>
-            <hr style="border:0; height:1px; background:rgba(44, 27, 42, 0.15); margin:20px 0;">
-            <button class="primary" onclick="enterSite(false)">Continue as Guest</button>
+        <div class="login-wrap">
+            <div class="login-banner">
+                <h2>Kindness<br>Recognition Hub</h2>
+                <p>A structured system to capture, celebrate, and sustain everyday acts of kindness in your community.</p>
+                <div class="feature-list">
+                    <div class="feature-item"><div class="feature-dot"></div>Nominate community heroes</div>
+                    <div class="feature-item"><div class="feature-dot"></div>Post updates & recognitions</div>
+                    <div class="feature-item"><div class="feature-dot"></div>Leave thank-you notes</div>
+                    <div class="feature-item"><div class="feature-dot"></div>Track impact over time</div>
+                </div>
+            </div>
+            <div class="login-card">
+                <h2>Welcome back</h2>
+                <p class="login-subtitle">Sign in to your account or create one</p>
+                <label>Username</label>
+                <input id="loginUser" type="text" placeholder="Enter username" autocomplete="username" />
+                <label>Password</label>
+                <input id="loginPass" type="password" placeholder="Enter password" autocomplete="current-password"
+                    onkeydown="if(event.key==='Enter') handleLogin()" />
+                <div class="login-btn-row" style="margin-top:12px;">
+                    <button class="primary" onclick="handleLogin()">Login</button>
+                    <button class="primary" onclick="handleSignup()">Sign Up</button>
+                </div>
+                <p id="loginError" style="color:#dc2626; display:none; margin-top:10px; font-size:0.85rem;"></p>
+                <div class="login-divider">or</div>
+                <button class="secondary" style="width:100%; margin-top:0;" onclick="enterSite(false)">👀 Continue as Guest</button>
+            </div>
         </div>
         </div>
     </div>
+
+    <!-- HOME -->
     <div id="home" class="section">
-        <div class="card">
-            <h2>Welcome</h2>
-            <p>
-                This platform captures acts of kindness in a consistent, structured way,
-                so recognition feels fair, visible, and meaningful across the community.
-            </p>
-        </div>
+        <div class="page-grid">
+            <div>
+                <div class="card card-accent">
+                    <div class="section-header">
+                        <h2>Welcome to the Recognition Hub</h2>
+                        <span class="badge">✦ Live</span>
+                    </div>
+                    <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6;">
+                        Capture acts of kindness in a consistent, structured way so recognition feels fair, visible, and meaningful across the community.
+                    </p>
+                </div>
 
-        <div class="card">
-            <h2>How Recognition Works</h2>
-            <p>1. Share a moment of kindness with context and tags.</p>
-            <p>2. Admins review and approve recognitions to keep the system trustworthy.</p>
-            <p>3. The community celebrates and builds a living archive of impact.</p>
-        </div>
+                <div class="card">
+                    <div class="section-header">
+                        <h2>Community Feed</h2>
+                        <small style="color:var(--text-muted); font-size:0.8rem;">Latest posts</small>
+                    </div>
+                    <div id="forumList"></div>
+                </div>
+            </div>
 
-        <div class="card">
-            <h2>Community Feed</h2>
-            <div class="forum" id="forumList"></div>
-        </div>
+            <aside class="rail">
+                <div class="card card-outline">
+                    <div class="section-header"><h2>Recognition Flow</h2></div>
+                    <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.7;">
+                        1. Nominate someone for an act of kindness.<br>
+                        2. Admins review &amp; approve nominations.<br>
+                        3. The community celebrates together.
+                    </p>
+                    <button class="primary" style="width:100%; margin-top:14px;" onclick="showTab('nominate', document.querySelector('[onclick*=nominate]'))">✨ Nominate Someone</button>
+                </div>
 
-        <div class="card composer-card" id="forumComposer" style="max-width:820px; margin:0 auto 28px;">
-            <div class="pill">Start a New Post</div>
-            <input id="postTitle" type="text" placeholder="Post title" />
-            <textarea id="postBody" placeholder="Share a recognition, update, or request..."></textarea>
-            <input id="postImageUrl" type="text" placeholder="Image URL (optional)" />
-            <input id="postImageFile" type="file" accept="image/*" />
-            <button class="primary" onclick="addPost()">Post</button>
-            <p id="postHint" style="color:var(--text-muted); margin-top:10px; display:none;">Login to create a post.</p>
+                <div class="card card-outline">
+                    <div class="section-header">
+                        <h2>Community Pulse</h2>
+                        <small style="color:var(--text-muted); font-size:0.78rem;">Live stats</small>
+                    </div>
+                    <div id="liveStats"></div>
+                </div>
+
+                <div class="card card-outline">
+                    <div class="section-header"><h2>🏆 Leaderboard</h2></div>
+                    <div id="leaderboard" class="leaderboard"></div>
+                </div>
+
+                <div class="card composer-card" id="forumComposer">
+                    <div class="pill">✏️ New Post</div>
+                    <input id="postTitle" type="text" placeholder="Post title" />
+                    <textarea id="postBody" placeholder="Share a recognition, update, or request…" oninput="updateCounter(this, 'postBodyCount', 500)"></textarea>
+                    <div class="char-counter" id="postBodyCount">500 left</div>
+                    <input id="postImageUrl" type="text" placeholder="Image URL (optional)" />
+                    <input id="postImageFile" type="file" accept="image/*" />
+                    <button class="primary" onclick="addPost()" style="width:100%;">Post</button>
+                    <p id="postHint" style="color:var(--text-muted); margin-top:8px; font-size:0.82rem; display:none;">Login to create a post.</p>
+                </div>
+            </aside>
         </div>
     </div>
-    </div>
 
+    <!-- RECOGNITION / HEROES -->
     <div id="heroes" class="section">
         <div class="card">
-            <h2>Recognized Acts</h2>
-            <div class="grid" id="heroesGrid"></div>
+            <div class="section-header">
+                <h2>⭐ Recognized Acts</h2>
+                <span id="heroCount" class="badge"></span>
+            </div>
+            <div class="tag-filters" id="heroTagFilters"></div>
+            <div class="heroes-grid" id="heroesGrid"></div>
         </div>
     </div>
 
+    <!-- NOMINATE -->
+    <div id="nominate" class="section">
+        <div class="card card-accent">
+            <div class="section-header">
+                <h2>🌟 Nominate Someone</h2>
+                <span class="badge">Community Powered</span>
+            </div>
+            <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:4px; line-height:1.6;">
+                Know someone who made a difference? Nominate them for recognition. Your submission will be reviewed by an admin before appearing publicly.
+            </p>
+        </div>
+        <div class="card composer-card">
+            <div class="pill">📝 Nomination Form</div>
+            <label>Person or team name *</label>
+            <input id="nomName" type="text" placeholder="Who are you nominating?" />
+            <label>What did they do? *</label>
+            <textarea id="nomDesc" placeholder="Describe the act of kindness in detail…" oninput="updateCounter(this, 'nomDescCount', 400)"></textarea>
+            <div class="char-counter" id="nomDescCount">400 left</div>
+            <label>Tags (comma-separated)</label>
+            <input id="nomTags" type="text" placeholder="e.g. Volunteer, Mentor, Cleanup" />
+            <label>Image URL (optional)</label>
+            <input id="nomImageUrl" type="text" placeholder="Photo URL" />
+            <input id="nomImageFile" type="file" accept="image/*" />
+            <button class="primary" onclick="submitNomination()" style="width:100%; margin-top:14px;">Submit Nomination</button>
+            <p id="nomHint" style="color:var(--text-muted); margin-top:8px; font-size:0.82rem; display:none;">Login to submit a nomination.</p>
+        </div>
+    </div>
+
+    <!-- THANK-YOU WALL -->
     <div id="messages" class="section">
-        <div class="card">
-            <h2>Leave a Thank-You Note</h2>
-            <textarea id="messageInput" placeholder="Write a message of appreciation..."></textarea>
-            <button class="primary" onclick="submitMessage()">Submit</button>
+        <div class="card composer-card">
+            <div class="pill">💛 Leave a Thank-You</div>
+            <textarea id="messageInput" placeholder="Write a message of appreciation for someone in the community…" oninput="updateCounter(this, 'msgCount', 300)"></textarea>
+            <div class="char-counter" id="msgCount">300 left</div>
+            <button class="primary" onclick="submitMessage()">Post to Wall</button>
         </div>
-
         <div class="card">
-            <h2>Thank-You Wall</h2>
-            <div id="messagesList"></div>
+            <div class="section-header">
+                <h2>💬 Thank-You Wall</h2>
+                <span id="msgBadge" class="badge"></span>
+            </div>
+            <div id="messagesList" class="messages-grid"></div>
         </div>
     </div>
 
+    <!-- SUPPORT -->
     <div id="support" class="section">
-        <div class="card" style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-            <h2>Support Center</h2>
-            <p class="post-meta">Create a ticket, track responses, and keep participation smooth.</p>
-            <button class="primary" onclick="refreshTickets()">Refresh</button>
+        <div class="card">
+            <div class="section-header">
+                <h2>🎫 Support Center</h2>
+                <button class="secondary" style="margin-top:0; padding:6px 14px; font-size:0.82rem;" onclick="refreshTickets()">↻ Refresh</button>
+            </div>
+            <p style="color:var(--text-muted); font-size:0.85rem;">Create a ticket, track responses, and keep participation smooth.</p>
         </div>
 
-        <div class="card composer-card" id="ticketComposer" style="max-width:820px; margin:0 auto 28px;">
-            <div class="pill">New Ticket</div>
+        <div class="card composer-card" id="ticketComposer">
+            <div class="pill">🎫 New Ticket</div>
             <input id="ticketSubject" type="text" placeholder="Ticket subject" />
-            <textarea id="ticketBody" placeholder="Describe the issue or request..."></textarea>
+            <textarea id="ticketBody" placeholder="Describe the issue or request…"></textarea>
             <button class="primary" id="ticketSubmitBtn" onclick="addTicket()">Submit Ticket</button>
-            <p id="ticketHint" style="color:var(--text-muted); margin-top:10px; display:none;">Login to create a ticket.</p>
+            <p id="ticketHint" style="color:var(--text-muted); margin-top:8px; font-size:0.82rem; display:none;">Login to create a ticket.</p>
         </div>
 
         <div class="card">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-            <h2 id="ticketListTitle">Your Tickets</h2>
-                <div class="inline" style="margin:0;">
-                    <label for="ticketFilter">View</label>
-                    <select id="ticketFilter" onchange="renderTickets()">
-                        <option value="active">Active</option>
-                        <option value="archived">Archived</option>
-                    </select>
-                </div>
+            <div class="section-header">
+                <h2 id="ticketListTitle">Your Tickets</h2>
+                <select id="ticketFilter" onchange="renderTickets()" style="width:auto; margin-top:0; padding:6px 10px; font-size:0.82rem;">
+                    <option value="active">Active</option>
+                    <option value="archived">Archived</option>
+                </select>
             </div>
             <div id="ticketList" class="ticket-layout"></div>
         </div>
     </div>
 
+    <!-- ADMIN -->
     <div id="admin" class="section">
         <div class="card">
-            <h2>Admin Panel</h2>
+            <h2>⚙️ Admin Panel</h2>
+            <hr>
             <h3>Data Tools</h3>
-            <div class="admin-actions">
-                <button class="primary" onclick="exportJSON('heroes')">Export Recognition JSON</button>
-                <button class="primary" onclick="exportJSON('messages')">Export Messages JSON</button>
-                <button class="primary" onclick="exportJSON('all')">Export All JSON</button>
+            <div class="admin-actions" style="margin-top:10px;">
+                <button class="primary" onclick="exportJSON('heroes')">Export Recognitions</button>
+                <button class="primary" onclick="exportJSON('messages')">Export Messages</button>
+                <button class="primary" onclick="exportJSON('all')">Export All</button>
             </div>
             <div class="row" style="margin-top:12px;">
                 <div>
-                    <label for="importType">Import Type</label>
+                    <label>Import Type</label>
                     <select id="importType">
                         <option value="heroes">Recognition</option>
                         <option value="messages">Messages</option>
@@ -797,28 +689,31 @@
                     </select>
                 </div>
                 <div>
-                    <label for="importFile">Import JSON File</label>
+                    <label>Import JSON File</label>
                     <input id="importFile" type="file" accept="application/json" />
                 </div>
             </div>
             <button class="primary" onclick="importJSON()">Import Selected JSON</button>
 
-            <h3 style="margin-top:30px;">Add Recognition</h3>
+            <hr>
+            <h3>Add Recognition Directly</h3>
             <input id="newHeroName" type="text" placeholder="Person or team" />
-            <textarea id="newHeroDesc" placeholder="Act of kindness summary..."></textarea>
-            <input id="newHeroImageUrl" type="text" placeholder="Recognition image URL (optional)" />
+            <textarea id="newHeroDesc" placeholder="Act of kindness summary…"></textarea>
+            <input id="newHeroImageUrl" type="text" placeholder="Image URL (optional)" />
             <input id="newHeroImageFile" type="file" accept="image/*" />
-            <input id="newHeroTags" type="text" placeholder="Tags (comma-separated) e.g. Neighbor Help, Cleanup" />
+            <input id="newHeroTags" type="text" placeholder="Tags (comma-separated)" />
             <div class="inline">
-                <input id="newHeroApproved" type="checkbox" />
-                <label for="newHeroApproved">Approved</label>
+                <input id="newHeroApproved" type="checkbox" style="width:auto; margin-top:0;" />
+                <label for="newHeroApproved" style="margin-top:0;">Approved immediately</label>
             </div>
             <button class="primary" onclick="addHero()">Add Recognition</button>
 
-            <h3>Manage Recognition</h3>
+            <hr>
+            <h3>Manage Recognitions</h3>
             <div id="adminHeroes"></div>
 
-            <h3 style="margin-top:30px;">Manage Messages</h3>
+            <hr>
+            <h3>Manage Messages</h3>
             <div id="adminMessages"></div>
         </div>
     </div>
@@ -827,128 +722,151 @@
     </div>
 </div>
 
-<footer>
-    © 2026 Kindness Recognition Hub
-</footer>
+<footer>© 2026 Kindness Recognition Hub · Built for community</footer>
+<div id="toast-container"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
     const SUPABASE_URL = "https://iyumgbzkgjpsdvxwfmyd.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_CXaKZLi2-bQ1bZBsB4bIiQ_O6GiK6Js";
     const API_BASE = "https://design-pcup-production.up.railway.app";
-    const sb = window.supabase
-        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-        : null;
-
-    let heroes = [];
-    let messages = [];
-    let posts = [];
-    let tickets = [];
-    let selectedTicketId = null;
-    let currentUser = null;
-    let currentProfile = null;
-    let isAdmin = false;
-    let editingPostId = null;
-    let editingComment = null;
-    let sidebarOpen = true;
-    document.getElementById("logoutBtn").style.display = "none";
-    document.getElementById("sidebarToggle").style.display = "none";
-
+    const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
     const DEMO_EMAIL_DOMAIN = "gmail.com";
 
+    let heroes = [], messages = [], posts = [], tickets = [];
+    let selectedTicketId = null, currentUser = null, currentProfile = null;
+    let isAdmin = false, editingPostId = null, editingComment = null, sidebarOpen = true;
+    let searchQuery = "", heroTagFilter = "";
+    let localVotes = JSON.parse(localStorage.getItem("kindness_votes") || "{}");
+
+    // ── Dark mode ──────────────────────────────────────────────────────────
+    function initDark() {
+        if (localStorage.getItem("kindness_dark") === "1") {
+            document.body.classList.add("dark");
+            document.getElementById("darkBtn").textContent = "☀️";
+        }
+    }
+    function toggleDark() {
+        const on = document.body.classList.toggle("dark");
+        localStorage.setItem("kindness_dark", on ? "1" : "0");
+        document.getElementById("darkBtn").textContent = on ? "☀️" : "🌙";
+    }
+    initDark();
+
+    // ── Toast ──────────────────────────────────────────────────────────────
+    function showToast(msg, type = "info") {
+        const icons = { success: "✅", error: "❌", info: "ℹ️" };
+        const el = document.createElement("div");
+        el.className = `toast ${type}`;
+        el.innerHTML = `<span>${icons[type] || "ℹ️"}</span><span>${msg}</span>`;
+        document.getElementById("toast-container").appendChild(el);
+        setTimeout(() => {
+            el.classList.add("toast-out");
+            setTimeout(() => el.remove(), 280);
+        }, 3200);
+    }
+
+    // ── Time ───────────────────────────────────────────────────────────────
+    function timeAgo(iso) {
+        if (!iso) return "just now";
+        const diff = Date.now() - new Date(iso).getTime();
+        const m = Math.floor(diff / 60000);
+        if (m < 1) return "just now";
+        if (m < 60) return `${m}m ago`;
+        const h = Math.floor(m / 60);
+        if (h < 24) return `${h}h ago`;
+        const d = Math.floor(h / 24);
+        if (d < 7) return `${d}d ago`;
+        return new Date(iso).toLocaleDateString();
+    }
+
+    // ── Char counter ───────────────────────────────────────────────────────
+    function updateCounter(el, counterId, max) {
+        const left = max - el.value.length;
+        const c = document.getElementById(counterId);
+        if (c) { c.textContent = `${left} left`; c.style.color = left < 50 ? "#dc2626" : "var(--text-subtle)"; }
+    }
+
+    // ── Search ─────────────────────────────────────────────────────────────
+    function handleSearch(val) {
+        searchQuery = val.toLowerCase().trim();
+        renderPosts();
+        renderHeroes();
+    }
+
+    // ── Utils ──────────────────────────────────────────────────────────────
     function usernameToEmail(username) {
         const safe = username.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
         return safe ? `${safe}@${DEMO_EMAIL_DOMAIN}` : "";
     }
-
-    function supabaseConfigured() {
-        return !!sb && !SUPABASE_URL.includes("YOUR_") && !SUPABASE_ANON_KEY.includes("YOUR_");
+    function supabaseConfigured() { return !!sb && !SUPABASE_URL.includes("YOUR_"); }
+    function apiConfigured() { return !!API_BASE && !API_BASE.includes("YOUR_"); }
+    function escapeHtml(str) {
+        return String(str)
+            .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
     }
+    function initials(name) { return (name || "?").split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2); }
 
-    function apiConfigured() {
-        return !!API_BASE && !API_BASE.includes("YOUR_");
-    }
-
+    // ── Auth ───────────────────────────────────────────────────────────────
     async function loadProfile() {
-        if (!currentUser) {
-            currentProfile = null;
-            isAdmin = false;
-            return;
-        }
-        const { data } = await sb
-            .from("profiles")
-            .select("username, role")
-            .eq("user_id", currentUser.id)
-            .single();
+        if (!currentUser) { currentProfile = null; isAdmin = false; return; }
+        const { data } = await sb.from("profiles").select("username, role").eq("user_id", currentUser.id).single();
         currentProfile = data || { username: currentUser.user_metadata?.username || "user", role: "user" };
-        isAdmin = currentProfile && currentProfile.role === "admin";
+        isAdmin = currentProfile?.role === "admin";
     }
 
     async function handleLogin() {
         const username = document.getElementById("loginUser").value.trim();
         const password = document.getElementById("loginPass").value.trim();
-        const error = document.getElementById("loginError");
-        error.style.display = "none";
+        const err = document.getElementById("loginError");
+        err.style.display = "none";
         if (!username || !password) return;
         if (!supabaseConfigured() || !apiConfigured()) {
-            error.textContent = "Set your Supabase URL/anon key and backend URL first.";
-            error.style.display = "block";
-            return;
+            err.textContent = "Supabase or backend not configured.";
+            err.style.display = "block"; return;
         }
         try {
             const res = await fetch(`${API_BASE}/api/login`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+                method: "POST", headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password })
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || "Login failed");
-            if (data.session) {
-                await sb.auth.setSession({
-                    access_token: data.session.access_token,
-                    refresh_token: data.session.refresh_token
-                });
-            }
+            if (data.session) await sb.auth.setSession({ access_token: data.session.access_token, refresh_token: data.session.refresh_token });
             currentUser = data.user || null;
             await loadProfile();
             await enterSite(isAdmin);
         } catch (e) {
-            error.textContent = e && e.message ? e.message : "Invalid credentials.";
-            error.style.display = "block";
+            err.textContent = e?.message || "Invalid credentials.";
+            err.style.display = "block";
         }
     }
 
     async function handleSignup() {
         const username = document.getElementById("loginUser").value.trim();
         const password = document.getElementById("loginPass").value.trim();
-        const error = document.getElementById("loginError");
-        error.style.display = "none";
+        const err = document.getElementById("loginError");
+        err.style.display = "none";
         if (!username || !password) return;
         if (!supabaseConfigured() || !apiConfigured()) {
-            error.textContent = "Set your Supabase URL/anon key and backend URL first.";
-            error.style.display = "block";
-            return;
+            err.textContent = "Supabase or backend not configured.";
+            err.style.display = "block"; return;
         }
         try {
             const res = await fetch(`${API_BASE}/api/signup`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+                method: "POST", headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password })
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || "Signup failed");
-            if (data.session) {
-                await sb.auth.setSession({
-                    access_token: data.session.access_token,
-                    refresh_token: data.session.refresh_token
-                });
-            }
+            if (data.session) await sb.auth.setSession({ access_token: data.session.access_token, refresh_token: data.session.refresh_token });
             currentUser = data.user || null;
             await loadProfile();
             await enterSite(isAdmin);
         } catch (e) {
-            error.textContent = e && e.message ? e.message : "Signup failed. Try a different username.";
-            error.style.display = "block";
+            err.textContent = e?.message || "Signup failed. Try a different username.";
+            err.style.display = "block";
         }
     }
 
@@ -957,263 +875,439 @@
         document.getElementById("loginSection").classList.remove("active");
         document.getElementById("home").classList.add("active");
         document.getElementById("navbar").style.display = "flex";
-        document.getElementById("adminTab").style.display = isAdmin ? "inline-block" : "none";
-        document.getElementById("logoutBtn").style.display = "inline-block";
-        document.getElementById("sidebarToggle").style.display = "inline-block";
+        document.getElementById("adminTab").style.display = isAdmin ? "flex" : "none";
+        document.getElementById("logoutBtn").style.display = "flex";
+        document.getElementById("sidebarToggle").style.display = "flex";
         document.body.classList.remove("sidebar-collapsed");
         document.body.classList.add("sidebar-open");
         sidebarOpen = true;
-        if (currentUser && !currentProfile) {
-            await loadProfile();
+        if (currentUser && !currentProfile) await loadProfile();
+        // Show user badge
+        if (currentProfile) {
+            const name = currentProfile.username || "user";
+            document.getElementById("userBadgeName").textContent = name;
+            document.getElementById("userAvatar").textContent = initials(name);
+            document.getElementById("userBadge").classList.add("visible");
         }
         updateComposerState();
         updateTicketComposerState();
+        updateNominateState();
         await loadData();
         await loadPosts();
         await loadTickets();
         render();
     }
 
+    async function logout() {
+        try { await sb.auth.signOut(); } catch (e) {}
+        isAdmin = false; currentUser = null; currentProfile = null;
+        posts = []; heroes = []; messages = []; tickets = [];
+        editingPostId = null; editingComment = null; selectedTicketId = null;
+        document.getElementById("navbar").style.display = "none";
+        document.getElementById("adminTab").style.display = "none";
+        document.getElementById("logoutBtn").style.display = "none";
+        document.getElementById("sidebarToggle").style.display = "none";
+        document.getElementById("userBadge").classList.remove("visible");
+        document.body.classList.remove("sidebar-open");
+        updateComposerState(); updateTicketComposerState(); updateNominateState();
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById("loginSection").classList.add("active");
+        document.getElementById("loginError").style.display = "none";
+        render();
+    }
+
+    // ── Render ─────────────────────────────────────────────────────────────
     function render() {
         renderHeroes();
         renderMessages();
         renderAdmin();
         renderPosts();
         renderTickets();
+        renderStats();
+        renderLeaderboard();
     }
 
+    // ── Live stats ─────────────────────────────────────────────────────────
+    function renderStats() {
+        const el = document.getElementById("liveStats");
+        if (!el) return;
+        const approved = heroes.filter(h => h.approved).length;
+        const totalPosts = posts.length;
+        const totalMsgs = messages.length;
+        el.innerHTML = `
+            <div class="stat-row"><span class="stat-label">Recognitions</span><span class="stat-value">${approved}</span></div>
+            <div class="stat-row"><span class="stat-label">Community posts</span><span class="stat-value">${totalPosts}</span></div>
+            <div class="stat-row"><span class="stat-label">Thank-you notes</span><span class="stat-value">${totalMsgs}</span></div>
+        `;
+    }
+
+    // ── Leaderboard ────────────────────────────────────────────────────────
+    function renderLeaderboard() {
+        const el = document.getElementById("leaderboard");
+        if (!el) return;
+        const approved = heroes.filter(h => h.approved);
+        if (!approved.length) { el.innerHTML = `<div class="empty-desc" style="font-size:0.82rem; color:var(--text-subtle);">No recognitions yet.</div>`; return; }
+        const counts = {};
+        approved.forEach(h => { counts[h.name] = (counts[h.name] || 0) + 1; });
+        const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+        const medals = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"];
+        el.innerHTML = sorted.map(([name, count], i) => `
+            <div class="lb-row">
+                <span class="lb-medal">${medals[i]}</span>
+                <span class="lb-rank">#${i + 1}</span>
+                <span class="lb-name">${escapeHtml(name)}</span>
+                <span class="lb-count">${count} rec.</span>
+            </div>
+        `).join("");
+    }
+
+    // ── Heroes ─────────────────────────────────────────────────────────────
     function renderHeroes() {
         const grid = document.getElementById("heroesGrid");
-        grid.innerHTML = "";
-        heroes.filter(h => h.approved).forEach(h => {
+        const filterRow = document.getElementById("heroTagFilters");
+        const countEl = document.getElementById("heroCount");
+        if (!grid) return;
+        let list = heroes.filter(h => h.approved);
+        // gather all tags
+        const allTags = [...new Set(list.flatMap(h => Array.isArray(h.tags) ? h.tags : []))];
+        if (filterRow) {
+            filterRow.innerHTML = allTags.length ? allTags.map(t =>
+                `<span class="tag filter-tag ${heroTagFilter === t ? 'active' : ''}" onclick="setHeroTag('${escapeHtml(t)}')">${escapeHtml(t)}</span>`
+            ).join("") : "";
+        }
+        if (heroTagFilter) list = list.filter(h => Array.isArray(h.tags) && h.tags.includes(heroTagFilter));
+        if (searchQuery) list = list.filter(h => h.name.toLowerCase().includes(searchQuery) || (h.desc || "").toLowerCase().includes(searchQuery));
+        if (countEl) countEl.textContent = `${list.length} recognized`;
+        if (!list.length) {
+            grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">⭐</div><div class="empty-title">No recognitions yet</div><div class="empty-desc">Be the first to nominate someone!</div></div>`;
+            return;
+        }
+        grid.innerHTML = list.map(h => {
             const tags = Array.isArray(h.tags) ? h.tags : [];
-            grid.innerHTML += `
+            return `
                 <div class="hero-card">
-                    ${h.image_url ? `<img class="hero-image" src="${escapeHtml(h.image_url)}" alt="Hero image" />` : ""}
-                    <h3>${escapeHtml(h.name)}</h3>
-                    <p>${escapeHtml(h.desc)}</p>
-                    <div class="tag-row">
-                        ${tags.map(t => `<span class="tag tag-soft">${escapeHtml(t)}</span>`).join("")}
+                    ${h.image_url
+                        ? `<img class="hero-image" src="${escapeHtml(h.image_url)}" alt="${escapeHtml(h.name)}" />`
+                        : `<div class="hero-avatar">${initials(h.name)}</div>`
+                    }
+                    <div class="hero-name">${escapeHtml(h.name)}</div>
+                    <div class="hero-desc">${escapeHtml(h.desc)}</div>
+                    <div class="tag-row">${tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>
+                </div>
+            `;
+        }).join("");
+    }
+
+    function setHeroTag(tag) {
+        heroTagFilter = heroTagFilter === tag ? "" : tag;
+        renderHeroes();
+    }
+
+    // ── Messages ───────────────────────────────────────────────────────────
+    function renderMessages() {
+        const list = document.getElementById("messagesList");
+        const badge = document.getElementById("msgBadge");
+        if (!list) return;
+        if (badge) badge.textContent = `${messages.length} notes`;
+        if (!messages.length) {
+            list.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">💬</div><div class="empty-title">Wall is empty</div><div class="empty-desc">Be the first to leave a thank-you!</div></div>`;
+            return;
+        }
+        list.innerHTML = messages.map(m => `
+            <div class="message-card">
+                <div style="padding-top:10px;">${escapeHtml(m.text)}</div>
+                <div class="message-author">— ${escapeHtml(m.author || "anonymous")} · ${timeAgo(m.created_at)}</div>
+            </div>
+        `).join("");
+    }
+
+    // ── Posts ──────────────────────────────────────────────────────────────
+    function renderPosts() {
+        const list = document.getElementById("forumList");
+        if (!list) return;
+        let filtered = posts;
+        if (searchQuery) filtered = posts.filter(p =>
+            (p.title || "").toLowerCase().includes(searchQuery) ||
+            (p.body || "").toLowerCase().includes(searchQuery)
+        );
+        if (!filtered.length) {
+            list.innerHTML = `<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-title">${searchQuery ? "No results" : "No posts yet"}</div><div class="empty-desc">${searchQuery ? "Try a different search" : "Be the first to post!"}</div></div>`;
+            return;
+        }
+        list.innerHTML = filtered.map(p => {
+            const canEdit = isAdmin || (currentUser && p.author_id === currentUser.id);
+            const isEditing = editingPostId === p.id;
+            const comments = Array.isArray(p.comments) ? [...p.comments].sort((a, b) => new Date(a.created_at) - new Date(b.created_at)) : [];
+            const myVote = localVotes[p.id] || 0;
+            const score = (p.score || 0) + (localVotes[`delta_${p.id}`] || 0);
+            return `
+                <div class="post-card">
+                    <div class="post-vote">
+                        <button class="vote-btn ${myVote === 1 ? 'voted-up' : ''}" onclick="vote(${p.id}, 1)">▲</button>
+                        <span class="vote-count">${score}</span>
+                        <button class="vote-btn ${myVote === -1 ? 'voted-down' : ''}" onclick="vote(${p.id}, -1)">▼</button>
+                    </div>
+                    <div>
+                        <div class="post-meta">
+                            <strong>${escapeHtml(p.author || "user")}</strong> · ${timeAgo(p.created_at)}
+                        </div>
+                        ${isEditing ? `
+                            <input type="text" id="editTitle_${p.id}" value="${escapeHtml(p.title)}" />
+                            <textarea id="editBody_${p.id}">${escapeHtml(p.body)}</textarea>
+                            ${p.image_url ? `<div class="post-meta" style="margin-top:6px;">Current image attached</div>` : ""}
+                            <input type="text" id="editImageUrl_${p.id}" value="${escapeHtml(p.image_url || "")}" placeholder="Image URL" />
+                            <input type="file" id="editImageFile_${p.id}" accept="image/*" />
+                            <div class="inline" style="margin-top:6px;">
+                                <input type="checkbox" id="editImageRemove_${p.id}" style="width:auto; margin-top:0;" />
+                                <label for="editImageRemove_${p.id}" style="margin-top:0;">Remove image</label>
+                            </div>
+                            <div class="post-actions">
+                                <button class="action-btn" onclick="savePost(${p.id})">💾 Save</button>
+                                <button class="action-btn del" onclick="cancelEdit()">✕ Cancel</button>
+                            </div>
+                        ` : `
+                            <div class="post-title">${escapeHtml(p.title)}</div>
+                            <div class="post-body">${escapeHtml(p.body)}</div>
+                            ${p.image_url ? `<img class="post-image" src="${escapeHtml(p.image_url)}" alt="Post image" />` : ""}
+                            ${canEdit ? `
+                                <div class="post-actions">
+                                    <button class="action-btn" onclick="editPost(${p.id})">✏️ Edit</button>
+                                    <button class="action-btn del" onclick="deletePost(${p.id})">🗑 Delete</button>
+                                </div>
+                            ` : ""}
+                        `}
+                        <div class="comment-list">
+                            ${comments.map(c => {
+                                const canEditC = isAdmin || (currentUser && c.author_id === currentUser.id);
+                                const isEditingC = editingComment?.postId === p.id && editingComment?.commentId === c.id;
+                                if (isEditingC) return `
+                                    <div class="comment-card">
+                                        <div class="comment-meta">Editing…</div>
+                                        <textarea id="editComment_${p.id}_${c.id}">${escapeHtml(c.body)}</textarea>
+                                        <div class="post-actions">
+                                            <button class="action-btn" onclick="saveComment(${p.id}, ${c.id})">Save</button>
+                                            <button class="action-btn del" onclick="cancelEditComment()">Cancel</button>
+                                        </div>
+                                    </div>
+                                `;
+                                return `
+                                    <div class="comment-card">
+                                        <div class="comment-meta"><strong>${escapeHtml(c.author || "user")}</strong> · ${timeAgo(c.created_at)}</div>
+                                        <div class="comment-body">${escapeHtml(c.body)}</div>
+                                        ${canEditC ? `
+                                            <div class="post-actions" style="margin-top:5px;">
+                                                <button class="action-btn" onclick="editComment(${p.id}, ${c.id})">Edit</button>
+                                                <button class="action-btn del" onclick="deleteComment(${p.id}, ${c.id})">Delete</button>
+                                            </div>
+                                        ` : ""}
+                                    </div>
+                                `;
+                            }).join("")}
+                        </div>
+                        <div class="comment-input-row" style="margin-top:10px;">
+                            <textarea id="commentBody_${p.id}" placeholder="Write a comment…" ${currentUser ? "" : "disabled"} rows="2"></textarea>
+                            <button class="primary" onclick="addComment(${p.id})" ${currentUser ? "" : "disabled"} style="margin-top:0; padding:8px 14px;">Post</button>
+                        </div>
+                        ${!currentUser ? `<div class="post-meta" style="margin-top:4px;">Login to comment.</div>` : ""}
                     </div>
                 </div>
             `;
-        });
+        }).join("");
     }
 
-    function renderMessages() {
-        const list = document.getElementById("messagesList");
-        list.innerHTML = "";
-        messages.forEach(m => {
-            list.innerHTML += `<p>“${escapeHtml(m.text)}”</p>`;
-        });
+    // ── Voting ─────────────────────────────────────────────────────────────
+    function vote(postId, dir) {
+        if (!currentUser) { showToast("Login to vote", "info"); return; }
+        const prev = localVotes[postId] || 0;
+        const newVote = prev === dir ? 0 : dir;
+        localVotes[postId] = newVote;
+        const prevDelta = localVotes[`delta_${postId}`] || 0;
+        localVotes[`delta_${postId}`] = prevDelta + (newVote - prev);
+        localStorage.setItem("kindness_votes", JSON.stringify(localVotes));
+        // Try to update score in Supabase (gracefully fails if column doesn't exist)
+        const post = posts.find(p => p.id === postId);
+        if (post) {
+            const newScore = (post.score || 0) + (newVote - prev);
+            sb.from("posts").update({ score: newScore }).eq("id", postId).then(() => {
+                posts = posts.map(p => p.id === postId ? { ...p, score: newScore } : p);
+                localVotes[`delta_${postId}`] = 0;
+                localStorage.setItem("kindness_votes", JSON.stringify(localVotes));
+            }).catch(() => {});
+        }
+        renderPosts();
     }
 
+    // ── Tickets ────────────────────────────────────────────────────────────
     function renderTickets() {
         const list = document.getElementById("ticketList");
         const title = document.getElementById("ticketListTitle");
         if (!list || !title) return;
         title.textContent = isAdmin ? "All Tickets" : "Your Tickets";
         list.innerHTML = "";
-        if (!currentUser) {
-            list.innerHTML = `<div class="post-meta">Login to view your tickets.</div>`;
-            return;
-        }
+        if (!currentUser) { list.innerHTML = `<div class="post-meta">Login to view your tickets.</div>`; return; }
         if (!tickets.length) {
-            list.innerHTML = `<div class="post-meta">No tickets yet.</div>`;
+            list.innerHTML = `<div class="empty-state"><div class="empty-icon">🎫</div><div class="empty-title">No tickets yet</div><div class="empty-desc">Submit one above.</div></div>`;
             return;
         }
-        const filter = document.getElementById("ticketFilter")?.value || "active";
-        const showArchived = filter === "archived";
-        const activeTickets = tickets.filter(t => !t.archived);
-        const archivedTickets = tickets.filter(t => t.archived);
-        const ticketsToShow = showArchived ? archivedTickets : activeTickets;
-
-        if (!ticketsToShow.length) {
+        const showArchived = (document.getElementById("ticketFilter")?.value || "active") === "archived";
+        const filtered = tickets.filter(t => showArchived ? t.archived : !t.archived);
+        if (!filtered.length) {
             list.innerHTML = `<div class="post-meta">${showArchived ? "No archived tickets." : "No active tickets."}</div>`;
             return;
         }
-
-        if (!selectedTicketId || !ticketsToShow.find(t => t.id === selectedTicketId)) {
-            selectedTicketId = ticketsToShow[0].id;
-        }
-
-        const listHtml = ticketsToShow.map(t => {
-            const status = (t.status || "open").toLowerCase();
-            const statusClass = status === "closed"
-                ? "ticket-status closed"
-                : status === "answered"
-                    ? "ticket-status answered"
-                    : "ticket-status";
-            const preview = t.body ? t.body.slice(0, 90) + (t.body.length > 90 ? "…" : "") : "";
-            return `
-                <div class="ticket-item ${selectedTicketId === t.id ? "active" : ""}" onclick="selectTicket(${t.id})">
-                    <div style="display:flex; justify-content:space-between; gap:10px; align-items:center;">
-                        <strong>${escapeHtml(t.subject || "Support Ticket")}</strong>
-                        <span class="${statusClass}">${escapeHtml(status)}</span>
-                    </div>
-                    <div class="ticket-meta">${formatTime(t.created_at)} • ${escapeHtml(t.author || "user")}</div>
-                    <div class="ticket-meta">${escapeHtml(preview)}</div>
-                </div>
-            `;
-        }).join("");
-
-        const current = ticketsToShow.find(t => t.id === selectedTicketId);
+        if (!selectedTicketId || !filtered.find(t => t.id === selectedTicketId)) selectedTicketId = filtered[0].id;
+        const current = filtered.find(t => t.id === selectedTicketId);
         const status = current ? (current.status || "open").toLowerCase() : "open";
-        const statusClass = status === "closed"
-            ? "ticket-status closed"
-            : status === "answered"
-                ? "ticket-status answered"
-                : "ticket-status";
-
-        const messages = current && Array.isArray(current.ticket_messages)
+        const msgs = current && Array.isArray(current.ticket_messages)
             ? [...current.ticket_messages].sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
             : [];
-
-        const detailHtml = current ? `
-            <div class="ticket-detail">
-                <div style="display:flex; justify-content:space-between; gap:10px; align-items:center; flex-wrap:wrap;">
-                    <div>
-                        <div class="ticket-meta">Ticket</div>
-                        <h3 style="margin:0;">${escapeHtml(current.subject || "Support Ticket")}</h3>
+        list.innerHTML = `
+            <div class="ticket-list">
+                ${filtered.map(t => {
+                    const s = (t.status || "open").toLowerCase();
+                    return `
+                        <div class="ticket-item ${selectedTicketId === t.id ? "active" : ""}" onclick="selectTicket(${t.id})">
+                            <div style="display:flex; justify-content:space-between; gap:8px; align-items:center;">
+                                <div class="ticket-subject">${escapeHtml(t.subject || "Support Ticket")}</div>
+                                <span class="ticket-status ${s}">${s}</span>
+                            </div>
+                            <div class="ticket-meta">${timeAgo(t.created_at)} · ${escapeHtml(t.author || "user")}</div>
+                            <div class="ticket-meta" style="margin-top:3px;">${escapeHtml((t.body || "").slice(0, 70))}${t.body?.length > 70 ? "…" : ""}</div>
+                        </div>
+                    `;
+                }).join("")}
+            </div>
+            ${current ? `
+                <div class="ticket-detail">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                        <div>
+                            <div class="ticket-meta">Ticket</div>
+                            <h3 style="margin-top:2px;">${escapeHtml(current.subject || "Support Ticket")}</h3>
+                        </div>
+                        <span class="ticket-status ${status}">${status}</span>
                     </div>
-                    <span class="${statusClass}">${escapeHtml(status)}</span>
-                </div>
-                <div class="ticket-meta">Opened ${formatTime(current.created_at)} • ${escapeHtml(current.author || "user")}</div>
-                <div class="ticket-thread">
-                    <div class="ticket-bubble">
-                        <div class="ticket-meta">Original request</div>
-                        <div>${escapeHtml(current.body)}</div>
-                    </div>
-                    ${messages.length
-                        ? messages.map(m => {
+                    <div class="ticket-meta">Opened ${timeAgo(current.created_at)} · ${escapeHtml(current.author || "user")}</div>
+                    <div class="ticket-thread">
+                        <div class="ticket-bubble">
+                            <div class="ticket-meta" style="margin-bottom:5px;">Original request</div>
+                            ${escapeHtml(current.body)}
+                        </div>
+                        ${msgs.map(m => {
                             const isUser = m.author_id === current.author_id;
                             return `
-                                <div class="ticket-bubble ${isUser ? "" : "admin"}">
-                                    <div class="ticket-meta">${isUser ? "User" : "Support"} • ${formatTime(m.created_at)}</div>
-                                    <div>${escapeHtml(m.body)}</div>
+                                <div class="ticket-bubble ${isUser ? "" : "support"}">
+                                    <div class="ticket-meta" style="margin-bottom:4px;">${isUser ? "You" : "⚙️ Support"} · ${timeAgo(m.created_at)}</div>
+                                    ${escapeHtml(m.body)}
                                 </div>
                             `;
-                        }).join("")
-                        : `<div class="ticket-meta">No replies yet.</div>`
-                    }
-                </div>
-                ${(isAdmin || (currentUser && current.author_id === currentUser.id)) ? `
-                    <div class="hero-card" style="background:rgba(236,242,252,0.7);">
-                        <label>New message</label>
-                        <textarea id="ticketMessage_${current.id}" placeholder="Write a response..."></textarea>
-                        <div class="post-actions">
-                            <button class="primary" onclick="sendTicketMessage(${current.id})">Send</button>
-                            ${isAdmin && current.archived ? `
-                                <button class="primary" onclick="archiveTicket(${current.id}, false)">Restore</button>
+                        }).join("")}
+                        ${!msgs.length ? `<div class="ticket-meta">No replies yet.</div>` : ""}
+                    </div>
+                    ${(isAdmin || (currentUser && current.author_id === currentUser.id)) ? `
+                        <div>
+                            <label>Reply</label>
+                            <textarea id="ticketMessage_${current.id}" placeholder="Write a response…"></textarea>
+                            <div class="post-actions">
+                                <button class="primary" onclick="sendTicketMessage(${current.id})">Send Reply</button>
+                                ${isAdmin && current.archived ? `<button class="secondary" style="margin-top:10px;" onclick="archiveTicket(${current.id}, false)">Restore</button>` : ""}
+                            </div>
+                            ${isAdmin ? `
+                                <label>Status</label>
+                                <select id="ticketStatus_${current.id}" style="margin-top:8px;">
+                                    <option value="open" ${status === "open" ? "selected" : ""}>Open</option>
+                                    <option value="answered" ${status === "answered" ? "selected" : ""}>Answered</option>
+                                    <option value="closed" ${status === "closed" ? "selected" : ""}>Closed</option>
+                                </select>
+                                <div class="post-actions">
+                                    <button class="primary" onclick="updateTicketStatus(${current.id})">Update Status</button>
+                                    <button class="danger" onclick="archiveTicket(${current.id}, true)">Archive</button>
+                                    <button class="danger" onclick="deleteTicket(${current.id})">Delete</button>
+                                </div>
                             ` : ""}
                         </div>
-                        ${isAdmin ? `
-                            <label>Status</label>
-                            <select id="ticketStatus_${current.id}">
-                                <option value="open" ${status === "open" ? "selected" : ""}>Open</option>
-                                <option value="answered" ${status === "answered" ? "selected" : ""}>Answered</option>
-                                <option value="closed" ${status === "closed" ? "selected" : ""}>Closed</option>
-                            </select>
-                            <div class="post-actions">
-                                <button class="primary" onclick="updateTicketStatus(${current.id})">Update Status</button>
-                                <button class="danger" onclick="archiveTicket(${current.id}, true)">Archive</button>
-                            </div>
-                        ` : ""}
-                    </div>
-                ` : ""}
-            </div>
-        ` : `<div class="ticket-detail"><div class="ticket-meta">Select a ticket to view details.</div></div>`;
-
-        list.innerHTML = `
-            <div class="ticket-list">${listHtml}</div>
-            ${detailHtml}
+                    ` : ""}
+                </div>
+            ` : `<div class="ticket-detail"><div class="ticket-meta">Select a ticket.</div></div>`}
         `;
     }
 
+    // ── Admin ──────────────────────────────────────────────────────────────
     function renderAdmin() {
         if (!isAdmin) return;
-
         const ah = document.getElementById("adminHeroes");
-        ah.innerHTML = "";
-        heroes.forEach(h => {
-            const tagsValue = (Array.isArray(h.tags) ? h.tags : []).join(", ");
-            const imageValue = (h.image_url || "").replace(/"/g, '&quot;');
-            ah.innerHTML += `
-                <div class="hero-card">
+        ah.innerHTML = heroes.map(h => {
+            const tagsVal = (Array.isArray(h.tags) ? h.tags : []).join(", ");
+            return `
+                <div class="hero-card" style="margin-bottom:10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <strong>${escapeHtml(h.name)}</strong>
+                        <span class="badge" style="${h.approved ? "background:#dcfce7; color:#15803d;" : ""}">${h.approved ? "✅ Approved" : "⏳ Pending"}</span>
+                    </div>
                     <label>Name</label>
-                    <input type="text" id="heroName_${h.id}" value="${h.name.replace(/"/g, '&quot;')}" />
+                    <input type="text" id="heroName_${h.id}" value="${escapeHtml(h.name)}" />
                     <label>Description</label>
-                    <textarea id="heroDesc_${h.id}">${h.desc}</textarea>
-                    ${h.image_url ? `<div class="post-meta">Current image attached</div>` : ""}
+                    <textarea id="heroDesc_${h.id}">${escapeHtml(h.desc)}</textarea>
                     <label>Image URL</label>
-                    <input type="text" id="heroImageUrl_${h.id}" value="${imageValue}" placeholder="Hero image URL (optional)" />
+                    <input type="text" id="heroImageUrl_${h.id}" value="${escapeHtml(h.image_url || "")}" placeholder="Image URL" />
                     <input type="file" id="heroImageFile_${h.id}" accept="image/*" />
-                    <div class="inline">
-                        <input type="checkbox" id="heroImageRemove_${h.id}" />
-                        <label for="heroImageRemove_${h.id}">Remove image</label>
+                    <div class="inline" style="margin-top:6px;">
+                        <input type="checkbox" id="heroImageRemove_${h.id}" style="width:auto; margin-top:0;" />
+                        <label for="heroImageRemove_${h.id}" style="margin-top:0;">Remove image</label>
                     </div>
-                    <label>Tags (comma-separated)</label>
-                    <input type="text" id="heroTags_${h.id}" value="${tagsValue.replace(/"/g, '&quot;')}" />
-                    <div class="inline">
-                        <input type="checkbox" id="heroApproved_${h.id}" ${h.approved ? "checked" : ""} />
-                        <label for="heroApproved_${h.id}">Approved</label>
+                    <label>Tags</label>
+                    <input type="text" id="heroTags_${h.id}" value="${escapeHtml(tagsVal)}" />
+                    <div class="inline" style="margin-top:6px;">
+                        <input type="checkbox" id="heroApproved_${h.id}" ${h.approved ? "checked" : ""} style="width:auto; margin-top:0;" />
+                        <label for="heroApproved_${h.id}" style="margin-top:0;">Approved</label>
                     </div>
-                    <div class="admin-actions">
+                    <div class="admin-actions" style="margin-top:10px;">
                         <button class="primary" onclick="saveHero(${h.id})">Save</button>
-                        ${h.approved
-                            ? ""
-                            : `<button class="primary" onclick="approveHero(${h.id})">Approve</button>`
-                        }
+                        ${!h.approved ? `<button class="primary" onclick="approveHero(${h.id})">✅ Approve</button>` : ""}
                         <button class="danger" onclick="deleteHero(${h.id})">Delete</button>
                     </div>
                 </div>
             `;
-        });
+        }).join("") || `<div class="empty-state"><div class="empty-icon">⭐</div><div class="empty-title">No recognitions yet.</div></div>`;
 
         const am = document.getElementById("adminMessages");
-        am.innerHTML = "";
-        messages.forEach((m) => {
-            am.innerHTML += `
-                <div class="hero-card">
-                    <p>${escapeHtml(m.text)}</p>
-                    <button class="danger" onclick="deleteMessage(${m.id})">Delete</button>
+        am.innerHTML = messages.map(m => `
+            <div class="hero-card" style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:8px;">
+                <div>
+                    <div style="font-size:0.88rem; font-style:italic;">"${escapeHtml(m.text)}"</div>
+                    <div class="ticket-meta">— ${escapeHtml(m.author || "anonymous")} · ${timeAgo(m.created_at)}</div>
                 </div>
-            `;
-        });
+                <button class="danger" style="margin-top:0; white-space:nowrap;" onclick="deleteMessage(${m.id})">Delete</button>
+            </div>
+        `).join("") || `<div class="empty-state"><div class="empty-icon">💬</div><div class="empty-title">No messages yet.</div></div>`;
     }
 
+    // ── CRUD: Heroes ───────────────────────────────────────────────────────
     async function approveHero(id) {
         if (!isAdmin) return;
         await sb.from("heroes").update({ approved: true }).eq("id", id);
-        await loadData();
-        render();
+        showToast("Recognition approved!", "success");
+        await loadData(); render();
     }
-
     async function deleteHero(id) {
         if (!isAdmin) return;
+        if (!confirm("Delete this recognition?")) return;
         await sb.from("heroes").delete().eq("id", id);
-        await loadData();
-        render();
+        showToast("Recognition deleted", "info");
+        await loadData(); render();
     }
-
     async function addHero() {
+        if (!isAdmin) return;
         const name = document.getElementById("newHeroName").value.trim();
         const desc = document.getElementById("newHeroDesc").value.trim();
-        const imageUrl = document.getElementById("newHeroImageUrl").value.trim();
-        const imageFile = document.getElementById("newHeroImageFile").files[0];
+        if (!name || !desc) { showToast("Name and description required", "error"); return; }
         const tagsInput = document.getElementById("newHeroTags").value.trim();
+        const tags = tagsInput ? tagsInput.split(",").map(t => t.trim()).filter(Boolean) : [];
         const approved = document.getElementById("newHeroApproved").checked;
-        if (!name || !desc) return;
-        const tags = tagsInput
-            ? tagsInput.split(",").map(t => t.trim()).filter(Boolean)
-            : [];
-        if (!isAdmin) return;
+        const imageFile = document.getElementById("newHeroImageFile").files[0];
+        const imageUrl = document.getElementById("newHeroImageUrl").value.trim();
         let image = null;
-        if (imageFile) {
-            image = await uploadHeroImage(imageFile);
-        } else if (imageUrl) {
-            image = imageUrl;
-        }
+        if (imageFile) image = await uploadHeroImage(imageFile);
+        else if (imageUrl) image = imageUrl;
         await sb.from("heroes").insert([{ name, desc, approved, tags, image_url: image }]);
         document.getElementById("newHeroName").value = "";
         document.getElementById("newHeroDesc").value = "";
@@ -1221,37 +1315,57 @@
         document.getElementById("newHeroImageFile").value = "";
         document.getElementById("newHeroTags").value = "";
         document.getElementById("newHeroApproved").checked = false;
-        await loadData();
-        render();
+        showToast("Recognition added!", "success");
+        await loadData(); render();
     }
-
     async function saveHero(id) {
         if (!isAdmin) return;
         const name = document.getElementById(`heroName_${id}`).value.trim();
         const desc = document.getElementById(`heroDesc_${id}`).value.trim();
-        const imageUrl = document.getElementById(`heroImageUrl_${id}`).value.trim();
-        const imageFile = document.getElementById(`heroImageFile_${id}`).files[0];
-        const removeImage = document.getElementById(`heroImageRemove_${id}`).checked;
-        const tagsInput = document.getElementById(`heroTags_${id}`).value.trim();
-        const approved = document.getElementById(`heroApproved_${id}`).checked;
         if (!name || !desc) return;
-        const tags = tagsInput
-            ? tagsInput.split(",").map(t => t.trim()).filter(Boolean)
-            : [];
+        const tags = document.getElementById(`heroTags_${id}`).value.trim().split(",").map(t => t.trim()).filter(Boolean);
+        const approved = document.getElementById(`heroApproved_${id}`).checked;
+        const imageFile = document.getElementById(`heroImageFile_${id}`).files[0];
+        const imageUrl = document.getElementById(`heroImageUrl_${id}`).value.trim();
+        const removeImage = document.getElementById(`heroImageRemove_${id}`).checked;
         const existing = heroes.find(h => h.id === id);
         let image = existing ? existing.image_url : null;
-        if (removeImage) {
-            image = null;
-        } else if (imageFile) {
-            image = await uploadHeroImage(imageFile);
-        } else if (imageUrl) {
-            image = imageUrl;
-        }
+        if (removeImage) image = null;
+        else if (imageFile) image = await uploadHeroImage(imageFile);
+        else if (imageUrl) image = imageUrl;
         await sb.from("heroes").update({ name, desc, approved, tags, image_url: image }).eq("id", id);
-        await loadData();
-        render();
+        showToast("Saved!", "success");
+        await loadData(); render();
     }
 
+    // ── Nomination (user-facing) ───────────────────────────────────────────
+    async function submitNomination() {
+        if (!currentUser) { updateNominateState(); return; }
+        const name = document.getElementById("nomName").value.trim();
+        const desc = document.getElementById("nomDesc").value.trim();
+        if (!name || !desc) { showToast("Name and description are required", "error"); return; }
+        const tagsInput = document.getElementById("nomTags").value.trim();
+        const tags = tagsInput ? tagsInput.split(",").map(t => t.trim()).filter(Boolean) : [];
+        const imageFile = document.getElementById("nomImageFile").files[0];
+        const imageUrl = document.getElementById("nomImageUrl").value.trim();
+        let image = null;
+        try {
+            if (imageFile) image = await uploadHeroImage(imageFile);
+            else if (imageUrl) image = imageUrl;
+            await sb.from("heroes").insert([{ name, desc, approved: false, tags, image_url: image }]);
+            document.getElementById("nomName").value = "";
+            document.getElementById("nomDesc").value = "";
+            document.getElementById("nomTags").value = "";
+            document.getElementById("nomImageUrl").value = "";
+            document.getElementById("nomImageFile").value = "";
+            showToast("Nomination submitted! An admin will review it.", "success");
+            await loadData(); render();
+        } catch (e) {
+            showToast("Failed to submit nomination", "error");
+        }
+    }
+
+    // ── CRUD: Messages ─────────────────────────────────────────────────────
     async function submitMessage() {
         const text = document.getElementById("messageInput").value.trim();
         if (!text) return;
@@ -1259,496 +1373,325 @@
             await sb.from("messages").insert([{
                 text,
                 author_id: currentUser ? currentUser.id : null,
-                author: currentProfile ? currentProfile.username : "guest"
+                author: currentProfile ? currentProfile.username : "anonymous"
             }]);
             document.getElementById("messageInput").value = "";
-            await loadData();
-            render();
-        } catch (e) {}
+            document.getElementById("msgCount").textContent = "300 left";
+            showToast("Thank-you note posted!", "success");
+            await loadData(); render();
+        } catch (e) { showToast("Failed to post note", "error"); }
+    }
+    async function deleteMessage(id) {
+        if (!isAdmin) return;
+        await sb.from("messages").delete().eq("id", id);
+        showToast("Message deleted", "info");
+        await loadData(); render();
     }
 
-    async function addTicket() {
-        if (!currentUser) {
-            updateTicketComposerState();
-            return;
-        }
-        const subject = document.getElementById("ticketSubject").value.trim();
-        const body = document.getElementById("ticketBody").value.trim();
-        if (!subject || !body) return;
+    // ── CRUD: Posts ────────────────────────────────────────────────────────
+    async function addPost() {
+        if (!currentUser) { updateComposerState(); return; }
+        const title = document.getElementById("postTitle").value.trim();
+        const body = document.getElementById("postBody").value.trim();
+        if (!title || !body) { showToast("Title and body required", "error"); return; }
+        const imageFile = document.getElementById("postImageFile").files[0];
+        const imageUrl = document.getElementById("postImageUrl").value.trim();
+        let image = null;
         try {
-            const { data } = await sb.from("tickets").insert([{
-                subject,
-                body,
-                status: "open",
+            if (imageFile) image = await uploadPostImage(imageFile);
+            else if (imageUrl) image = imageUrl;
+            const { data } = await sb.from("posts").insert([{
+                title, body, image_url: image,
                 author_id: currentUser.id,
                 author: currentProfile ? currentProfile.username : "user"
             }]).select().single();
-            if (data) {
-                tickets.unshift(data);
-                selectedTicketId = data.id;
-            }
-            document.getElementById("ticketSubject").value = "";
-            document.getElementById("ticketBody").value = "";
-            renderTickets();
-        } catch (e) {}
+            if (data) posts.unshift({ ...data, comments: [] });
+            document.getElementById("postTitle").value = "";
+            document.getElementById("postBody").value = "";
+            document.getElementById("postImageUrl").value = "";
+            document.getElementById("postImageFile").value = "";
+            document.getElementById("postBodyCount").textContent = "500 left";
+            showToast("Posted!", "success");
+            renderPosts();
+        } catch (e) { showToast("Failed to post", "error"); }
     }
-
-    async function sendTicketMessage(ticketId) {
-        if (!currentUser) return;
-        const input = document.getElementById(`ticketMessage_${ticketId}`);
-        const body = input ? input.value.trim() : "";
-        if (!body) return;
+    function editPost(id) { editingPostId = id; renderPosts(); }
+    function cancelEdit() { editingPostId = null; renderPosts(); }
+    async function savePost(id) {
+        const title = document.getElementById(`editTitle_${id}`).value.trim();
+        const body = document.getElementById(`editBody_${id}`).value.trim();
+        if (!title || !body) return;
+        const imageFile = document.getElementById(`editImageFile_${id}`).files[0];
+        const imageUrl = document.getElementById(`editImageUrl_${id}`).value.trim();
+        const removeImage = document.getElementById(`editImageRemove_${id}`).checked;
+        const existing = posts.find(p => p.id === id);
+        let image = existing ? existing.image_url : null;
+        if (removeImage) image = null;
+        else if (imageFile) image = await uploadPostImage(imageFile);
+        else if (imageUrl) image = imageUrl;
         try {
-            const { data } = await sb.from("ticket_messages").insert([{
-                ticket_id: ticketId,
-                body,
-                author_id: currentUser.id,
-                author: currentProfile ? currentProfile.username : "user"
-            }]).select().single();
-            if (data) {
-                tickets = tickets.map(t => {
-                    if (t.id !== ticketId) return t;
-                    const messages = Array.isArray(t.ticket_messages) ? t.ticket_messages : [];
-                    return { ...t, ticket_messages: [...messages, data] };
-                });
-            }
-            if (input) input.value = "";
-            renderTickets();
-        } catch (e) {}
+            const { data } = await sb.from("posts").update({ title, body, image_url: image }).eq("id", id).select().single();
+            posts = posts.map(p => p.id === id ? { ...data, comments: p.comments } : p);
+            editingPostId = null;
+            showToast("Post updated!", "success");
+            renderPosts();
+        } catch (e) { showToast("Failed to save", "error"); }
     }
-
-    async function updateTicketStatus(ticketId) {
-        if (!isAdmin) return;
-        const status = document.getElementById(`ticketStatus_${ticketId}`)?.value || "open";
+    async function deletePost(id) {
+        if (!confirm("Delete this post?")) return;
         try {
-            const { data } = await sb
-                .from("tickets")
-                .update({ status })
-                .eq("id", ticketId)
-                .select()
-                .single();
-            tickets = tickets.map(t => (t.id === ticketId ? data : t));
-            renderTickets();
-        } catch (e) {}
+            await sb.from("posts").delete().eq("id", id);
+            posts = posts.filter(p => p.id !== id);
+            showToast("Post deleted", "info");
+            renderPosts();
+        } catch (e) { showToast("Failed to delete", "error"); }
     }
 
-    async function archiveTicket(ticketId, archived) {
-        if (!isAdmin) return;
-        try {
-            const { data } = await sb
-                .from("tickets")
-                .update({ archived })
-                .eq("id", ticketId)
-                .select()
-                .single();
-            tickets = tickets.map(t => (t.id === ticketId ? data : t));
-            if (archived && selectedTicketId === ticketId) {
-                selectedTicketId = null;
-            }
-            renderTickets();
-        } catch (e) {}
-    }
-
-    async function deleteTicket(ticketId) {
-        if (!isAdmin) return;
-        if (!confirm("Delete this ticket and all its messages?")) return;
-        try {
-            await sb.from("tickets").delete().eq("id", ticketId);
-            tickets = tickets.filter(t => t.id !== ticketId);
-            selectedTicketId = tickets.length ? tickets[0].id : null;
-            renderTickets();
-        } catch (e) {}
-    }
-
-    function selectTicket(id) {
-        selectedTicketId = id;
-        renderTickets();
-    }
-
-    async function refreshTickets() {
-        await loadTickets();
-        renderTickets();
-    }
-
-    function renderPosts() {
-        const list = document.getElementById("forumList");
-        if (!list) return;
-        list.innerHTML = "";
-        posts.forEach(p => {
-            const canEdit = isAdmin || (currentUser && p.authorId === currentUser.id);
-            const isEditing = editingPostId === p.id;
-            const comments = Array.isArray(p.comments) ? [...p.comments].sort((a, b) => new Date(a.created_at) - new Date(b.created_at)) : [];
-            list.innerHTML += `
-                <div class="post-card">
-                    <div class="post-vote">
-                        <span>▲</span>
-                        <strong>${p.score || 0}</strong>
-                        <span>▼</span>
-                    </div>
-                    <div>
-                        <div class="post-meta">Posted by ${escapeHtml(p.author || "user")} • ${formatTime(p.createdAt)}</div>
-                        ${isEditing ? `
-                            <input type="text" id="editTitle_${p.id}" value="${escapeHtml(p.title)}" />
-                            <textarea id="editBody_${p.id}">${escapeHtml(p.body)}</textarea>
-                            ${p.image_url ? `<div class="post-meta">Current image attached</div>` : ""}
-                            <input type="text" id="editImageUrl_${p.id}" value="${escapeHtml(p.image_url || "")}" placeholder="Image URL (optional)" />
-                            <input type="file" id="editImageFile_${p.id}" accept="image/*" />
-                            <div class="inline">
-                                <input type="checkbox" id="editImageRemove_${p.id}" />
-                                <label for="editImageRemove_${p.id}">Remove image</label>
-                            </div>
-                        ` : `
-                            <h3 class="post-title">${escapeHtml(p.title)}</h3>
-                            <p class="post-body">${escapeHtml(p.body)}</p>
-                            ${p.image_url ? `<img class="post-image" src="${escapeHtml(p.image_url)}" alt="Forum post image" />` : ""}
-                        `}
-                        <div class="post-actions">
-                            ${canEdit ? (isEditing
-                                ? `<button class="primary" onclick="savePost(${p.id})">Save</button>
-                                   <button class="danger" onclick="cancelEdit()">Cancel</button>`
-                                : `<button class="primary" onclick="editPost(${p.id})">Edit</button>
-                                   <button class="danger" onclick="deletePost(${p.id})">Delete</button>`) : ""
-                            }
-                        </div>
-                        <div class="comment-list">
-                            ${comments.map(c => {
-                                const canEditComment = isAdmin || (currentUser && c.authorId === currentUser.id);
-                                const isEditingComment = editingComment && editingComment.postId === p.id && editingComment.commentId === c.id;
-                                if (isEditingComment) {
-                                    return `
-                                        <div class="comment-card">
-                                            <div class="comment-meta">Editing comment</div>
-                                            <textarea id="editComment_${p.id}_${c.id}">${escapeHtml(c.body)}</textarea>
-                                            <div class="post-actions">
-                                                <button class="primary" onclick="saveComment(${p.id}, ${c.id})">Save</button>
-                                                <button class="danger" onclick="cancelEditComment()">Cancel</button>
-                                            </div>
-                                        </div>
-                                    `;
-                                }
-                                return `
-                                    <div class="comment-card">
-                                        <div class="comment-meta">${escapeHtml(c.author || "user")} • ${formatTime(c.createdAt)}</div>
-                                        <div>${escapeHtml(c.body)}</div>
-                                        ${canEditComment ? `
-                                            <div class="post-actions">
-                                                <button class="primary" onclick="editComment(${p.id}, ${c.id})">Edit</button>
-                                                <button class="danger" onclick="deleteComment(${p.id}, ${c.id})">Delete</button>
-                                            </div>
-                                        ` : ""}
-                                    </div>
-                                `;
-                            }).join("")}
-                        </div>
-                        <div class="post-actions" style="margin-top:12px;">
-                            <textarea id="commentBody_${p.id}" placeholder="Write a comment..." ${currentUser ? "" : "disabled"}></textarea>
-                            <button class="primary" onclick="addComment(${p.id})" ${currentUser ? "" : "disabled"}>Comment</button>
-                            ${currentUser ? "" : `<div class="post-meta">Login to comment.</div>`}
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-    }
-
-    async function loadPosts() {
-        try {
-            const { data } = await sb
-                .from("posts")
-                .select("id,title,body,image_url,author,author_id,created_at,updated_at, comments ( id, body, author, author_id, created_at, updated_at )")
-                .order("created_at", { ascending: false });
-            posts = Array.isArray(data) ? data : [];
-        } catch (e) {
-            posts = [];
-        }
-    }
-
-    async function loadTickets() {
-        if (!currentUser) {
-            tickets = [];
-            return;
-        }
-        try {
-            let query = sb
-                .from("tickets")
-                .select("*, ticket_messages ( id, body, author, author_id, created_at )")
-                .order("created_at", { ascending: false });
-            if (!isAdmin) {
-                query = query.eq("author_id", currentUser.id);
-            }
-            const { data } = await query;
-            tickets = Array.isArray(data) ? data : [];
-            if (tickets.length && (!selectedTicketId || !tickets.find(t => t.id === selectedTicketId))) {
-                selectedTicketId = tickets[0].id;
-            }
-        } catch (e) {
-            tickets = [];
-        }
-    }
-
+    // ── CRUD: Comments ─────────────────────────────────────────────────────
     async function addComment(postId) {
         if (!currentUser) return;
         const body = document.getElementById(`commentBody_${postId}`).value.trim();
         if (!body) return;
         try {
             const { data } = await sb.from("comments").insert([{
-                post_id: postId,
-                body,
+                post_id: postId, body,
                 author_id: currentUser.id,
                 author: currentProfile ? currentProfile.username : "user"
             }]).select().single();
             posts = posts.map(p => p.id === postId ? { ...p, comments: [...(p.comments || []), data] } : p);
             document.getElementById(`commentBody_${postId}`).value = "";
             renderPosts();
-        } catch (e) {}
+        } catch (e) { showToast("Failed to comment", "error"); }
     }
-
-    function editComment(postId, commentId) {
-        editingComment = { postId, commentId };
-        renderPosts();
-    }
-
-    function cancelEditComment() {
-        editingComment = null;
-        renderPosts();
-    }
-
+    function editComment(postId, commentId) { editingComment = { postId, commentId }; renderPosts(); }
+    function cancelEditComment() { editingComment = null; renderPosts(); }
     async function saveComment(postId, commentId) {
         const body = document.getElementById(`editComment_${postId}_${commentId}`).value.trim();
         if (!body) return;
         try {
-            const { data } = await sb
-                .from("comments")
-                .update({ body })
-                .eq("id", commentId)
-                .select()
-                .single();
+            const { data } = await sb.from("comments").update({ body }).eq("id", commentId).select().single();
             posts = posts.map(p => {
                 if (p.id !== postId) return p;
-                const comments = (p.comments || []).map(c => c.id === commentId ? data : c);
-                return { ...p, comments };
+                return { ...p, comments: (p.comments || []).map(c => c.id === commentId ? data : c) };
             });
             editingComment = null;
+            showToast("Comment updated!", "success");
             renderPosts();
-        } catch (e) {}
+        } catch (e) { showToast("Failed to save", "error"); }
     }
-
     async function deleteComment(postId, commentId) {
-        if (!confirm("Delete this comment?")) return;
+        if (!confirm("Delete comment?")) return;
         try {
             await sb.from("comments").delete().eq("id", commentId);
             posts = posts.map(p => {
                 if (p.id !== postId) return p;
-                const comments = (p.comments || []).filter(c => c.id !== commentId);
-                return { ...p, comments };
+                return { ...p, comments: (p.comments || []).filter(c => c.id !== commentId) };
             });
             renderPosts();
-        } catch (e) {}
+        } catch (e) { showToast("Failed to delete", "error"); }
     }
 
-    async function addPost() {
-        if (!currentUser) {
-            updateComposerState();
-            return;
-        }
-        const title = document.getElementById("postTitle").value.trim();
-        const body = document.getElementById("postBody").value.trim();
-        if (!title || !body) return;
-        const imageUrl = document.getElementById("postImageUrl").value.trim();
-        const imageFile = document.getElementById("postImageFile").files[0];
+    // ── CRUD: Tickets ──────────────────────────────────────────────────────
+    async function addTicket() {
+        if (!currentUser) { updateTicketComposerState(); return; }
+        const subject = document.getElementById("ticketSubject").value.trim();
+        const body = document.getElementById("ticketBody").value.trim();
+        if (!subject || !body) { showToast("Subject and description required", "error"); return; }
         try {
-            let image = null;
-            if (imageFile) {
-                image = await uploadPostImage(imageFile);
-            } else if (imageUrl) {
-                image = imageUrl;
-            }
-            const { data } = await sb.from("posts").insert([{
-                title,
-                body,
-                image_url: image,
+            const { data } = await sb.from("tickets").insert([{
+                subject, body, status: "open",
                 author_id: currentUser.id,
                 author: currentProfile ? currentProfile.username : "user"
             }]).select().single();
-            if (data) posts.unshift(data);
-            document.getElementById("postTitle").value = "";
-            document.getElementById("postBody").value = "";
-            document.getElementById("postImageUrl").value = "";
-            document.getElementById("postImageFile").value = "";
-            renderPosts();
-        } catch (e) {}
+            if (data) { tickets.unshift(data); selectedTicketId = data.id; }
+            document.getElementById("ticketSubject").value = "";
+            document.getElementById("ticketBody").value = "";
+            showToast("Ticket submitted!", "success");
+            renderTickets();
+        } catch (e) { showToast("Failed to submit ticket", "error"); }
     }
-
-    function editPost(id) {
-        editingPostId = id;
-        renderPosts();
+    async function sendTicketMessage(ticketId) {
+        if (!currentUser) return;
+        const input = document.getElementById(`ticketMessage_${ticketId}`);
+        const body = input?.value.trim();
+        if (!body) return;
+        try {
+            const { data } = await sb.from("ticket_messages").insert([{
+                ticket_id: ticketId, body,
+                author_id: currentUser.id,
+                author: currentProfile ? currentProfile.username : "user"
+            }]).select().single();
+            if (data) {
+                tickets = tickets.map(t => t.id !== ticketId ? t : {
+                    ...t, ticket_messages: [...(Array.isArray(t.ticket_messages) ? t.ticket_messages : []), data]
+                });
+            }
+            if (input) input.value = "";
+            showToast("Reply sent!", "success");
+            renderTickets();
+        } catch (e) { showToast("Failed to send reply", "error"); }
     }
-
-    function cancelEdit() {
-        editingPostId = null;
-        renderPosts();
+    async function updateTicketStatus(ticketId) {
+        if (!isAdmin) return;
+        const status = document.getElementById(`ticketStatus_${ticketId}`)?.value || "open";
+        try {
+            const { data } = await sb.from("tickets").update({ status }).eq("id", ticketId).select().single();
+            tickets = tickets.map(t => t.id === ticketId ? { ...data, ticket_messages: t.ticket_messages } : t);
+            showToast("Status updated", "success");
+            renderTickets();
+        } catch (e) { showToast("Failed to update status", "error"); }
     }
+    async function archiveTicket(ticketId, archived) {
+        if (!isAdmin) return;
+        try {
+            const { data } = await sb.from("tickets").update({ archived }).eq("id", ticketId).select().single();
+            tickets = tickets.map(t => t.id === ticketId ? { ...data, ticket_messages: t.ticket_messages } : t);
+            if (archived && selectedTicketId === ticketId) selectedTicketId = null;
+            showToast(archived ? "Ticket archived" : "Ticket restored", "info");
+            renderTickets();
+        } catch (e) { showToast("Failed to archive", "error"); }
+    }
+    async function deleteTicket(ticketId) {
+        if (!isAdmin) return;
+        if (!confirm("Delete ticket and all messages?")) return;
+        try {
+            await sb.from("tickets").delete().eq("id", ticketId);
+            tickets = tickets.filter(t => t.id !== ticketId);
+            selectedTicketId = tickets.length ? tickets[0].id : null;
+            showToast("Ticket deleted", "info");
+            renderTickets();
+        } catch (e) { showToast("Failed to delete ticket", "error"); }
+    }
+    function selectTicket(id) { selectedTicketId = id; renderTickets(); }
+    async function refreshTickets() { await loadTickets(); renderTickets(); showToast("Tickets refreshed", "info"); }
 
-    async function savePost(id) {
-        const title = document.getElementById(`editTitle_${id}`).value.trim();
-        const body = document.getElementById(`editBody_${id}`).value.trim();
-        if (!title || !body) return;
-        const imageUrl = document.getElementById(`editImageUrl_${id}`).value.trim();
-        const imageFile = document.getElementById(`editImageFile_${id}`).files[0];
-        const removeImage = document.getElementById(`editImageRemove_${id}`).checked;
-        const existing = posts.find(p => p.id === id);
-        let image = existing ? existing.image_url : null;
-        if (removeImage) {
-            image = null;
-        } else if (imageFile) {
-            image = await uploadPostImage(imageFile);
-        } else if (imageUrl) {
-            image = imageUrl;
-        }
+    // ── Data loading ───────────────────────────────────────────────────────
+    async function loadData() {
+        try {
+            let heroesQ = sb.from("heroes").select("*").order("id", { ascending: true });
+            if (!isAdmin) heroesQ = heroesQ.eq("approved", true);
+            const { data: heroData } = await heroesQ;
+            const { data: msgData } = await sb.from("messages").select("*").order("created_at", { ascending: false });
+            heroes = Array.isArray(heroData) ? heroData : [];
+            messages = Array.isArray(msgData) ? msgData : [];
+        } catch (e) { heroes = []; messages = []; }
+    }
+    async function loadPosts() {
         try {
             const { data } = await sb
                 .from("posts")
-                .update({ title, body, image_url: image })
-                .eq("id", id)
-                .select()
-                .single();
-            posts = posts.map(p => (p.id === id ? data : p));
-            editingPostId = null;
-            renderPosts();
-        } catch (e) {}
+                .select("id, title, body, image_url, score, author, author_id, created_at, updated_at, comments ( id, body, author, author_id, created_at, updated_at )")
+                .order("created_at", { ascending: false });
+            posts = Array.isArray(data) ? data : [];
+        } catch (e) { posts = []; }
     }
-
-    async function deletePost(id) {
-        if (!confirm("Delete this post?")) return;
+    async function loadTickets() {
+        if (!currentUser) { tickets = []; return; }
         try {
-            await sb.from("posts").delete().eq("id", id);
-            posts = posts.filter(p => p.id !== id);
-            renderPosts();
-        } catch (e) {}
+            let q = sb.from("tickets")
+                .select("*, ticket_messages ( id, body, author, author_id, created_at )")
+                .order("created_at", { ascending: false });
+            if (!isAdmin) q = q.eq("author_id", currentUser.id);
+            const { data } = await q;
+            tickets = Array.isArray(data) ? data : [];
+            if (tickets.length && (!selectedTicketId || !tickets.find(t => t.id === selectedTicketId)))
+                selectedTicketId = tickets[0].id;
+        } catch (e) { tickets = []; }
     }
 
-    async function deleteMessage(id) {
-        if (!isAdmin) return;
-        await sb.from("messages").delete().eq("id", id);
-        await loadData();
-        render();
-    }
-
+    // ── Data export/import ─────────────────────────────────────────────────
     function exportJSON(type) {
-        let data = null;
-        let filename = "community-data.json";
-        if (type === "heroes") {
-            data = heroes;
-            filename = "community-heroes.json";
-        } else if (type === "messages") {
-            data = messages;
-            filename = "community-messages.json";
-        } else {
-            data = { heroes, messages };
-            filename = "community-all.json";
-        }
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = filename;
-        a.click();
-        URL.revokeObjectURL(url);
+        let data, filename;
+        if (type === "heroes") { data = heroes; filename = "community-heroes.json"; }
+        else if (type === "messages") { data = messages; filename = "community-messages.json"; }
+        else { data = { heroes, messages }; filename = "community-all.json"; }
+        const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
+        const a = Object.assign(document.createElement("a"), { href: url, download: filename });
+        a.click(); URL.revokeObjectURL(url);
+        showToast("Exported!", "success");
     }
-
     function importJSON() {
         if (!isAdmin) return;
         const type = document.getElementById("importType").value;
-        const fileInput = document.getElementById("importFile");
-        const file = fileInput.files[0];
+        const file = document.getElementById("importFile").files[0];
         if (!file) return;
         const reader = new FileReader();
         reader.onload = async (e) => {
             try {
                 const data = JSON.parse(e.target.result);
-                if (type === "heroes") {
-                    if (Array.isArray(data)) {
-                        await sb.from("heroes").upsert(data, { onConflict: "id" });
-                    }
-                } else if (type === "messages") {
-                    if (Array.isArray(data)) {
-                        await sb.from("messages").upsert(data, { onConflict: "id" });
-                    }
-                } else {
-                    if (data && Array.isArray(data.heroes)) {
-                        await sb.from("heroes").upsert(data.heroes, { onConflict: "id" });
-                    }
-                    if (data && Array.isArray(data.messages)) {
-                        await sb.from("messages").upsert(data.messages, { onConflict: "id" });
-                    }
+                if (type === "heroes" && Array.isArray(data)) await sb.from("heroes").upsert(data, { onConflict: "id" });
+                else if (type === "messages" && Array.isArray(data)) await sb.from("messages").upsert(data, { onConflict: "id" });
+                else {
+                    if (Array.isArray(data.heroes)) await sb.from("heroes").upsert(data.heroes, { onConflict: "id" });
+                    if (Array.isArray(data.messages)) await sb.from("messages").upsert(data.messages, { onConflict: "id" });
                 }
-                await loadData();
-                render();
-                fileInput.value = "";
-            } catch (err) {}
+                await loadData(); render();
+                document.getElementById("importFile").value = "";
+                showToast("Imported successfully!", "success");
+            } catch (err) { showToast("Import failed", "error"); }
         };
         reader.readAsText(file);
+    }
+
+    // ── Image upload ───────────────────────────────────────────────────────
+    async function uploadHeroImage(file) {
+        const ext = (file.name.split(".").pop() || "png").toLowerCase();
+        const uid = currentUser ? currentUser.id : "anon";
+        const key = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(36).slice(2)}`;
+        const path = `heroes/${uid}/${key}.${ext}`;
+        const { error } = await sb.storage.from("post-images").upload(path, file, { cacheControl: "3600", upsert: false });
+        if (error) throw error;
+        return sb.storage.from("post-images").getPublicUrl(path).data.publicUrl;
+    }
+    async function uploadPostImage(file) {
+        const ext = (file.name.split(".").pop() || "png").toLowerCase();
+        const uid = currentUser ? currentUser.id : "anon";
+        const key = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(36).slice(2)}`;
+        const path = `${uid}/${key}.${ext}`;
+        const { error } = await sb.storage.from("post-images").upload(path, file, { cacheControl: "3600", upsert: false });
+        if (error) throw error;
+        return sb.storage.from("post-images").getPublicUrl(path).data.publicUrl;
+    }
+
+    // ── UI state helpers ───────────────────────────────────────────────────
+    function updateComposerState() {
+        const disabled = !currentUser;
+        ["postTitle", "postBody", "postImageUrl", "postImageFile"].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.disabled = disabled;
+        });
+        const btn = document.querySelector("#forumComposer button.primary");
+        if (btn) { btn.disabled = disabled; btn.style.opacity = disabled ? "0.5" : "1"; }
+        const hint = document.getElementById("postHint");
+        if (hint) hint.style.display = disabled ? "block" : "none";
+    }
+    function updateTicketComposerState() {
+        const disabled = !currentUser;
+        ["ticketSubject", "ticketBody", "ticketSubmitBtn"].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) { el.disabled = disabled; if (id === "ticketSubmitBtn") el.style.opacity = disabled ? "0.5" : "1"; }
+        });
+        const hint = document.getElementById("ticketHint");
+        if (hint) hint.style.display = disabled ? "block" : "none";
+    }
+    function updateNominateState() {
+        const disabled = !currentUser;
+        ["nomName", "nomDesc", "nomTags", "nomImageUrl", "nomImageFile"].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.disabled = disabled;
+        });
+        const hint = document.getElementById("nomHint");
+        if (hint) hint.style.display = disabled ? "block" : "none";
+        const btn = document.querySelector("#nominate button.primary");
+        if (btn) { btn.disabled = disabled; btn.style.opacity = disabled ? "0.5" : "1"; }
     }
 
     function showTab(id, el) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+        const target = document.getElementById(id);
+        if (target) target.classList.add('active');
         if (el) el.classList.add('active');
-    }
-
-    async function loadData() {
-        try {
-            let heroesQuery = sb.from("heroes").select("*").order("id", { ascending: true });
-            if (!isAdmin) heroesQuery = heroesQuery.eq("approved", true);
-            const { data: heroData } = await heroesQuery;
-            const { data: messageData } = await sb.from("messages").select("*").order("created_at", { ascending: false });
-            heroes = Array.isArray(heroData) ? heroData : [];
-            messages = Array.isArray(messageData) ? messageData : [];
-        } catch (e) {
-            heroes = [];
-            messages = [];
-        }
-    }
-
-    async function saveData() {}
-
-    async function init() {
-        if (!supabaseConfigured()) return;
-        const { data } = await sb.auth.getSession();
-        if (data && data.session && data.session.user) {
-            currentUser = data.session.user;
-            await loadProfile();
-            await enterSite(isAdmin);
-            return;
-        }
-    }
-
-        async function logout() {
-            try {
-                await sb.auth.signOut();
-            } catch (e) {}
-            isAdmin = false;
-            currentUser = null;
-            currentProfile = null;
-            posts = [];
-            editingPostId = null;
-            editingComment = null;
-            heroes = [];
-            messages = [];
-            tickets = [];
-            selectedTicketId = null;
-            document.getElementById("navbar").style.display = "none";
-        document.getElementById("adminTab").style.display = "none";
-        document.getElementById("logoutBtn").style.display = "none";
-        document.getElementById("sidebarToggle").style.display = "none";
-        document.body.classList.remove("sidebar-open");
-        updateComposerState();
-        updateTicketComposerState();
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById("loginSection").classList.add("active");
-        document.getElementById("loginError").style.display = "none";
-        render();
     }
 
     function toggleSidebar() {
@@ -1756,81 +1699,15 @@
         document.body.classList.toggle("sidebar-collapsed", !sidebarOpen);
     }
 
-    function updateComposerState() {
-        const hint = document.getElementById("postHint");
-        const title = document.getElementById("postTitle");
-        const body = document.getElementById("postBody");
-        const imageUrl = document.getElementById("postImageUrl");
-        const imageFile = document.getElementById("postImageFile");
-        const button = document.querySelector("#forumComposer button.primary");
-        if (!hint || !title || !body || !button) return;
-        const disabled = !currentUser;
-        hint.style.display = disabled ? "block" : "none";
-        title.disabled = disabled;
-        body.disabled = disabled;
-        if (imageUrl) imageUrl.disabled = disabled;
-        if (imageFile) imageFile.disabled = disabled;
-        button.disabled = disabled;
-        button.style.opacity = disabled ? "0.6" : "1";
-        button.style.cursor = disabled ? "not-allowed" : "pointer";
-    }
-
-    function updateTicketComposerState() {
-        const hint = document.getElementById("ticketHint");
-        const subject = document.getElementById("ticketSubject");
-        const body = document.getElementById("ticketBody");
-        const button = document.getElementById("ticketSubmitBtn");
-        if (!hint || !subject || !body || !button) return;
-        const disabled = !currentUser;
-        hint.style.display = disabled ? "block" : "none";
-        subject.disabled = disabled;
-        body.disabled = disabled;
-        button.disabled = disabled;
-        button.style.opacity = disabled ? "0.6" : "1";
-        button.style.cursor = disabled ? "not-allowed" : "pointer";
-    }
-
-    async function uploadHeroImage(file) {
-        const ext = (file.name.split(".").pop() || "png").toLowerCase();
-        const uid = currentUser ? currentUser.id : "anon";
-        const key = (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(36).slice(2)}`);
-        const path = `heroes/${uid}/${key}.${ext}`;
-        const { error } = await sb.storage.from("post-images").upload(path, file, {
-            cacheControl: "3600",
-            upsert: false
-        });
-        if (error) throw error;
-        const { data } = sb.storage.from("post-images").getPublicUrl(path);
-        return data.publicUrl;
-    }
-
-    async function uploadPostImage(file) {
-        const ext = (file.name.split(".").pop() || "png").toLowerCase();
-        const uid = currentUser ? currentUser.id : "anon";
-        const key = (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(36).slice(2)}`);
-        const path = `${uid}/${key}.${ext}`;
-        const { error } = await sb.storage.from("post-images").upload(path, file, {
-            cacheControl: "3600",
-            upsert: false
-        });
-        if (error) throw error;
-        const { data } = sb.storage.from("post-images").getPublicUrl(path);
-        return data.publicUrl;
-    }
-
-    function escapeHtml(str) {
-        return String(str)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/\"/g, "&quot;")
-            .replace(/'/g, "&#39;");
-    }
-
-    function formatTime(iso) {
-        if (!iso) return "just now";
-        const date = new Date(iso);
-        return date.toLocaleString();
+    // ── Init ───────────────────────────────────────────────────────────────
+    async function init() {
+        if (!supabaseConfigured()) return;
+        const { data } = await sb.auth.getSession();
+        if (data?.session?.user) {
+            currentUser = data.session.user;
+            await loadProfile();
+            await enterSite(isAdmin);
+        }
     }
 
     window.login = handleLogin;
@@ -1838,6 +1715,5 @@
 
     init();
 </script>
-
 </body>
 </html>
