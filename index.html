@@ -1763,7 +1763,7 @@
         try {
             const { data } = await sb
                 .from("posts")
-                .select("id, title, body, image_url, score, author, author_id, created_at, updated_at, comments ( id, body, author, author_id, created_at, updated_at )")
+                .select("id, title, body, image_url, author, author_id, created_at, updated_at, comments ( id, body, author, author_id, created_at, updated_at )")
                 .order("created_at", { ascending: false });
             posts = Array.isArray(data) ? data : [];
         } catch (e) { posts = []; }
