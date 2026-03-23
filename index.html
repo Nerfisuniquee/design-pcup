@@ -1068,9 +1068,11 @@
         updateWelcomeHeading();
         updateActivityTicker();
         setInterval(updateWelcomeHeading, 60000);
+        setupRealtime();
     }
 
     async function logout() {
+        teardownRealtime();
         try { await sb.auth.signOut(); } catch (e) {}
         isAdmin = false; currentUser = null; currentProfile = null;
         posts = []; heroes = []; messages = []; tickets = [];
@@ -1943,6 +1945,126 @@
 
     function getReactionCount(msgId, emoji) {
         return msgReactions[`${msgId}_${emoji}`] || 0;
+    }
+
+    // ── Real-time ──────────────────────────────────────────────────────────
+    let realtimeChannel = null;
+    let pollInterval = null;
+
+    function setupRealtime() {
+        if (!sb) return;
+        teardownRealtime();
+
+        realtimeChannel = sb.channel('kindness-live')
+            // Posts
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, ({ new: post }) => {
+                if (posts.find(p => p.id === post.id)) return;
+                posts.unshift({ ...post, comments: [] });
+                renderPosts(); renderStats(); updateActivityTicker();
+                if (post.author_id !== currentUser?.id)
+                    showToast(`📝 New post: "${(post.title||'').slice(0,35)}…"`, 'info');
+            })
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'posts' }, ({ new: post }) => {
+                posts = posts.map(p => p.id === post.id ? { ...post, comments: p.comments || [] } : p);
+                renderPosts();
+            })
+            .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'posts' }, ({ old }) => {
+                posts = posts.filter(p => p.id !== old.id);
+                renderPosts(); renderStats();
+            })
+            // Comments
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'comments' }, ({ new: c }) => {
+                posts = posts.map(p => {
+                    if (p.id !== c.post_id) return p;
+                    if ((p.comments||[]).find(x => x.id === c.id)) return p;
+                    return { ...p, comments: [...(p.comments||[]), c] };
+                });
+                renderPosts();
+                if (c.author_id !== currentUser?.id) showToast('💬 New comment on a post', 'info');
+            })
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'comments' }, ({ new: c }) => {
+                posts = posts.map(p => p.id !== c.post_id ? p : {
+                    ...p, comments: (p.comments||[]).map(x => x.id === c.id ? c : x)
+                });
+                renderPosts();
+            })
+            .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'comments' }, ({ old }) => {
+                posts = posts.map(p => ({ ...p, comments: (p.comments||[]).filter(c => c.id !== old.id) }));
+                renderPosts();
+            })
+            // Heroes
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'heroes' }, async ({ new: h }) => {
+                if (!isAdmin && !h.approved) return;
+                if (!heroes.find(x => x.id === h.id)) heroes.push(h);
+                renderHeroes(); renderAdmin(); renderStats(); renderLeaderboard(); updateActivityTicker();
+                if (h.approved && h.author_id !== currentUser?.id)
+                    showToast(`⭐ New recognition: ${h.name}`, 'success');
+            })
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'heroes' }, ({ new: h }) => {
+                heroes = heroes.map(x => x.id === h.id ? h : x);
+                if (!isAdmin) heroes = heroes.filter(x => x.approved);
+                renderHeroes(); renderAdmin(); renderStats(); renderLeaderboard();
+                if (h.approved) showToast(`✅ ${h.name} has been recognised!`, 'success');
+            })
+            .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'heroes' }, ({ old }) => {
+                heroes = heroes.filter(x => x.id !== old.id);
+                renderHeroes(); renderAdmin(); renderStats(); renderLeaderboard();
+            })
+            // Messages
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, ({ new: m }) => {
+                if (messages.find(x => x.id === m.id)) return;
+                messages.unshift(m);
+                renderMessages(); renderStats(); updateActivityTicker();
+                if (m.author_id !== currentUser?.id) showToast('💛 New thank-you note!', 'info');
+            })
+            .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, ({ old }) => {
+                messages = messages.filter(m => m.id !== old.id);
+                renderMessages(); renderStats();
+            })
+            // Tickets
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'tickets' }, async ({ new: t, eventType }) => {
+                if (!currentUser) return;
+                if (!isAdmin && t && t.author_id !== currentUser.id) return;
+                await loadTickets(); renderTickets();
+                if (eventType === 'UPDATE' && t?.status && t.author_id !== currentUser?.id)
+                    showToast(`🎫 Ticket status updated: ${t.status}`, 'info');
+            })
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'ticket_messages' }, ({ new: tm }) => {
+                if (!currentUser) return;
+                tickets = tickets.map(t => {
+                    if (t.id !== tm.ticket_id) return t;
+                    if ((t.ticket_messages||[]).find(m => m.id === tm.id)) return t;
+                    return { ...t, ticket_messages: [...(t.ticket_messages||[]), tm] };
+                });
+                renderTickets();
+                if (tm.author_id !== currentUser?.id) showToast('🎫 New reply on your ticket', 'info');
+            })
+            .subscribe(status => {
+                if (status === 'SUBSCRIBED') {
+                    showToast('⚡ Live updates connected', 'success');
+                    clearInterval(pollInterval); // real-time working, stop polling
+                } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+                    startPolling(); // fall back to polling
+                }
+            });
+
+        // Start polling as fallback in case real-time takes time or isn't enabled
+        startPolling();
+    }
+
+    function startPolling() {
+        clearInterval(pollInterval);
+        pollInterval = setInterval(async () => {
+            if (realtimeChannel?._socket?.isConnected?.()) return; // real-time is live, skip
+            await loadPosts(); await loadData();
+            if (currentUser) await loadTickets();
+            render(); updateActivityTicker();
+        }, 30000); // every 30 seconds
+    }
+
+    function teardownRealtime() {
+        if (realtimeChannel) { sb.removeChannel(realtimeChannel); realtimeChannel = null; }
+        clearInterval(pollInterval); pollInterval = null;
     }
 
     window.login = handleLogin;
