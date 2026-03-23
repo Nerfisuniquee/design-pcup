@@ -118,6 +118,11 @@ app.post("/api/login", async (req, res) => {
 
 app.use(express.static(__dirname));
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// Local dev: listen on port. Vercel: export the app.
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
